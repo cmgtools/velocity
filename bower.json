@@ -1,0 +1,29 @@
+{
+  "name": "cmt-velocity",
+  "title": "Velocity",
+  "version": "1.0.0-alpha",
+  "homepage": "https://velocity.cmsgtools.org/",
+  "authors": [
+    "Bhagwat Singh Chouhan"
+  ],
+  "description": "Velocity is a JavaScript library which provide utilities, UI components and MVC framework implementation.",
+  "keywords": [
+    "cmgtools",
+	"Velocity",
+    "JavaScript library",
+    "mvc",
+    "components",
+    "utilities"
+  ],
+  "license": "GPLv3",
+  "ignore": [
+    ".gitignore",
+    "gruntfile.js",
+    "package.json",
+    "examples"
+  ],
+  "main": "dist/velocity.js",
+  "dependencies": {
+    "jquery": "~2.2.*"
+  }
+}
