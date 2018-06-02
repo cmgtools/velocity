@@ -1569,7 +1569,8 @@ cmt.utils.ui = {
 
 
 /**
- * Form Info is a small plugin to flip form information and form fields. The form information can be formed only by labels whereas fields can be formed using labels and form elements.
+ * Form Info is a small plugin to flip form information and form fields. The form information 
+ * can be formed only by labels whereas fields can be formed using labels and form elements.
  */
 
 ( function( cmtjq ) {
@@ -1597,7 +1598,7 @@ cmt.utils.ui = {
 
 		function init( form ) {
 
-			form.find( '.box-form-trigger' ).click( function() {
+			form.find( '.box-trigger-form' ).click( function() {
 
 				var parent	= jQuery( this ).closest( '.box-form' );
 				var info 	= parent.find( '.box-form-info-wrap' );
@@ -1606,11 +1607,13 @@ cmt.utils.ui = {
 				if( info.is( ':visible' ) ) {
 
 					info.hide();
+					
 					content.fadeIn( 'slow' );
 				}
 				else {
 
 					info.fadeIn( 'fast' );
+					
 					content.hide();
 				}
 			});
