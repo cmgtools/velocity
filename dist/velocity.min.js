@@ -1,7 +1,7 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-05-28
+ * Velocity - v1.0.0-alpha1 - 2018-06-02
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
- * License: GPLv3
+ * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
  */
 
