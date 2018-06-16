@@ -53,5 +53,13 @@ cmt.utils.browser = {
 		var toDataUrlSupported	= data.indexOf( "data:image/png" ) == 0;
 
 		return toDataUrlSupported;
+	},
+	
+	/**
+	 * Detect whether browser supports history api.
+	 */
+	isHistory: function() {
+
+		return !( typeof history.pushState === 'undefined' );
 	}
 };
