@@ -1,7 +1,7 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-05-28
+ * Velocity - v1.0.0-alpha1 - 2018-07-04
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
- * License: GPLv3
+ * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
  */
 
@@ -100,6 +100,14 @@ cmt.utils.browser = {
 		var toDataUrlSupported	= data.indexOf( "data:image/png" ) == 0;
 
 		return toDataUrlSupported;
+	},
+	
+	/**
+	 * Detect whether browser supports history api.
+	 */
+	isHistory: function() {
+
+		return !( typeof history.pushState === 'undefined' );
 	}
 };
 
@@ -1185,6 +1193,12 @@ cmt.utils.ui = {
 /**
  * File Uploader plugin can be used to upload files. The appropriate backend code should be able to handle the file sent by this plugin.
  * It works fine for CMSGears using it's File Uploader and Avatar Uploader widgets.
+ * 
+ * It also support two special cases using special classes as listed below:
+ * 
+ * file-uploader-direct - To upload several files in a row.
+ * 
+ * file-uploader-chooser - Always Show File Wrap and Chooser and keep Dragger hidden.
  */
 
 // TODO: Validate for max file size if possible
@@ -1228,7 +1242,7 @@ cmt.utils.ui = {
 					btnChooser.hide();
 					
 					if( settings.toggle ) {
-						
+
 						fileUploader.find( '.chooser-wrap' ).show();
 						fileUploader.find( '.file-wrap' ).hide();
 					}
@@ -1252,6 +1266,14 @@ cmt.utils.ui = {
 					// Reset Canvas and Progress
 					resetUploader( fileUploader );
 				});
+			}
+			
+			// Always Show File Wrap and Chooser and keep Dragger hidden
+			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
+
+				fileUploader.find( '.chooser-wrap' ).show();
+				fileUploader.find( '.file-wrap' ).show();
+				fileUploader.find( '.file-dragger' ).hide();
 			}
 
 			// Modern Uploader
@@ -1293,7 +1315,7 @@ cmt.utils.ui = {
 				inputField.change( function( event ) {
 
 					uploadTraditionalFile( fileUploader, directory, type );
-				} );
+				});
 			}
 		}
 
@@ -1313,7 +1335,7 @@ cmt.utils.ui = {
 				}
 			}
 
-			var progressContainer	= fileUploader.find( '.file-preloader .file-preloader-bar' );
+			var progressContainer = fileUploader.find( '.file-preloader .file-preloader-bar' );
 
 			// Modern Uploader
 			if ( cmt.utils.browser.isFileApi() ) {
@@ -1528,11 +1550,16 @@ cmt.utils.ui = {
 			}
 
 			if( settings.toggle ) {
-				
-				// Swap Chooser and Dragger
+
+				// Swap Chooser and File Wrap
 				fileUploader.find( '.chooser-wrap' ).fadeToggle( 'fast' );
-				fileUploader.find( '.file-wrap' ).fadeToggle( 'slow' );
+
+				if( !fileUploader.hasClass( 'file-uploader-chooser' ) ) {
+
+					fileUploader.find( '.file-wrap' ).fadeToggle( 'slow' );
+				}
 			}
+
 			// Show Postaction
 			fileUploader.find( '.post-action' ).fadeIn();
 		}
@@ -1569,7 +1596,8 @@ cmt.utils.ui = {
 
 
 /**
- * Form Info is a small plugin to flip form information and form fields. The form information can be formed only by labels whereas fields can be formed using labels and form elements.
+ * Form Info is a small plugin to flip form information and form fields. The form information 
+ * can be formed only by labels whereas fields can be formed using labels and form elements.
  */
 
 ( function( cmtjq ) {
@@ -1597,7 +1625,7 @@ cmt.utils.ui = {
 
 		function init( form ) {
 
-			form.find( '.box-form-trigger' ).click( function() {
+			form.find( '.box-trigger-form' ).click( function() {
 
 				var parent	= jQuery( this ).closest( '.box-form' );
 				var info 	= parent.find( '.box-form-info-wrap' );
@@ -1606,11 +1634,13 @@ cmt.utils.ui = {
 				if( info.is( ':visible' ) ) {
 
 					info.hide();
+					
 					content.fadeIn( 'slow' );
 				}
 				else {
 
 					info.fadeIn( 'fast' );
+					
 					content.hide();
 				}
 			});

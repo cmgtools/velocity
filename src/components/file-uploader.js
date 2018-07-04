@@ -1,6 +1,12 @@
 /**
  * File Uploader plugin can be used to upload files. The appropriate backend code should be able to handle the file sent by this plugin.
  * It works fine for CMSGears using it's File Uploader and Avatar Uploader widgets.
+ * 
+ * It also support two special cases using special classes as listed below:
+ * 
+ * file-uploader-direct - To upload several files in a row.
+ * 
+ * file-uploader-chooser - Always Show File Wrap and Chooser and keep Dragger hidden.
  */
 
 // TODO: Validate for max file size if possible
@@ -44,7 +50,7 @@
 					btnChooser.hide();
 					
 					if( settings.toggle ) {
-						
+
 						fileUploader.find( '.chooser-wrap' ).show();
 						fileUploader.find( '.file-wrap' ).hide();
 					}
@@ -68,6 +74,14 @@
 					// Reset Canvas and Progress
 					resetUploader( fileUploader );
 				});
+			}
+			
+			// Always Show File Wrap and Chooser and keep Dragger hidden
+			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
+
+				fileUploader.find( '.chooser-wrap' ).show();
+				fileUploader.find( '.file-wrap' ).show();
+				fileUploader.find( '.file-dragger' ).hide();
 			}
 
 			// Modern Uploader
@@ -109,7 +123,7 @@
 				inputField.change( function( event ) {
 
 					uploadTraditionalFile( fileUploader, directory, type );
-				} );
+				});
 			}
 		}
 
@@ -129,7 +143,7 @@
 				}
 			}
 
-			var progressContainer	= fileUploader.find( '.file-preloader .file-preloader-bar' );
+			var progressContainer = fileUploader.find( '.file-preloader .file-preloader-bar' );
 
 			// Modern Uploader
 			if ( cmt.utils.browser.isFileApi() ) {
@@ -344,11 +358,16 @@
 			}
 
 			if( settings.toggle ) {
-				
-				// Swap Chooser and Dragger
+
+				// Swap Chooser and File Wrap
 				fileUploader.find( '.chooser-wrap' ).fadeToggle( 'fast' );
-				fileUploader.find( '.file-wrap' ).fadeToggle( 'slow' );
+
+				if( !fileUploader.hasClass( 'file-uploader-chooser' ) ) {
+
+					fileUploader.find( '.file-wrap' ).fadeToggle( 'slow' );
+				}
 			}
+
 			// Show Postaction
 			fileUploader.find( '.post-action' ).fadeIn();
 		}
