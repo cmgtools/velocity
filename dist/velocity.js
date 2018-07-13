@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-07-04
+ * Velocity - v1.0.0-alpha1 - 2018-07-13
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1240,7 +1240,7 @@ cmt.utils.ui = {
 					fileUploader.addClass( 'file-uploader-direct' );
 
 					btnChooser.hide();
-					
+
 					if( settings.toggle ) {
 
 						fileUploader.find( '.chooser-wrap' ).show();
@@ -1251,7 +1251,7 @@ cmt.utils.ui = {
 				btnChooser.click( function() {
 
 					if( settings.toggle ) {
-						
+
 						// Swap Chooser and Dragger
 						fileUploader.find( '.chooser-wrap' ).fadeToggle( 'slow' );
 						fileUploader.find( '.file-wrap' ).fadeToggle( 'fast' );
@@ -1267,7 +1267,7 @@ cmt.utils.ui = {
 					resetUploader( fileUploader );
 				});
 			}
-			
+
 			// Always Show File Wrap and Chooser and keep Dragger hidden
 			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
 
@@ -1541,7 +1541,7 @@ cmt.utils.ui = {
 				case "compressed":
 				case "shared": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='cmti cmti-3x cmti-check'></i>" );
+					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='" + settings.docSuccessIcon + "'></i>" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -1560,7 +1560,8 @@ cmt.utils.ui = {
 				}
 			}
 
-			// Show Postaction
+			// Show Clear and Postaction
+			fileUploader.find( '.file-clear' ).fadeIn();
 			fileUploader.find( '.post-action' ).fadeIn();
 		}
 
@@ -1589,7 +1590,8 @@ cmt.utils.ui = {
 		direct: false,
 		uploadListener: null,
 		preview: true,
-		toggle: true
+		toggle: true,
+		docSuccessIcon: 'cmti cmti-3x cmti-check'
 	};
 
 })( jQuery );
@@ -4420,6 +4422,16 @@ cmt.api.Application = function( options ) {
 	 * Map of all the active controllers (alias, object) which are already initialised. It will save us from re-initialising controllers.
 	 */
 	this.activeControllers 	= []; // Alias, Controller map
+	
+	/**
+	 * Map of all the services (alias, classpath) available for the application.
+	 */
+	this.services	= [];
+	
+	/**
+	 * Map to query active services (alias, object) which are already initialised.
+	 */
+	this.activeServices	= [];
 };
 
 // Application Globals -----------------------------------
@@ -4488,10 +4500,11 @@ cmt.api.Application.prototype.mapController = function( alias, path ) {
  * It returns the controller from active controllers.
  *
  * @param {string} alias
+ * @param {object} options
  * @param {boolean} factory
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.getController = function( alias, factory, options ) {
+cmt.api.Application.prototype.getController = function( alias, options, factory ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 	factory = typeof factory !== 'undefined' ? factory : false; // Use singleton from registry if not passed
@@ -4542,29 +4555,32 @@ cmt.api.Application.prototype.setController = function( alias, controller ) {
  * It maps the controller to registry and add it to active controllers.
  *
  * @param {string} alias
- * @param {boolean} factory
+ * @param {string} classpath
+ * @param {object} options
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.registerController = function( alias, path, options ) {
+cmt.api.Application.prototype.registerController = function( alias, classpath, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	this.addController( alias, path );
+	this.mapController( alias, classpath );
 
-	return this.getController( alias, false, options );
+	return this.getController( alias, options, false );
 };
 
 /**
  * It find the controller and return default controller in case not found.
  *
  * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.findController = function( alias, factory ) {
+cmt.api.Application.prototype.findController = function( alias, options, factory ) {
 
 	try {
 
-		return this.getController( alias, factory );
+		return this.getController( alias, options, factory );
 	}
 	catch( err ) {
 
@@ -4577,6 +4593,91 @@ cmt.api.Application.prototype.findController = function( alias, factory ) {
 			return this.findController( cmt.api.Application.CONTROLLER_DEFAULT );
 		}
 	}
+};
+
+// Manage Application Services ---------------------------
+
+/**
+ * It maps the service to registry by accepting alias and path.
+ *
+ * @param {string} alias
+ * @param {string} path
+ */
+cmt.api.Application.prototype.mapService = function( alias, path ) {
+
+	if( this.services[ alias ] == undefined ) {
+
+		this.services[ alias ] = path;
+	}
+}
+
+/**
+ * It returns the service from active services.
+ *
+ * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
+ * @returns {cmt.api.services.BaseService}
+ */
+cmt.api.Application.prototype.getService = function( alias, options, factory ) {
+
+	options = typeof options !== 'undefined' ? options : { };
+
+	if( this.services[ alias ] == undefined ) throw 'Service with alias ' + alias + ' is not registered.';
+
+	// Create and return the instance
+	if( factory ) {
+
+		var service = cmt.utils.object.strToObject( this.services[ alias ] );
+
+		// Initialise Service
+		service.init( options );
+
+		return service;
+	}
+
+	// Create singleton instance if not exist
+	if( this.activeServices[ alias ] == undefined ) {
+
+		var service = cmt.utils.object.strToObject( this.services[ alias ] );
+
+		// Initialise Service
+		service.init( options );
+
+		// Add singleton to active registry
+		this.activeServices[ alias ] = service;
+	}
+
+	return this.activeServices[ alias ];
+}
+
+/**
+ * It set and update the active services.
+ *
+ * @param {string} alias
+ * @param {cmt.api.services.BaseService} service
+ */
+cmt.api.Application.prototype.setService = function( alias, service ) {
+
+	if( this.activeServices[ alias ] == undefined ) {
+
+		this.activeServices[ alias ] = service;
+	}
+}
+
+/**
+ * It maps the service to registry and add it to active services.
+ *
+ * @param {string} alias
+ * @param {string} classpath
+ * @param {object} options
+ * @returns {cmt.api.services.BaseService}
+ */
+cmt.api.Application.prototype.registerService = function( alias, classpath, options ) {
+
+	this.mapService( alias, classpath );
+
+	return this.getService( alias, options );
 };
 
 

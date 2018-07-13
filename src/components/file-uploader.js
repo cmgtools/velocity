@@ -48,7 +48,7 @@
 					fileUploader.addClass( 'file-uploader-direct' );
 
 					btnChooser.hide();
-					
+
 					if( settings.toggle ) {
 
 						fileUploader.find( '.chooser-wrap' ).show();
@@ -59,7 +59,7 @@
 				btnChooser.click( function() {
 
 					if( settings.toggle ) {
-						
+
 						// Swap Chooser and Dragger
 						fileUploader.find( '.chooser-wrap' ).fadeToggle( 'slow' );
 						fileUploader.find( '.file-wrap' ).fadeToggle( 'fast' );
@@ -75,7 +75,7 @@
 					resetUploader( fileUploader );
 				});
 			}
-			
+
 			// Always Show File Wrap and Chooser and keep Dragger hidden
 			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
 
@@ -349,7 +349,7 @@
 				case "compressed":
 				case "shared": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='cmti cmti-3x cmti-check'></i>" );
+					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='" + settings.docSuccessIcon + "'></i>" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -368,7 +368,8 @@
 				}
 			}
 
-			// Show Postaction
+			// Show Clear and Postaction
+			fileUploader.find( '.file-clear' ).fadeIn();
 			fileUploader.find( '.post-action' ).fadeIn();
 		}
 
@@ -397,7 +398,8 @@
 		direct: false,
 		uploadListener: null,
 		preview: true,
-		toggle: true
+		toggle: true,
+		docSuccessIcon: 'cmti cmti-3x cmti-check'
 	};
 
 })( jQuery );
