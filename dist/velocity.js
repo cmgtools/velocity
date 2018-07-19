@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-07-13
+ * Velocity - v1.0.0-alpha1 - 2018-07-19
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -4689,6 +4689,13 @@ cmt.api.controllers = cmt.api.controllers || {};
 
 
 /**
+ * Service namespace providing base class for all the services.
+ */
+
+cmt.api.services = cmt.api.services || {};
+
+
+/**
  * CMGTools API Utilities - Collection of commonly used utility functions available for CMGTools API.
  */
 
@@ -5027,6 +5034,18 @@ cmt.api.controllers.RestController.prototype.deleteActionSuccess = function( res
 cmt.api.controllers.RestController.prototype.deleteActionFailure = function( response ) {
 
 	console.log( "Processing failure for delete action." );
+};
+
+
+cmt.api.services.BaseService = function( options ) {
+
+};
+
+// Initialise --------------------
+
+cmt.api.services.BaseService.prototype.init = function( options ) {
+
+	// Initialise service
 };
 
 
