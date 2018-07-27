@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-07-19
+ * Velocity - v1.0.0-alpha1 - 2018-07-27
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -5133,9 +5133,16 @@ cmt.api.utils.request = {
 	},
 
 	// Locate app and register the target request triggers
-	registerTargetApp: function( appName, target ) {
+	registerTargetApp: function( appName, target, discover ) {
 
-		cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target.find( '[cmt-app=' + appName + ']' ) );
+		if( typeof discover === "undefined" || discover ) {
+
+			cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target.find( '[cmt-app=' + appName + ']' ) );
+		}
+		else {
+
+			cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target );
+		}
 	},
 
 	trigger: function( application, requestElement, isForm, requestTrigger ) {

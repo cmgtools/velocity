@@ -82,9 +82,16 @@ cmt.api.utils.request = {
 	},
 
 	// Locate app and register the target request triggers
-	registerTargetApp: function( appName, target ) {
+	registerTargetApp: function( appName, target, discover ) {
 
-		cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target.find( '[cmt-app=' + appName + ']' ) );
+		if( typeof discover === "undefined" || discover ) {
+
+			cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target.find( '[cmt-app=' + appName + ']' ) );
+		}
+		else {
+
+			cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target );
+		}
 	},
 
 	trigger: function( application, requestElement, isForm, requestTrigger ) {
