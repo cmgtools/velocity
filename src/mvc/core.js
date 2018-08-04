@@ -42,7 +42,10 @@ cmt.api.Root.prototype.getApplication = function( alias, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	if( this.apps[ alias ] == undefined ) throw 'Application with alias ' + alias + ' is not registered.';
+	if( this.apps[ alias ] == undefined ) {
+		
+		throw 'Application with alias ' + alias + ' is not registered.';
+	}
 
 	// Create singleton instance if not exist
 	if( this.activeApps[ alias ] == undefined ) {
@@ -81,6 +84,11 @@ cmt.api.Root.prototype.setApplication = function( alias, application ) {
  * @param {cmt.api.Application} application
  */
 cmt.api.Root.prototype.registerApplication = function( alias, path, options ) {
+	
+	if( this.apps[ alias ] != null ) {
+		
+		throw 'Application with alias ' + alias + ' is already registered. Cannot register the same alias.';
+	}
 
 	this.mapApplication( alias, path );
 

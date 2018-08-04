@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-07-27
+ * Velocity - v1.0.0-alpha1 - 2018-08-04
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -793,6 +793,27 @@ cmt.utils.ui = {
 	};
 
 })( jQuery );
+
+
+// == Auto Hide ===========================
+
+function initAutoHide() {
+
+	hideElement( jQuery( '.auto-hide-trigger' ), jQuery( '.popout' ) );
+}
+
+function hideElement( targetElement, hideElement ) {
+
+	jQuery( window ).click( function( e ) {
+
+	    if ( !targetElement.is( e.target ) && targetElement.has( e.target ).length === 0 ) {
+
+			jQuery( hideElement ).slideUp();
+
+	        targetElement.removeClass( 'active' );
+	    }
+	});
+}
 
 
 /**
@@ -4300,7 +4321,10 @@ cmt.api.Root.prototype.getApplication = function( alias, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	if( this.apps[ alias ] == undefined ) throw 'Application with alias ' + alias + ' is not registered.';
+	if( this.apps[ alias ] == undefined ) {
+		
+		throw 'Application with alias ' + alias + ' is not registered.';
+	}
 
 	// Create singleton instance if not exist
 	if( this.activeApps[ alias ] == undefined ) {
@@ -4339,6 +4363,11 @@ cmt.api.Root.prototype.setApplication = function( alias, application ) {
  * @param {cmt.api.Application} application
  */
 cmt.api.Root.prototype.registerApplication = function( alias, path, options ) {
+	
+	if( this.apps[ alias ] != null ) {
+		
+		throw 'Application with alias ' + alias + ' is already registered. Cannot register the same alias.';
+	}
 
 	this.mapApplication( alias, path );
 
