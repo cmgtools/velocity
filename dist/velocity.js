@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-08-04
+ * Velocity - v1.0.0-alpha1 - 2018-08-09
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1345,7 +1345,7 @@ function hideElement( targetElement, hideElement ) {
 			// Clear Old Values
 			if( cmt.utils.browser.isCanvas() && fileUploader.attr( 'type' ) == 'image' ) {
 
-				var canvasArr	= fileUploader.find( '.file-dragger canvas' );
+				var canvasArr = fileUploader.find( '.file-dragger canvas' );
 
 				if( canvasArr.length > 0 ) {
 
@@ -1359,7 +1359,7 @@ function hideElement( targetElement, hideElement ) {
 			var progressContainer = fileUploader.find( '.file-preloader .file-preloader-bar' );
 
 			// Modern Uploader
-			if ( cmt.utils.browser.isFileApi() ) {
+			if( cmt.utils.browser.isFileApi() ) {
 
 				progressContainer.css( "width", "0%" );
 			}
@@ -1375,8 +1375,7 @@ function hideElement( targetElement, hideElement ) {
 			event.stopPropagation();
 			event.preventDefault();
 
-			// TODO: add class hover to drag
-			// event.target.className = ( event.type == "dragover" ? "hover" : "" );
+			event.target.className = ( event.type == "dragover" ? "dragger-hover" : "" );
 		}
 
 		function handleFile( event, fileUploader ) {
@@ -1393,11 +1392,14 @@ function hideElement( targetElement, hideElement ) {
 			// Draw if image
 			if( settings.preview && cmt.utils.browser.isCanvas() && type == 'image' ) {
 
-				var canvas	= fileUploader.find( '.file-dragger canvas' );
+				var canvas = fileUploader.find( '.file-dragger canvas' );
 
-				canvas.show();
+				if( canvas.length > 0 ) {
 
-				cmt.utils.image.drawAtCanvasCenter( canvas[0], files[0] );
+					canvas.show();
+
+					cmt.utils.image.drawAtCanvasCenter( canvas[0], files[0] );
+				}
 			}
 
 			// Upload File
@@ -1443,7 +1445,7 @@ function hideElement( targetElement, hideElement ) {
 
 							if( jsonResponse[ 'result' ] == 1 ) {
 
-								var responseData	= jsonResponse[ 'data' ];
+								var responseData = jsonResponse[ 'data' ];
 
 								if( settings.uploadListener ) {
 
@@ -1467,7 +1469,7 @@ function hideElement( targetElement, hideElement ) {
 					}
 				};
 
-				var urlParams	= fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
+				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
 
 				// start upload
 				xhr.open("POST", urlParams, true );
@@ -1520,7 +1522,7 @@ function hideElement( targetElement, hideElement ) {
 				}
 				else {
 
-					var errors	= response[ 'errors' ];
+					var errors = response[ 'errors' ];
 
 					alert( errors.error );
 				}
@@ -1544,7 +1546,7 @@ function hideElement( targetElement, hideElement ) {
 
 				case "image": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<img src='" + result['tempUrl'] + "' class='fluid' />" );
+					fileUploader.find( '.file-data' ).html( "<img src='" + result['tempUrl'] + "' class='fluid' />" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -1552,7 +1554,7 @@ function hideElement( targetElement, hideElement ) {
 				}
 				case "video": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<video src='" + result['tempUrl'] + "' controls class='fluid'>Video not supported.</video>" );
+					fileUploader.find( '.file-data' ).html( "<video src='" + result['tempUrl'] + "' controls class='fluid'>Video not supported.</video>" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -1562,7 +1564,7 @@ function hideElement( targetElement, hideElement ) {
 				case "compressed":
 				case "shared": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='" + settings.docSuccessIcon + "'></i>" );
+					fileUploader.find( '.file-data' ).html( "<i class='" + settings.docSuccessIcon + "'></i>" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -3593,12 +3595,12 @@ function hideMessagePopup() {
 
 				var slide = cmtjq( this );
 
-				slide.addClass( 'cmt-slider-slide' );
+				slide.addClass( 'slider-slide' );
 			});
 
 			// wrap the slides
-			var sliderHtml		= '<div class="cmt-slider-slides-wrap"><div class="cmt-slider-slides">' + slider.html() + '</div></div>';
-			sliderHtml		   += '<div class="cmt-slider-control cmt-slider-control-left"></div><div class="cmt-slider-control cmt-slider-control-right"></div>';
+			var sliderHtml		= '<div class="slider-slides-wrap"><div class="slider-slides">' + slider.html() + '</div></div>';
+			sliderHtml		   += '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
 
 			slider.html( sliderHtml );
 		}
@@ -3609,8 +3611,8 @@ function hideMessagePopup() {
 			// Calculate and set Slider Width
 			//var sliderWidth		= slider.width();
 			//var sliderHeight	= slider.height();
-			var slidesWrapper	= slider.find( '.cmt-slider-slides' );
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
+			var slidesWrapper	= slider.find( '.slider-slides' );
+			var slidesSelector	= slider.find( '.slider-slide' );
 
 			var slideWidth		= slidesSelector.outerWidth();
 			var slidesCount		= slidesSelector.length;
@@ -3646,9 +3648,9 @@ function hideMessagePopup() {
 		// Initialise the Slider controls
 		function initControls( slider ) {
 
-			var slidesWrapper	= slider.find( '.cmt-slider-slides' );
-			var leftControl		= slider.find( '.cmt-slider-control-left' );
-			var rightControl	= slider.find( '.cmt-slider-control-right' );
+			var slidesWrapper	= slider.find( '.slider-slides' );
+			var leftControl		= slider.find( '.slider-control-left' );
+			var rightControl	= slider.find( '.slider-control-right' );
 
 			if( slidesWrapper.width() < slider.width() ) {
 
@@ -3717,10 +3719,10 @@ function hideMessagePopup() {
 		// Calculate and re-position slides to form filmstrip
 		function resetSlides( slider ) {
 
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
+			var slidesSelector	= slider.find( '.slider-slide' );
 			var slideWidth		= slidesSelector.width();
 			var currentPosition	= 0;
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
+			var filmstrip		= slider.find( '.slider-slides' );
 
 			// reset filmstrip
 			filmstrip.css( { left: 0 + 'px', 'right' : '' } );
@@ -3736,10 +3738,10 @@ function hideMessagePopup() {
 		// Show Previous Slide on clicking next button
 		function showNextSlide( slider ) {
 
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
+			var slidesSelector	= slider.find( '.slider-slide' );
 			var firstSlide		= slidesSelector.first();
 			var slideWidth		= firstSlide.width();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
+			var filmstrip		= slider.find( '.slider-slides' );
 
 			// do pre processing
 			if( null !== settings.preSlideChange ) {
@@ -3755,7 +3757,7 @@ function hideMessagePopup() {
 					complete: function() {
 
 						// Remove first and append to last
-						var slidesSelector	= slider.find( '.cmt-slider-slide' );
+						var slidesSelector	= slider.find( '.slider-slide' );
 						var firstSlide		= slidesSelector.first();
 						firstSlide.insertAfter( slidesSelector.eq( slidesSelector.length - 1 ) );
 						firstSlide.css( 'right', -slideWidth );
@@ -3777,10 +3779,10 @@ function hideMessagePopup() {
 		// Show Next Slide on clicking previous button
 		function showPrevSlide( slider ) {
 
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
+			var slidesSelector	= slider.find( '.slider-slide' );
 			var firstSlide		= slidesSelector.first();
 			var slideWidth		= firstSlide.width();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
+			var filmstrip		= slider.find( '.slider-slides' );
 
 			// do pre processing
 			if( null !== settings.preSlideChange ) {
@@ -3820,13 +3822,13 @@ function hideMessagePopup() {
 		// Move to left on clicking next button
 		function moveToLeft( slider ) {
 
-			var leftControl		= slider.find( '.cmt-slider-control-left' );
-			var rightControl	= slider.find( '.cmt-slider-control-right' );
+			var leftControl		= slider.find( '.slider-control-left' );
+			var rightControl	= slider.find( '.slider-control-right' );
 
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
+			var slidesSelector	= slider.find( '.slider-slide' );
 			var firstSlide		= slidesSelector.first();
 			var slideWidth		= firstSlide.outerWidth();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
+			var filmstrip		= slider.find( '.slider-slides' );
 
 			var sliderWidth		= slider.outerWidth();
 			var filmWidth		= filmstrip.outerWidth();
@@ -3869,13 +3871,13 @@ function hideMessagePopup() {
 		// Move to right on clicking prev button
 		function moveToRight( slider ) {
 
-			var leftControl		= slider.find( '.cmt-slider-control-left' );
-			var rightControl	= slider.find( '.cmt-slider-control-right' );
+			var leftControl		= slider.find( '.slider-control-left' );
+			var rightControl	= slider.find( '.slider-control-right' );
 
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
+			var slidesSelector	= slider.find( '.slider-slide' );
 			var firstSlide		= slidesSelector.first();
 			var slideWidth		= firstSlide.outerWidth();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
+			var filmstrip		= slider.find( '.slider-slides' );
 
 			//var sliderWidth		= slider.outerWidth();
 			//var filmWidth		= filmstrip.outerWidth();
