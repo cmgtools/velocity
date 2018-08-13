@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-08-09
+ * Velocity - v1.0.0-alpha1 - 2018-08-14
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -863,6 +863,7 @@ function hideElement( targetElement, hideElement ) {
 
 				var blockConfig				= blocksConfig[ block.attr( blockAttr ) ];
 				var height					= blockConfig[ 'height' ];
+				var autoHeight				= blockConfig[ 'autoHeight' ];
 				var fullHeight				= blockConfig[ 'fullHeight' ];
 				var halfHeight				= blockConfig[ 'halfHeight' ];
 				var qtfHeight				= blockConfig[ 'qtfHeight' ];
@@ -880,7 +881,11 @@ function hideElement( targetElement, hideElement ) {
 				// Apply auto height
 				if( null != heightAuto && heightAuto ) {
 
-					if( null != height && height ) {
+					if( null != autoHeight && autoHeight ) {
+
+						block.css( { 'height': 'auto' } );
+					}
+					else if( null != height && height ) {
 
 						block.css( { 'height': 'auto', 'min-height': height + 'px' } );
 					}
@@ -961,6 +966,15 @@ function hideElement( targetElement, hideElement ) {
 			// -- Apply Common Settings for all the Blocks
 			else {
 
+				// Apply Auto Height
+				if( settings.autoHeight ) {
+
+					if( settings.autoHeight ) {
+
+						block.css( { 'height': 'auto' } );
+					}
+				}
+
 				// Apply Full Height
 				if( settings.fullHeight ) {
 
@@ -1039,7 +1053,8 @@ function hideElement( targetElement, hideElement ) {
 	cmtjq.fn.cmtBlock.defaults = {
 		blockAttr: 'cmt-block',
 		// Controls
-		fullHeight: true,
+		autoHeight: true,
+		fullHeight: false,
 		halfHeight: false,
 		qtfHeight: false,
 		heightAuto: false,
@@ -1048,6 +1063,7 @@ function hideElement( targetElement, hideElement ) {
 			/* An array of blocks which need extra configuration. Ex:
 			<Block Selector>: {
 				height: 250,
+				autoHeight: false,
 				fullHeight: false,
 				halfHeight: false,
 				qtfHeight: false,

@@ -45,6 +45,7 @@
 
 				var blockConfig				= blocksConfig[ block.attr( blockAttr ) ];
 				var height					= blockConfig[ 'height' ];
+				var autoHeight				= blockConfig[ 'autoHeight' ];
 				var fullHeight				= blockConfig[ 'fullHeight' ];
 				var halfHeight				= blockConfig[ 'halfHeight' ];
 				var qtfHeight				= blockConfig[ 'qtfHeight' ];
@@ -62,7 +63,11 @@
 				// Apply auto height
 				if( null != heightAuto && heightAuto ) {
 
-					if( null != height && height ) {
+					if( null != autoHeight && autoHeight ) {
+
+						block.css( { 'height': 'auto' } );
+					}
+					else if( null != height && height ) {
 
 						block.css( { 'height': 'auto', 'min-height': height + 'px' } );
 					}
@@ -143,6 +148,15 @@
 			// -- Apply Common Settings for all the Blocks
 			else {
 
+				// Apply Auto Height
+				if( settings.autoHeight ) {
+
+					if( settings.autoHeight ) {
+
+						block.css( { 'height': 'auto' } );
+					}
+				}
+
 				// Apply Full Height
 				if( settings.fullHeight ) {
 
@@ -221,7 +235,8 @@
 	cmtjq.fn.cmtBlock.defaults = {
 		blockAttr: 'cmt-block',
 		// Controls
-		fullHeight: true,
+		autoHeight: true,
+		fullHeight: false,
 		halfHeight: false,
 		qtfHeight: false,
 		heightAuto: false,
@@ -230,6 +245,7 @@
 			/* An array of blocks which need extra configuration. Ex:
 			<Block Selector>: {
 				height: 250,
+				autoHeight: false,
 				fullHeight: false,
 				halfHeight: false,
 				qtfHeight: false,
