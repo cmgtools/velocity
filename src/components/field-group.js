@@ -29,23 +29,40 @@
 
 		function init( fieldGroup ) {
 
-			var checkbox = fieldGroup.find( "input[type='checkbox']" );
+			var checkbox	= fieldGroup.find( "input[type='checkbox']" );
+			var reverse		= cmt.utils.data.hasAttribute( fieldGroup, 'data-reverse' );
 
 			if( checkbox.prop( 'checked' ) ) {
 
 				var target	= fieldGroup.attr( 'group-target' );
 				var alt		= fieldGroup.attr( 'group-alt' );
+				
+				if( reverse ) {
 
-				jQuery( '.' + target ).show();
-				jQuery( '.' + alt ).hide();
+					jQuery( '.' + target ).hide();
+					jQuery( '.' + alt ).show();
+				}
+				else {
+
+					jQuery( '.' + target ).show();
+					jQuery( '.' + alt ).hide();
+				}
 			}
 			else {
 
 				var target	= fieldGroup.attr( 'group-target' );
 				var alt		= fieldGroup.attr( 'group-alt' );
 
-				jQuery( '.' + target ).hide();
-				jQuery( '.' + alt ).show();
+				if( reverse ) {
+
+					jQuery( '.' + target ).show();
+					jQuery( '.' + alt ).hide();
+				}
+				else {
+
+					jQuery( '.' + target ).hide();
+					jQuery( '.' + alt ).show();
+				}
 			}
 
 			fieldGroup.click( function() {
@@ -55,16 +72,32 @@
 					var target	= fieldGroup.attr( 'group-target' );
 					var alt		= fieldGroup.attr( 'group-alt' );
 
-					jQuery( '.' + target ).fadeIn( 'slow' );
-					jQuery( '.' + alt ).fadeOut( 'fast' );
+					if( reverse ) {
+
+						jQuery( '.' + alt ).fadeIn( 'slow' );
+						jQuery( '.' + target ).fadeOut( 'fast' );
+					}
+					else {
+
+						jQuery( '.' + target ).fadeIn( 'slow' );
+						jQuery( '.' + alt ).fadeOut( 'fast' );
+					}
 				}
 				else {
 
 					var target	= fieldGroup.attr( 'group-target' );
 					var alt		= fieldGroup.attr( 'group-alt' );
 
-					jQuery( '.' + alt ).fadeIn( 'slow' );
-					jQuery( '.' + target ).fadeOut( 'fast' );
+					if( reverse ) {
+
+						jQuery( '.' + target ).fadeIn( 'slow' );
+						jQuery( '.' + alt ).fadeOut( 'fast' );
+					}
+					else {
+
+						jQuery( '.' + alt ).fadeIn( 'slow' );
+						jQuery( '.' + target ).fadeOut( 'fast' );
+					}
 				}
 			});
 		}

@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-08-14
+ * Velocity - v1.0.0-alpha1 - 2018-08-21
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1179,23 +1179,40 @@ function hideElement( targetElement, hideElement ) {
 
 		function init( fieldGroup ) {
 
-			var checkbox = fieldGroup.find( "input[type='checkbox']" );
+			var checkbox	= fieldGroup.find( "input[type='checkbox']" );
+			var reverse		= cmt.utils.data.hasAttribute( fieldGroup, 'data-reverse' );
 
 			if( checkbox.prop( 'checked' ) ) {
 
 				var target	= fieldGroup.attr( 'group-target' );
 				var alt		= fieldGroup.attr( 'group-alt' );
+				
+				if( reverse ) {
 
-				jQuery( '.' + target ).show();
-				jQuery( '.' + alt ).hide();
+					jQuery( '.' + target ).hide();
+					jQuery( '.' + alt ).show();
+				}
+				else {
+
+					jQuery( '.' + target ).show();
+					jQuery( '.' + alt ).hide();
+				}
 			}
 			else {
 
 				var target	= fieldGroup.attr( 'group-target' );
 				var alt		= fieldGroup.attr( 'group-alt' );
 
-				jQuery( '.' + target ).hide();
-				jQuery( '.' + alt ).show();
+				if( reverse ) {
+
+					jQuery( '.' + target ).show();
+					jQuery( '.' + alt ).hide();
+				}
+				else {
+
+					jQuery( '.' + target ).hide();
+					jQuery( '.' + alt ).show();
+				}
 			}
 
 			fieldGroup.click( function() {
@@ -1205,16 +1222,32 @@ function hideElement( targetElement, hideElement ) {
 					var target	= fieldGroup.attr( 'group-target' );
 					var alt		= fieldGroup.attr( 'group-alt' );
 
-					jQuery( '.' + target ).fadeIn( 'slow' );
-					jQuery( '.' + alt ).fadeOut( 'fast' );
+					if( reverse ) {
+
+						jQuery( '.' + alt ).fadeIn( 'slow' );
+						jQuery( '.' + target ).fadeOut( 'fast' );
+					}
+					else {
+
+						jQuery( '.' + target ).fadeIn( 'slow' );
+						jQuery( '.' + alt ).fadeOut( 'fast' );
+					}
 				}
 				else {
 
 					var target	= fieldGroup.attr( 'group-target' );
 					var alt		= fieldGroup.attr( 'group-alt' );
 
-					jQuery( '.' + alt ).fadeIn( 'slow' );
-					jQuery( '.' + target ).fadeOut( 'fast' );
+					if( reverse ) {
+
+						jQuery( '.' + target ).fadeIn( 'slow' );
+						jQuery( '.' + alt ).fadeOut( 'fast' );
+					}
+					else {
+
+						jQuery( '.' + alt ).fadeIn( 'slow' );
+						jQuery( '.' + target ).fadeOut( 'fast' );
+					}
 				}
 			});
 		}
@@ -1226,6 +1259,7 @@ function hideElement( targetElement, hideElement ) {
 	};
 
 })( jQuery );
+
 
 /**
  * File Uploader plugin can be used to upload files. The appropriate backend code should be able to handle the file sent by this plugin.
