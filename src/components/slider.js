@@ -9,24 +9,25 @@
 		// == Init =================================================================== //
 
 		// Configure Sliders
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtSlider.defaults, options );
-		var sliders			= this;
+		var settings = cmtjq.extend( {}, cmtjq.fn.cmtSlider.defaults, options );
+		
+		var sliders = this;
 
 		// Iterate and initialise all the fox sliders
 		sliders.each( function() {
 
-			var slider	= cmtjq( this );
+			var slider = cmtjq( this );
 
 			init( slider );
 		});
 
 		// Windows resize
-		cmtjq( window ).resize(function() {
+		cmtjq( window ).resize( function() {
 
 			// Iterate and resize all the fox sliders
 			sliders.each( function() {
 
-				var slider	= cmtjq( this );
+				var slider = cmtjq( this );
 
 				normaliseSlides( slider );
 			});
@@ -64,8 +65,8 @@
 			});
 
 			// wrap the slides
-			var sliderHtml		= '<div class="slider-slides-wrap"><div class="slider-slides">' + slider.html() + '</div></div>';
-			sliderHtml		   += '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
+			var sliderHtml	= '<div class="slider-slides-wrap"><div class="slider-slides">' + slider.html() + '</div></div>';
+			sliderHtml		+= '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
 
 			slider.html( sliderHtml );
 		}
@@ -79,8 +80,8 @@
 			var slidesWrapper	= slider.find( '.slider-slides' );
 			var slidesSelector	= slider.find( '.slider-slide' );
 
-			var slideWidth		= slidesSelector.outerWidth();
-			var slidesCount		= slidesSelector.length;
+			var slideWidth	= slidesSelector.outerWidth();
+			var slidesCount	= slidesSelector.length;
 
 			// Initialise Slide position
 			var currentPosition	= 0;
@@ -90,7 +91,7 @@
 			// Set slides position on filmstrip
 			slidesSelector.each( function( count ) {
 
-				var currentSlide	= cmtjq( this );
+				var currentSlide = cmtjq( this );
 
 				currentSlide.css( 'left', currentPosition );
 
@@ -224,6 +225,7 @@
 						// Remove first and append to last
 						var slidesSelector	= slider.find( '.slider-slide' );
 						var firstSlide		= slidesSelector.first();
+						
 						firstSlide.insertAfter( slidesSelector.eq( slidesSelector.length - 1 ) );
 						firstSlide.css( 'right', -slideWidth );
 
@@ -312,8 +314,8 @@
 						duration: 500,
 						complete: function() {
 
-							var filmWidth		= filmstrip.outerWidth();
-							var filmLeft		= filmstrip.position().left;
+							var filmWidth	= filmstrip.outerWidth();
+							var filmLeft	= filmstrip.position().left;
 
 							var leftPosition	= filmLeft - moveBy;
 							var remaining		= filmWidth + leftPosition;
@@ -362,7 +364,7 @@
 						duration: 500,
 						complete: function() {
 
-							var filmLeft	= filmstrip.position().left;
+							var filmLeft = filmstrip.position().left;
 
 							if( filmLeft > -( slideWidth/2 ) ) {
 

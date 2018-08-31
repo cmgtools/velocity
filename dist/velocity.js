@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-08-21
+ * Velocity - v1.0.0-alpha1 - 2018-08-31
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -440,6 +440,25 @@ cmt.utils.data = {
 	},
 
 	/**
+	 * Add or Update url param
+	 */
+	updateUriParam: function( uri, key, value ) {
+
+		var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+
+		var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+
+		if( uri.match( re ) ) {
+
+			return uri.replace( re, '$1' + key + "=" + value + '$2' );
+		}
+		else {
+
+			return uri + separator + key + "=" + value;
+		}
+	},
+
+	/**
 	 * Refresh current grid.
 	 */
 	refreshGrid: function() {
@@ -465,6 +484,32 @@ cmt.utils.data = {
 		}
 		
 		return false;
+	},
+	
+	/**
+	 * Late binder to bind CL Editor for elements hidden at start.
+	 */
+	bindEditor: function( selector ) {
+
+		var lateBinder = jQuery( selector );
+
+		if( jQuery.cleditor && !lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			var controls = 'bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | outdent indent | alignleft center alignright justify | undo redo | rule link unlink | source';
+
+			lateBinder.cleditor( { docType: '<!DOCTYPE html>', controls: controls, height: 165 } );
+		}
+		else if( lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			if( lateBinder.hasClass( 'add' ) ) {
+
+				lateBinder.val( '' ).blur();
+			}
+			else {
+
+				lateBinder.val( lateBinder.val() ).blur();
+			}
+		}
 	}
 };
 
@@ -3016,11 +3061,18 @@ function hideMessagePopup() {
 			// Disabled - Change color
 			if( disabled ) {
 
-				star.css( 'color', settings.disabledColor );
+				if( selected > 0 && selected >= index ) {
+
+					star.css( 'color', settings.disabledColor );
+				}
 			}
+			// Read Only - Change color
 			else if( readOnly ) {
 
-				star.css( 'color', settings.readonlyColor );
+				if( selected > 0 && selected >= index ) {
+
+					star.css( 'color', settings.readonlyColor );
+				}
 			}
 			// Enabled - Prepare cache
 			else {
@@ -3594,24 +3646,25 @@ function hideMessagePopup() {
 		// == Init =================================================================== //
 
 		// Configure Sliders
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtSlider.defaults, options );
-		var sliders			= this;
+		var settings = cmtjq.extend( {}, cmtjq.fn.cmtSlider.defaults, options );
+		
+		var sliders = this;
 
 		// Iterate and initialise all the fox sliders
 		sliders.each( function() {
 
-			var slider	= cmtjq( this );
+			var slider = cmtjq( this );
 
 			init( slider );
 		});
 
 		// Windows resize
-		cmtjq( window ).resize(function() {
+		cmtjq( window ).resize( function() {
 
 			// Iterate and resize all the fox sliders
 			sliders.each( function() {
 
-				var slider	= cmtjq( this );
+				var slider = cmtjq( this );
 
 				normaliseSlides( slider );
 			});
@@ -3649,8 +3702,8 @@ function hideMessagePopup() {
 			});
 
 			// wrap the slides
-			var sliderHtml		= '<div class="slider-slides-wrap"><div class="slider-slides">' + slider.html() + '</div></div>';
-			sliderHtml		   += '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
+			var sliderHtml	= '<div class="slider-slides-wrap"><div class="slider-slides">' + slider.html() + '</div></div>';
+			sliderHtml		+= '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
 
 			slider.html( sliderHtml );
 		}
@@ -3664,8 +3717,8 @@ function hideMessagePopup() {
 			var slidesWrapper	= slider.find( '.slider-slides' );
 			var slidesSelector	= slider.find( '.slider-slide' );
 
-			var slideWidth		= slidesSelector.outerWidth();
-			var slidesCount		= slidesSelector.length;
+			var slideWidth	= slidesSelector.outerWidth();
+			var slidesCount	= slidesSelector.length;
 
 			// Initialise Slide position
 			var currentPosition	= 0;
@@ -3675,7 +3728,7 @@ function hideMessagePopup() {
 			// Set slides position on filmstrip
 			slidesSelector.each( function( count ) {
 
-				var currentSlide	= cmtjq( this );
+				var currentSlide = cmtjq( this );
 
 				currentSlide.css( 'left', currentPosition );
 
@@ -3809,6 +3862,7 @@ function hideMessagePopup() {
 						// Remove first and append to last
 						var slidesSelector	= slider.find( '.slider-slide' );
 						var firstSlide		= slidesSelector.first();
+						
 						firstSlide.insertAfter( slidesSelector.eq( slidesSelector.length - 1 ) );
 						firstSlide.css( 'right', -slideWidth );
 
@@ -3897,8 +3951,8 @@ function hideMessagePopup() {
 						duration: 500,
 						complete: function() {
 
-							var filmWidth		= filmstrip.outerWidth();
-							var filmLeft		= filmstrip.position().left;
+							var filmWidth	= filmstrip.outerWidth();
+							var filmLeft	= filmstrip.position().left;
 
 							var leftPosition	= filmLeft - moveBy;
 							var remaining		= filmWidth + leftPosition;
@@ -3947,7 +4001,7 @@ function hideMessagePopup() {
 						duration: 500,
 						complete: function() {
 
-							var filmLeft	= filmstrip.position().left;
+							var filmLeft = filmstrip.position().left;
 
 							if( filmLeft > -( slideWidth/2 ) ) {
 
@@ -5473,9 +5527,9 @@ cmt.api.utils.request = {
 			if( !requestElement.is( '[' + cmt.api.Application.STATIC_KEEP + ']' ) ) {
 
 				// Clear all form fields
-				formElement.find( ' input[type="text"]' ).val( '' );
-				formElement.find( ' input[type="password"]' ).val( '' );
-				formElement.find( ' textarea' ).val( '' );
+				formElement.find( 'input[type=text]' ).not( formElement.find( 'input[' + cmt.api.Application.STATIC_KEEP + '=1]' ) ).val( '' );
+				formElement.find( 'input[type=password]' ).val( '' );
+				formElement.find( 'textarea' ).not( formElement.find( 'textarea[' + cmt.api.Application.STATIC_KEEP + '=1]' ) ).val( '' );
 			}
 
 			// Hide all errors

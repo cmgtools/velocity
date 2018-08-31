@@ -326,6 +326,25 @@ cmt.utils.data = {
 	},
 
 	/**
+	 * Add or Update url param
+	 */
+	updateUriParam: function( uri, key, value ) {
+
+		var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+
+		var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+
+		if( uri.match( re ) ) {
+
+			return uri.replace( re, '$1' + key + "=" + value + '$2' );
+		}
+		else {
+
+			return uri + separator + key + "=" + value;
+		}
+	},
+
+	/**
 	 * Refresh current grid.
 	 */
 	refreshGrid: function() {
@@ -351,5 +370,31 @@ cmt.utils.data = {
 		}
 		
 		return false;
+	},
+	
+	/**
+	 * Late binder to bind CL Editor for elements hidden at start.
+	 */
+	bindEditor: function( selector ) {
+
+		var lateBinder = jQuery( selector );
+
+		if( jQuery.cleditor && !lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			var controls = 'bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | outdent indent | alignleft center alignright justify | undo redo | rule link unlink | source';
+
+			lateBinder.cleditor( { docType: '<!DOCTYPE html>', controls: controls, height: 165 } );
+		}
+		else if( lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			if( lateBinder.hasClass( 'add' ) ) {
+
+				lateBinder.val( '' ).blur();
+			}
+			else {
+
+				lateBinder.val( lateBinder.val() ).blur();
+			}
+		}
 	}
 };

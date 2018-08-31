@@ -82,11 +82,18 @@
 			// Disabled - Change color
 			if( disabled ) {
 
-				star.css( 'color', settings.disabledColor );
+				if( selected > 0 && selected >= index ) {
+
+					star.css( 'color', settings.disabledColor );
+				}
 			}
+			// Read Only - Change color
 			else if( readOnly ) {
 
-				star.css( 'color', settings.readonlyColor );
+				if( selected > 0 && selected >= index ) {
+
+					star.css( 'color', settings.readonlyColor );
+				}
 			}
 			// Enabled - Prepare cache
 			else {

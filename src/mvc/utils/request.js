@@ -341,9 +341,9 @@ cmt.api.utils.request = {
 			if( !requestElement.is( '[' + cmt.api.Application.STATIC_KEEP + ']' ) ) {
 
 				// Clear all form fields
-				formElement.find( ' input[type="text"]' ).val( '' );
-				formElement.find( ' input[type="password"]' ).val( '' );
-				formElement.find( ' textarea' ).val( '' );
+				formElement.find( 'input[type=text]' ).not( formElement.find( 'input[' + cmt.api.Application.STATIC_KEEP + '=1]' ) ).val( '' );
+				formElement.find( 'input[type=password]' ).val( '' );
+				formElement.find( 'textarea' ).not( formElement.find( 'textarea[' + cmt.api.Application.STATIC_KEEP + '=1]' ) ).val( '' );
 			}
 
 			// Hide all errors
