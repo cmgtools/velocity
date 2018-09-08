@@ -52,11 +52,12 @@
 			grid.find( '.grid-filters select' ).change( function() {
 
 				var pageUrl		= window.location.href;
-				var selected 	= jQuery( this ).val();
-				var option		= jQuery( this ).find( ':selected' );
-				var column		= option.attr( 'data-col' );
-				var cols		= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
-				cols			= cols.split( ',' );
+				var selected	= jQuery( this ).val();
+				
+				var option	= jQuery( this ).find( ':selected' );
+				var column	= option.attr( 'data-col' );
+				var cols	= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
+				cols		= cols.split( ',' );
 
 				// Clear Filter
 				for( i = 0; i < cols.length; i++ ) {
@@ -90,9 +91,9 @@
 
 				fields.each( function( index, element ) {
 
-					var field	= jQuery( this );
+					var field = jQuery( this );
 
-					pageUrl 	= cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
+					pageUrl = cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
 
 					if( field.val().length > 0 ) {
 
@@ -114,11 +115,11 @@
 
 				fields.each( function( index, element ) {
 
-					var field	= jQuery( this );
+					var field = jQuery( this );
 
 		    		field.val( '' );
 
-		    		pageUrl 	= cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
+		    		pageUrl = cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
 				});
 
 				pageUrl = cmt.utils.data.removeParam( pageUrl, 'report' );
@@ -127,7 +128,7 @@
 			});
 
 			// Searching
-			grid.find( '.search-field .trigger-search' ).click( function() {
+			grid.find( '.grid-search-trigger' ).click( function() {
 
 				var pageUrl		= window.location.href;
 				var grid		= jQuery( this ).closest( '.grid-data' );
@@ -148,7 +149,7 @@
 				window.location	= pageUrl;
 			});
 
-			grid.find( '.search-field .trigger-search-single' ).bind( 'blur keyup',function( e ) {
+			grid.find( '.grid-search-input' ).bind( 'blur keyup', function( e ) {
 
 				if( e.type == 'blur' || e.keyCode == '13' ) {
 
@@ -241,8 +242,8 @@
 			// Limit
 			grid.find( '.wrap-limits select' ).change( function() {
 
-				var pageUrl		= window.location.href;
-				var value		= jQuery( this ).val();
+				var pageUrl	= window.location.href;
+				var value	= jQuery( this ).val();
 
 				if( value === 'select' ) {
 
@@ -262,40 +263,45 @@
 			grid.find( '.trigger-layout-switch' ).click( function() {
 
 				var trigger = jQuery( this );
+				var layout	= trigger.attr( 'layout' );
+				var pageUrl	= window.location.href;
 
-				if( trigger.hasClass( 'grid-view-data' ) ) {
+				switch( layout ) {
 
-					trigger.removeClass( 'grid-view-data ' + settings.cardIcon );
-					trigger.addClass( 'grid-view-card ' + settings.listIcon );
+					case 'data': {
+						
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'data' );
 
-					grid.find( '.grid-rows-wrap' ).fadeOut( 'fast' );
-					grid.find( '.grid-cards-wrap' ).fadeIn( 'fast' );
+						break;
+					}
+					case 'table': {
+						
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'table' );
 
-					if( updateUserMeta ) {
+						break;
+					}
+					case 'list': {
 
-						updateUserMeta( 'gridLayout', 'card' );
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'list' );
+
+						break;
+					}
+					case 'card': {
+
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'card' );
+
+						break;
 					}
 				}
-				else if( trigger.hasClass( 'grid-view-card' ) ) {
 
-					trigger.removeClass( 'grid-view-card ' + settings.listIcon );
-					trigger.addClass( 'grid-view-data ' + settings.cardIcon );
-
-					grid.find( '.grid-cards-wrap' ).fadeOut( 'fast' );
-					grid.find( '.grid-rows-wrap' ).fadeIn( 'fast' );
-
-					if( updateUserMeta ) {
-
-						updateUserMeta( 'gridLayout', 'data' );
-					}
-				}
+				window.location	= pageUrl;
 			});
 
 			// Popup - Generic Action
 			grid.find( '.actions .action-generic' ).click( function() {
 
-				var target		= parseInt( jQuery( this ).attr( 'target' ) );
-				var popup		= jQuery( this ).attr( 'popup' );
+				var target	= parseInt( jQuery( this ).attr( 'target' ) );
+				var popup	= jQuery( this ).attr( 'popup' );
 
 				if( target > 0 ) {
 
@@ -322,7 +328,7 @@
 			// Popup - Specific Add Action
 			grid.find( '.grid-title .action-add' ).click( function() {
 
-				var popup	= jQuery( this ).attr( 'popup' );
+				var popup = jQuery( this ).attr( 'popup' );
 
 				showPopup( '#' + popup );
 			});
@@ -330,8 +336,8 @@
 			// Popup - Specific Action
 			grid.find( '.actions .action-pop' ).click( function() {
 
-				var target		= parseInt( jQuery( this ).attr( 'target' ) );
-				var popup		= jQuery( this ).attr( 'popup' );
+				var target	= parseInt( jQuery( this ).attr( 'target' ) );
+				var popup	= jQuery( this ).attr( 'popup' );
 
 				if( target > 0 ) {
 
@@ -356,7 +362,8 @@
 		cardIcon: 'cmti cmti-grid',
 		listIcon: 'cmti cmti-list',
 		pageParam: 'page',
-		pageLimitParam: 'per-page'
+		pageLimitParam: 'per-page',
+		layoutParam: 'layout'
 	};
 
 })( jQuery );

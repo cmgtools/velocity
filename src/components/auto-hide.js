@@ -1,19 +1,49 @@
-// == Auto Hide ===========================
+/**
+ * Actions list having hidden list displayed when user click on list title.
+ */
 
-function initAutoHide() {
+( function( cmtjq ) {
 
-	hideElement( jQuery( '.auto-hide-trigger' ), jQuery( '.popout' ) );
-}
+	cmtjq.fn.cmtAutoHide = function( options ) {
 
-function hideElement( targetElement, hideElement ) {
+		// == Init == //
 
-	jQuery( window ).click( function( e ) {
+		// Configure Plugin
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtFormInfo.defaults, options );
+		var triggers	= this;
 
-	    if ( !targetElement.is( e.target ) && targetElement.has( e.target ).length === 0 ) {
+		// Iterate and initialise all the menus
+		triggers.each( function() {
 
-			jQuery( hideElement ).slideUp();
+			var trigger = cmtjq( this );
 
-	        targetElement.removeClass( 'active' );
-	    }
-	});
-}
+			init( trigger );
+		});
+
+		// return control
+		return;
+
+		// == Private Functions == //
+
+		function init( trigger ) {
+
+			var hide = jQuery( trigger.attr( 'data-target' ) );
+
+			jQuery( window ).click( function( e ) {
+
+				if ( !trigger.is( e.target ) && trigger.has( e.target ).length === 0 ) {
+
+					jQuery( hide ).slideUp();
+
+					trigger.removeClass( 'active' );
+				}
+			});
+		}
+	};
+
+	// Default Settings
+	cmtjq.fn.cmtAutoHide.defaults = {
+		animation: 'slide'
+	};
+
+})( jQuery );

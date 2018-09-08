@@ -27,7 +27,9 @@ cmt.api.utils.request = {
 			}
 
 			// Button Clicks
-			var clickTrigger = requestElement.find( cmt.api.Application.STATIC_CLICK ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CLICK ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CLICK + ', .cmt-request ' + cmt.api.Application.STATIC_CLICK );
+
+			var clickTrigger = requestElement.find( cmt.api.Application.STATIC_CLICK ).not( filters );
 
 			if( clickTrigger.length > 0 ) {
 
@@ -43,7 +45,9 @@ cmt.api.utils.request = {
 			}
 
 			// Select Change
-			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE + ', .cmt-request ' + cmt.api.Application.STATIC_CHANGE );
+			
+			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( filters );
 
 			if( selectTrigger.length > 0 ) {
 
@@ -56,7 +60,9 @@ cmt.api.utils.request = {
 			}
 
 			// Key Up
-			var keyupTrigger = requestElement.find( cmt.api.Application.STATIC_KEY_UP ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_KEY_UP ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_KEY_UP + ', .cmt-request ' + cmt.api.Application.STATIC_KEY_UP );
+
+			var keyupTrigger = requestElement.find( cmt.api.Application.STATIC_KEY_UP ).not( filters );
 
 			if( keyupTrigger.length > 0 ) {
 
@@ -68,7 +74,9 @@ cmt.api.utils.request = {
 			}
 
 			// Blur
-			var blurTrigger = requestElement.find( cmt.api.Application.STATIC_BLUR ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_BLUR ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_BLUR + ', .cmt-request ' + cmt.api.Application.STATIC_BLUR );
+
+			var blurTrigger = requestElement.find( cmt.api.Application.STATIC_BLUR ).not( filters );
 
 			if( blurTrigger.length > 0 ) {
 
@@ -533,4 +541,86 @@ cmt.api.utils.request = {
 			controller[ failureAction ]( response );
 		}
 	},
+
+	// Register the service triggers
+	registerServiceTriggers: function( requestTriggers ) {
+
+		// Iterate and initialise all the requests
+		requestTriggers.each( function() {
+
+			// Active element
+			var requestTrigger	= jQuery( this );
+			
+			var app		= requestTriggers.attr( 'data-app' );
+			var service	= requestTriggers.attr( 'data-service' );
+			var handler	= requestTrigger.attr( 'data-handler' );
+
+			// Form Submits
+			if( requestTrigger.is( 'form' ) ) {
+
+				// Trigger request on form submit
+				requestTrigger.submit( function( event ) {
+
+					// Stop default form submit execution
+					event.preventDefault();
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Button Clicks
+			var clickTrigger = requestTrigger.find( cmt.api.Application.STATIC_CLICK );
+
+			if( clickTrigger.length > 0 ) {
+
+				// Trigger request on click action
+				clickTrigger.click( function( event ) {
+
+					// Stop default click action
+					event.preventDefault();
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Select Change
+			var selectTrigger = requestTrigger.find( cmt.api.Application.STATIC_CHANGE );
+
+			if( selectTrigger.length > 0 ) {
+
+				// Trigger request on select
+				selectTrigger.change( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Key Up
+			var keyupTrigger = requestTrigger.find( cmt.api.Application.STATIC_KEY_UP );
+
+			if( keyupTrigger.length > 0 ) {
+
+				keyupTrigger.keyup( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Blur
+			var blurTrigger = requestTrigger.find( cmt.api.Application.STATIC_BLUR );
+
+			if( blurTrigger.length > 0 ) {
+
+				blurTrigger.blur( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+		});
+	}
 }

@@ -30,76 +30,93 @@
 		function init( fieldGroup ) {
 
 			var checkbox	= fieldGroup.find( "input[type='checkbox']" );
+			var radio		= fieldGroup.find( "input[type='radio']" );
 			var reverse		= cmt.utils.data.hasAttribute( fieldGroup, 'data-reverse' );
 
-			if( checkbox.prop( 'checked' ) ) {
-
-				var target	= fieldGroup.attr( 'group-target' );
-				var alt		= fieldGroup.attr( 'group-alt' );
-				
-				if( reverse ) {
-
-					jQuery( '.' + target ).hide();
-					jQuery( '.' + alt ).show();
-				}
-				else {
-
-					jQuery( '.' + target ).show();
-					jQuery( '.' + alt ).hide();
-				}
-			}
-			else {
-
-				var target	= fieldGroup.attr( 'group-target' );
-				var alt		= fieldGroup.attr( 'group-alt' );
-
-				if( reverse ) {
-
-					jQuery( '.' + target ).show();
-					jQuery( '.' + alt ).hide();
-				}
-				else {
-
-					jQuery( '.' + target ).hide();
-					jQuery( '.' + alt ).show();
-				}
-			}
-
-			fieldGroup.click( function() {
+			if( checkbox.length > 0 ) {
 
 				if( checkbox.prop( 'checked' ) ) {
 
-					var target	= fieldGroup.attr( 'group-target' );
-					var alt		= fieldGroup.attr( 'group-alt' );
-
-					if( reverse ) {
-
-						jQuery( '.' + alt ).fadeIn( 'slow' );
-						jQuery( '.' + target ).fadeOut( 'fast' );
-					}
-					else {
-
-						jQuery( '.' + target ).fadeIn( 'slow' );
-						jQuery( '.' + alt ).fadeOut( 'fast' );
-					}
+					checkPositive( fieldGroup, reverse );
 				}
 				else {
 
-					var target	= fieldGroup.attr( 'group-target' );
-					var alt		= fieldGroup.attr( 'group-alt' );
+					checkNegative( fieldGroup, reverse );
+				}
 
-					if( reverse ) {
+				fieldGroup.click( function() {
 
-						jQuery( '.' + target ).fadeIn( 'slow' );
-						jQuery( '.' + alt ).fadeOut( 'fast' );
+					if( checkbox.prop( 'checked' ) ) {
+
+						checkPositive( fieldGroup, reverse );
 					}
 					else {
 
-						jQuery( '.' + alt ).fadeIn( 'slow' );
-						jQuery( '.' + target ).fadeOut( 'fast' );
+						checkNegative( fieldGroup, reverse );
 					}
+				});
+			}
+			else if( radio.length > 0 ) {
+
+				var status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
+			
+				if( status == 1 ) {
+
+					checkPositive( fieldGroup, reverse );
 				}
-			});
+				else if( status == 0 ) {
+
+					checkNegative( fieldGroup, reverse );
+				}
+
+				fieldGroup.find( "input[type='radio']" ).change( function() {
+
+					status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
+
+					if( status == 1 ) {
+
+						checkPositive( fieldGroup, reverse );
+					}
+					else if( status == 0 ) {
+
+						checkNegative( fieldGroup, reverse );
+					}
+				});
+			}
+		}
+		
+		function checkPositive( fieldGroup, reverse ) {
+
+			var target	= fieldGroup.attr( 'group-target' );
+			var alt		= fieldGroup.attr( 'group-alt' );
+
+			if( reverse ) {
+
+				jQuery( '.' + target ).hide();
+				jQuery( '.' + alt ).show();
+			}
+			else {
+
+				jQuery( '.' + target ).show();
+				jQuery( '.' + alt ).hide();
+			}
+		}
+		
+		function checkNegative( fieldGroup, reverse ) {
+
+			var target	= fieldGroup.attr( 'group-target' );
+			var alt		= fieldGroup.attr( 'group-alt' );
+
+			if( reverse ) {
+
+				jQuery( '.' + target ).show();
+				jQuery( '.' + alt ).hide();
+			}
+			else {
+
+				jQuery( '.' + target ).hide();
+				jQuery( '.' + alt ).show();
+			}
 		}
 	};
 

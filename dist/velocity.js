@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-08-31
+ * Velocity - v1.0.0-alpha1 - 2018-09-08
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -788,6 +788,73 @@ cmt.utils.ui = {
 
 
 /**
+ * Actions list having hidden list displayed when user click on list title.
+ */
+
+( function( cmtjq ) {
+
+	cmtjq.fn.cmtActions = function( options ) {
+
+		// == Init == //
+
+		// Configure Plugin
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtFormInfo.defaults, options );
+		var actions		= this;
+
+		// Iterate and initialise all the menus
+		actions.each( function( index, val ) {
+
+			var list = cmtjq( this );
+
+			init( list, index );
+		});
+
+		// return control
+		return;
+
+		// == Private Functions == //
+
+		function init( list, index ) {
+
+			var data = list.find( '.actions-list-data' );
+
+			list.attr( 'data-id', index );
+			list.find( '.actions-list-title' ).attr( 'data-target', '#actions-list-data-' + index );
+			data.attr( 'id', 'actions-list-data-' + index );
+
+			// Detach
+			data = data.detach();
+
+			// Append to Body
+			data.appendTo( "body" );
+
+			list.find( '.actions-list-title' ).click( function() {
+
+				var offset = list.offset();
+
+				data.css( { top: ( offset.top + list.height() ), left: offset.left } );
+
+				if( data.is( ':hidden' ) ) {
+
+					data.slideDown( 'slow' );
+				}
+				else {
+					
+					data.slideUp( 'slow' );
+				}
+			});
+		}
+	};
+
+	// Default Settings
+	cmtjq.fn.cmtActions.defaults = {
+		position: 'tr'
+	};
+
+})( jQuery );
+
+
+/**
  * Auto Suggest is jQuery plugin which change the default behaviour of input field. It shows
  * auto suggestions as user type and provide options to select single or multiple values.
  */
@@ -840,25 +907,55 @@ cmt.utils.ui = {
 })( jQuery );
 
 
-// == Auto Hide ===========================
+/**
+ * Actions list having hidden list displayed when user click on list title.
+ */
 
-function initAutoHide() {
+( function( cmtjq ) {
 
-	hideElement( jQuery( '.auto-hide-trigger' ), jQuery( '.popout' ) );
-}
+	cmtjq.fn.cmtAutoHide = function( options ) {
 
-function hideElement( targetElement, hideElement ) {
+		// == Init == //
 
-	jQuery( window ).click( function( e ) {
+		// Configure Plugin
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtFormInfo.defaults, options );
+		var triggers	= this;
 
-	    if ( !targetElement.is( e.target ) && targetElement.has( e.target ).length === 0 ) {
+		// Iterate and initialise all the menus
+		triggers.each( function() {
 
-			jQuery( hideElement ).slideUp();
+			var trigger = cmtjq( this );
 
-	        targetElement.removeClass( 'active' );
-	    }
-	});
-}
+			init( trigger );
+		});
+
+		// return control
+		return;
+
+		// == Private Functions == //
+
+		function init( trigger ) {
+
+			var hide = jQuery( trigger.attr( 'data-target' ) );
+
+			jQuery( window ).click( function( e ) {
+
+				if ( !trigger.is( e.target ) && trigger.has( e.target ).length === 0 ) {
+
+					jQuery( hide ).slideUp();
+
+					trigger.removeClass( 'active' );
+				}
+			});
+		}
+	};
+
+	// Default Settings
+	cmtjq.fn.cmtAutoHide.defaults = {
+		animation: 'slide'
+	};
+
+})( jQuery );
 
 
 /**
@@ -1225,76 +1322,93 @@ function hideElement( targetElement, hideElement ) {
 		function init( fieldGroup ) {
 
 			var checkbox	= fieldGroup.find( "input[type='checkbox']" );
+			var radio		= fieldGroup.find( "input[type='radio']" );
 			var reverse		= cmt.utils.data.hasAttribute( fieldGroup, 'data-reverse' );
 
-			if( checkbox.prop( 'checked' ) ) {
-
-				var target	= fieldGroup.attr( 'group-target' );
-				var alt		= fieldGroup.attr( 'group-alt' );
-				
-				if( reverse ) {
-
-					jQuery( '.' + target ).hide();
-					jQuery( '.' + alt ).show();
-				}
-				else {
-
-					jQuery( '.' + target ).show();
-					jQuery( '.' + alt ).hide();
-				}
-			}
-			else {
-
-				var target	= fieldGroup.attr( 'group-target' );
-				var alt		= fieldGroup.attr( 'group-alt' );
-
-				if( reverse ) {
-
-					jQuery( '.' + target ).show();
-					jQuery( '.' + alt ).hide();
-				}
-				else {
-
-					jQuery( '.' + target ).hide();
-					jQuery( '.' + alt ).show();
-				}
-			}
-
-			fieldGroup.click( function() {
+			if( checkbox.length > 0 ) {
 
 				if( checkbox.prop( 'checked' ) ) {
 
-					var target	= fieldGroup.attr( 'group-target' );
-					var alt		= fieldGroup.attr( 'group-alt' );
-
-					if( reverse ) {
-
-						jQuery( '.' + alt ).fadeIn( 'slow' );
-						jQuery( '.' + target ).fadeOut( 'fast' );
-					}
-					else {
-
-						jQuery( '.' + target ).fadeIn( 'slow' );
-						jQuery( '.' + alt ).fadeOut( 'fast' );
-					}
+					checkPositive( fieldGroup, reverse );
 				}
 				else {
 
-					var target	= fieldGroup.attr( 'group-target' );
-					var alt		= fieldGroup.attr( 'group-alt' );
+					checkNegative( fieldGroup, reverse );
+				}
 
-					if( reverse ) {
+				fieldGroup.click( function() {
 
-						jQuery( '.' + target ).fadeIn( 'slow' );
-						jQuery( '.' + alt ).fadeOut( 'fast' );
+					if( checkbox.prop( 'checked' ) ) {
+
+						checkPositive( fieldGroup, reverse );
 					}
 					else {
 
-						jQuery( '.' + alt ).fadeIn( 'slow' );
-						jQuery( '.' + target ).fadeOut( 'fast' );
+						checkNegative( fieldGroup, reverse );
 					}
+				});
+			}
+			else if( radio.length > 0 ) {
+
+				var status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
+			
+				if( status == 1 ) {
+
+					checkPositive( fieldGroup, reverse );
 				}
-			});
+				else if( status == 0 ) {
+
+					checkNegative( fieldGroup, reverse );
+				}
+
+				fieldGroup.find( "input[type='radio']" ).change( function() {
+
+					status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
+
+					if( status == 1 ) {
+
+						checkPositive( fieldGroup, reverse );
+					}
+					else if( status == 0 ) {
+
+						checkNegative( fieldGroup, reverse );
+					}
+				});
+			}
+		}
+		
+		function checkPositive( fieldGroup, reverse ) {
+
+			var target	= fieldGroup.attr( 'group-target' );
+			var alt		= fieldGroup.attr( 'group-alt' );
+
+			if( reverse ) {
+
+				jQuery( '.' + target ).hide();
+				jQuery( '.' + alt ).show();
+			}
+			else {
+
+				jQuery( '.' + target ).show();
+				jQuery( '.' + alt ).hide();
+			}
+		}
+		
+		function checkNegative( fieldGroup, reverse ) {
+
+			var target	= fieldGroup.attr( 'group-target' );
+			var alt		= fieldGroup.attr( 'group-alt' );
+
+			if( reverse ) {
+
+				jQuery( '.' + target ).show();
+				jQuery( '.' + alt ).hide();
+			}
+			else {
+
+				jQuery( '.' + target ).hide();
+				jQuery( '.' + alt ).show();
+			}
 		}
 	};
 
@@ -1829,11 +1943,12 @@ function hideElement( targetElement, hideElement ) {
 			grid.find( '.grid-filters select' ).change( function() {
 
 				var pageUrl		= window.location.href;
-				var selected 	= jQuery( this ).val();
-				var option		= jQuery( this ).find( ':selected' );
-				var column		= option.attr( 'data-col' );
-				var cols		= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
-				cols			= cols.split( ',' );
+				var selected	= jQuery( this ).val();
+				
+				var option	= jQuery( this ).find( ':selected' );
+				var column	= option.attr( 'data-col' );
+				var cols	= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
+				cols		= cols.split( ',' );
 
 				// Clear Filter
 				for( i = 0; i < cols.length; i++ ) {
@@ -1867,9 +1982,9 @@ function hideElement( targetElement, hideElement ) {
 
 				fields.each( function( index, element ) {
 
-					var field	= jQuery( this );
+					var field = jQuery( this );
 
-					pageUrl 	= cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
+					pageUrl = cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
 
 					if( field.val().length > 0 ) {
 
@@ -1891,11 +2006,11 @@ function hideElement( targetElement, hideElement ) {
 
 				fields.each( function( index, element ) {
 
-					var field	= jQuery( this );
+					var field = jQuery( this );
 
 		    		field.val( '' );
 
-		    		pageUrl 	= cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
+		    		pageUrl = cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
 				});
 
 				pageUrl = cmt.utils.data.removeParam( pageUrl, 'report' );
@@ -1904,7 +2019,7 @@ function hideElement( targetElement, hideElement ) {
 			});
 
 			// Searching
-			grid.find( '.search-field .trigger-search' ).click( function() {
+			grid.find( '.grid-search-trigger' ).click( function() {
 
 				var pageUrl		= window.location.href;
 				var grid		= jQuery( this ).closest( '.grid-data' );
@@ -1925,7 +2040,7 @@ function hideElement( targetElement, hideElement ) {
 				window.location	= pageUrl;
 			});
 
-			grid.find( '.search-field .trigger-search-single' ).bind( 'blur keyup',function( e ) {
+			grid.find( '.grid-search-input' ).bind( 'blur keyup', function( e ) {
 
 				if( e.type == 'blur' || e.keyCode == '13' ) {
 
@@ -2018,8 +2133,8 @@ function hideElement( targetElement, hideElement ) {
 			// Limit
 			grid.find( '.wrap-limits select' ).change( function() {
 
-				var pageUrl		= window.location.href;
-				var value		= jQuery( this ).val();
+				var pageUrl	= window.location.href;
+				var value	= jQuery( this ).val();
 
 				if( value === 'select' ) {
 
@@ -2039,40 +2154,45 @@ function hideElement( targetElement, hideElement ) {
 			grid.find( '.trigger-layout-switch' ).click( function() {
 
 				var trigger = jQuery( this );
+				var layout	= trigger.attr( 'layout' );
+				var pageUrl	= window.location.href;
 
-				if( trigger.hasClass( 'grid-view-data' ) ) {
+				switch( layout ) {
 
-					trigger.removeClass( 'grid-view-data ' + settings.cardIcon );
-					trigger.addClass( 'grid-view-card ' + settings.listIcon );
+					case 'data': {
+						
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'data' );
 
-					grid.find( '.grid-rows-wrap' ).fadeOut( 'fast' );
-					grid.find( '.grid-cards-wrap' ).fadeIn( 'fast' );
+						break;
+					}
+					case 'table': {
+						
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'table' );
 
-					if( updateUserMeta ) {
+						break;
+					}
+					case 'list': {
 
-						updateUserMeta( 'gridLayout', 'card' );
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'list' );
+
+						break;
+					}
+					case 'card': {
+
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'card' );
+
+						break;
 					}
 				}
-				else if( trigger.hasClass( 'grid-view-card' ) ) {
 
-					trigger.removeClass( 'grid-view-card ' + settings.listIcon );
-					trigger.addClass( 'grid-view-data ' + settings.cardIcon );
-
-					grid.find( '.grid-cards-wrap' ).fadeOut( 'fast' );
-					grid.find( '.grid-rows-wrap' ).fadeIn( 'fast' );
-
-					if( updateUserMeta ) {
-
-						updateUserMeta( 'gridLayout', 'data' );
-					}
-				}
+				window.location	= pageUrl;
 			});
 
 			// Popup - Generic Action
 			grid.find( '.actions .action-generic' ).click( function() {
 
-				var target		= parseInt( jQuery( this ).attr( 'target' ) );
-				var popup		= jQuery( this ).attr( 'popup' );
+				var target	= parseInt( jQuery( this ).attr( 'target' ) );
+				var popup	= jQuery( this ).attr( 'popup' );
 
 				if( target > 0 ) {
 
@@ -2099,7 +2219,7 @@ function hideElement( targetElement, hideElement ) {
 			// Popup - Specific Add Action
 			grid.find( '.grid-title .action-add' ).click( function() {
 
-				var popup	= jQuery( this ).attr( 'popup' );
+				var popup = jQuery( this ).attr( 'popup' );
 
 				showPopup( '#' + popup );
 			});
@@ -2107,8 +2227,8 @@ function hideElement( targetElement, hideElement ) {
 			// Popup - Specific Action
 			grid.find( '.actions .action-pop' ).click( function() {
 
-				var target		= parseInt( jQuery( this ).attr( 'target' ) );
-				var popup		= jQuery( this ).attr( 'popup' );
+				var target	= parseInt( jQuery( this ).attr( 'target' ) );
+				var popup	= jQuery( this ).attr( 'popup' );
 
 				if( target > 0 ) {
 
@@ -2133,7 +2253,8 @@ function hideElement( targetElement, hideElement ) {
 		cardIcon: 'cmti cmti-grid',
 		listIcon: 'cmti cmti-list',
 		pageParam: 'page',
-		pageLimitParam: 'per-page'
+		pageLimitParam: 'per-page',
+		layoutParam: 'layout'
 	};
 
 })( jQuery );
@@ -2777,8 +2898,8 @@ function hideElement( targetElement, hideElement ) {
 		// == Init == //
 
 		// Configure Popups
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtPopoutGroup.defaults, options );
-		var elements		= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtPopoutGroup.defaults, options );
+		var elements	= this;
 
 		// Iterate and initialise all the popups
 		elements.each( function() {
@@ -2804,8 +2925,9 @@ function hideElement( targetElement, hideElement ) {
 
 				jQuery( this ).addClass( 'active' );
 
-				var popoutId		= "#" + jQuery( this ).attr( 'popout' );
-				var targetPopout 	= jQuery( popoutId );
+				var popoutId = "#" + jQuery( this ).attr( 'popout' );
+				
+				var targetPopout = jQuery( popoutId );
 
 				if( targetPopout.is( ':visible' ) ) {
 
@@ -2835,6 +2957,23 @@ function hideElement( targetElement, hideElement ) {
 						}
 					}
 				}
+
+				targetPopout.find( '.popout-close' ).click( function() {
+					
+					var popId = targetPopout.attr( 'popout' );
+
+					popoutGroup.find( '.popout-trigger[popout=' + popId + ']' ).removeClass( 'active' );
+
+					switch( settings.animation ) {
+
+						case "down": {
+
+							targetPopout.slideUp();
+
+							break;
+						}
+					}
+				});
 			});
 		}
 	};
@@ -5213,7 +5352,9 @@ cmt.api.utils.request = {
 			}
 
 			// Button Clicks
-			var clickTrigger = requestElement.find( cmt.api.Application.STATIC_CLICK ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CLICK ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CLICK + ', .cmt-request ' + cmt.api.Application.STATIC_CLICK );
+
+			var clickTrigger = requestElement.find( cmt.api.Application.STATIC_CLICK ).not( filters );
 
 			if( clickTrigger.length > 0 ) {
 
@@ -5229,7 +5370,9 @@ cmt.api.utils.request = {
 			}
 
 			// Select Change
-			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE + ', .cmt-request ' + cmt.api.Application.STATIC_CHANGE );
+			
+			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( filters );
 
 			if( selectTrigger.length > 0 ) {
 
@@ -5242,7 +5385,9 @@ cmt.api.utils.request = {
 			}
 
 			// Key Up
-			var keyupTrigger = requestElement.find( cmt.api.Application.STATIC_KEY_UP ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_KEY_UP ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_KEY_UP + ', .cmt-request ' + cmt.api.Application.STATIC_KEY_UP );
+
+			var keyupTrigger = requestElement.find( cmt.api.Application.STATIC_KEY_UP ).not( filters );
 
 			if( keyupTrigger.length > 0 ) {
 
@@ -5254,7 +5399,9 @@ cmt.api.utils.request = {
 			}
 
 			// Blur
-			var blurTrigger = requestElement.find( cmt.api.Application.STATIC_BLUR ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_BLUR ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_BLUR + ', .cmt-request ' + cmt.api.Application.STATIC_BLUR );
+
+			var blurTrigger = requestElement.find( cmt.api.Application.STATIC_BLUR ).not( filters );
 
 			if( blurTrigger.length > 0 ) {
 
@@ -5719,4 +5866,86 @@ cmt.api.utils.request = {
 			controller[ failureAction ]( response );
 		}
 	},
+
+	// Register the service triggers
+	registerServiceTriggers: function( requestTriggers ) {
+
+		// Iterate and initialise all the requests
+		requestTriggers.each( function() {
+
+			// Active element
+			var requestTrigger	= jQuery( this );
+			
+			var app		= requestTriggers.attr( 'data-app' );
+			var service	= requestTriggers.attr( 'data-service' );
+			var handler	= requestTrigger.attr( 'data-handler' );
+
+			// Form Submits
+			if( requestTrigger.is( 'form' ) ) {
+
+				// Trigger request on form submit
+				requestTrigger.submit( function( event ) {
+
+					// Stop default form submit execution
+					event.preventDefault();
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Button Clicks
+			var clickTrigger = requestTrigger.find( cmt.api.Application.STATIC_CLICK );
+
+			if( clickTrigger.length > 0 ) {
+
+				// Trigger request on click action
+				clickTrigger.click( function( event ) {
+
+					// Stop default click action
+					event.preventDefault();
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Select Change
+			var selectTrigger = requestTrigger.find( cmt.api.Application.STATIC_CHANGE );
+
+			if( selectTrigger.length > 0 ) {
+
+				// Trigger request on select
+				selectTrigger.change( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Key Up
+			var keyupTrigger = requestTrigger.find( cmt.api.Application.STATIC_KEY_UP );
+
+			if( keyupTrigger.length > 0 ) {
+
+				keyupTrigger.keyup( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Blur
+			var blurTrigger = requestTrigger.find( cmt.api.Application.STATIC_BLUR );
+
+			if( blurTrigger.length > 0 ) {
+
+				blurTrigger.blur( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+		});
+	}
 }

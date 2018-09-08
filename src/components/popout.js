@@ -9,8 +9,8 @@
 		// == Init == //
 
 		// Configure Popups
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtPopoutGroup.defaults, options );
-		var elements		= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtPopoutGroup.defaults, options );
+		var elements	= this;
 
 		// Iterate and initialise all the popups
 		elements.each( function() {
@@ -36,8 +36,9 @@
 
 				jQuery( this ).addClass( 'active' );
 
-				var popoutId		= "#" + jQuery( this ).attr( 'popout' );
-				var targetPopout 	= jQuery( popoutId );
+				var popoutId = "#" + jQuery( this ).attr( 'popout' );
+				
+				var targetPopout = jQuery( popoutId );
 
 				if( targetPopout.is( ':visible' ) ) {
 
@@ -67,6 +68,23 @@
 						}
 					}
 				}
+
+				targetPopout.find( '.popout-close' ).click( function() {
+					
+					var popId = targetPopout.attr( 'popout' );
+
+					popoutGroup.find( '.popout-trigger[popout=' + popId + ']' ).removeClass( 'active' );
+
+					switch( settings.animation ) {
+
+						case "down": {
+
+							targetPopout.slideUp();
+
+							break;
+						}
+					}
+				});
 			});
 		}
 	};
