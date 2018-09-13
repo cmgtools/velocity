@@ -2,6 +2,8 @@
  * Object utility provides methods to initialise or manipulate objects.
  */
 
+// == Object Utility ======================
+
 cmt.utils.object = {
 
 	/**
@@ -9,15 +11,16 @@ cmt.utils.object = {
 	 */
 	strToObject: function( str ) {
 
-	    var arr 		= str.split( "." );
-		var objClass	= ( window || this );
+	    var arr = str.split( "." );
+
+		var objClass = ( window || this );
 
 	    for( var i = 0, arrLength = arr.length; i < arrLength; i++ ) {
 
-	        objClass	= objClass[ arr[ i ] ];
+	        objClass = objClass[ arr[ i ] ];
 	    }
 
-		var obj		= new objClass;
+		var obj = new objClass;
 
 		if ( typeof obj !== 'object' ) {
 
@@ -34,4 +37,5 @@ cmt.utils.object = {
 
 		return ( property in object ) && ( !( property in prototype ) || prototype[ property ] !== object[ property ] );
 	}
+
 };

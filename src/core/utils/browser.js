@@ -2,6 +2,8 @@
  * Browser utility provides commonly used browser feature detection methods.
  */
 
+// == Browser Utility =====================
+
 cmt.utils.browser = {
 
 	/**
@@ -35,7 +37,8 @@ cmt.utils.browser = {
 	 */
 	isCanvas: function() {
 
-		var elem 			= document.createElement( 'canvas' );
+		var elem = document.createElement( 'canvas' );
+		
 		var canvasSupported = !!( elem.getContext && elem.getContext( '2d' ) );
 
 		return canvasSupported;
@@ -48,9 +51,10 @@ cmt.utils.browser = {
 
 		// Used image/png for testing purpose
 
-		var cvsTest 			= document.createElement( "canvas" );
-		var data				= cvsTest.toDataURL( "image/png" );
-		var toDataUrlSupported	= data.indexOf( "data:image/png" ) == 0;
+		var cvsTest	= document.createElement( "canvas" );
+		var data	= cvsTest.toDataURL( "image/png" );
+		
+		var toDataUrlSupported = data.indexOf( "data:image/png" ) == 0;
 
 		return toDataUrlSupported;
 	},
@@ -62,4 +66,5 @@ cmt.utils.browser = {
 
 		return !( typeof history.pushState === 'undefined' );
 	}
+
 };

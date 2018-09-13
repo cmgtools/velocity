@@ -2,6 +2,8 @@
  * UI utility provides methods to format or manage UI elements.
  */
 
+// == UI Utility ==========================
+
 cmt.utils.ui = {
 
 	/**
@@ -9,8 +11,8 @@ cmt.utils.ui = {
 	 */
 	alignMiddle: function( parent, child ) {
 
-		var parent			= jQuery( parent );
-		var child			= jQuery( child );
+		var parent	= jQuery( parent );
+		var child	= jQuery( child );
 
 		var parentHeight	= parent.height();
 		var parentWidth		= parent.width();
@@ -19,10 +21,11 @@ cmt.utils.ui = {
 
 		if( childHeight <= parentHeight && childWidth <= parentWidth ) {
 
-			var top 	= (parentHeight - childHeight) / 2;
-			var left 	= (parentWidth - childWidth) / 2;
+			var top		= (parentHeight - childHeight) / 2;
+			var left	= (parentWidth - childWidth) / 2;
 
 			child.css( { "position": "absolute", "top": top, "left": left } );
 		}
 	}
+
 };

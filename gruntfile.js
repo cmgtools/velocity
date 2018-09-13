@@ -15,13 +15,19 @@ module.exports = function( grunt ) {
 			            '\n */\n\n'
       		},
       		dist: {
-        		src: [ 'src/core/main.js', 'src/core/utils/main.js',
-						'src/core/utils/**/*.js',
-						'src/components/**/*.js',
-						'src/mvc/core.js', 'src/mvc/application.js', 'src/mvc/controllers/main.js', 'src/mvc/services/main.js', 'src/mvc/utils/main.js',
-						'src/mvc/controllers/BaseController.js', 'src/mvc/controllers/**/*.js', 'src/mvc/services/**/*.js',
-						'src/mvc/utils/**/*.js'
-					],
+        		src: [ 
+					'src/core/main.js',
+					'src/core/utils/main.js', 'src/core/utils/**/*.js',
+					'src/components/main.js',
+					'src/components/base/main.js', 'src/components/base/BaseComponent.js', 'src/components/base/**/*.js',
+					'src/components/jquery/main.js', 'src/components/jquery/**/*.js',
+					'src/mvc/main.js', 'src/mvc/application.js', 
+					'src/mvc/controllers/main.js', 'src/mvc/services/main.js', 
+					'src/mvc/utils/main.js',
+					'src/mvc/controllers/BaseController.js', 'src/mvc/controllers/**/*.js', 
+					'src/mvc/services/BaseService.js', 'src/mvc/services/**/*.js',
+					'src/mvc/utils/**/*.js'
+				],
         		dest: 'dist/velocity.js'
       		}
     	},

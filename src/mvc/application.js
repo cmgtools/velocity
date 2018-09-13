@@ -1,15 +1,16 @@
 /**
  * Key Concepts
  * -------------------------
- * 1. Application
- * 2. Controller
- * 3. Action
- * 4. User
- * 5. Route
- * 6. Request Element
- * 7. Trigger Element
- * 8. Get, Post, Put and Delete
- * 9. View
+ *  1. Application
+ *  2. Controller
+ *  3. Service
+ *  4. Action
+ *  5. User
+ *  6. Route
+ *  7. Request Element
+ *  8. Trigger Element
+ *  9. Get, Post, Put and Delete
+ * 10. View
  *
  * An application is a collection of app config and controllers. Each controller can define several actions that can be executed by app user.
  * A project can create multiple applications based on it's needs. The request triggers present within request elements use the Request Processing Engine
@@ -23,7 +24,7 @@
  * sent back by server.
  */
 
-// Application -------------------------------------------
+// == Application =========================
 
 cmt.api.Application = function( options ) {
 
@@ -44,7 +45,7 @@ cmt.api.Application = function( options ) {
 	jQuery.extend( this.config, options );
 
 	// Default controller to be used as fallback in case no controller is mentioned
-	var defaultController	= cmt.api.Application.CONTROLLER_DEFAULT;
+	var defaultController = cmt.api.Application.CONTROLLER_DEFAULT;
 
 	// TODO: Add Apix and REST based default controllers to handle CRUD operations.
 
@@ -65,18 +66,19 @@ cmt.api.Application = function( options ) {
 	/**
 	 * An exhaustive map of all the controllers (alias, classpath) available for the application. Each application can use this map to maintain it's controllers list.
 	 */
-	this.controllers 						= []; // Alias, Path map
-	this.controllers[ defaultController ] 	= 'cmt.api.controllers.RequestController';
+	this.controllers = []; // Alias, Path map
+
+	this.controllers[ defaultController ] = 'cmt.api.controllers.RequestController';
 
 	/**
 	 * Map of all the active controllers (alias, object) which are already initialised. It will save us from re-initialising controllers.
 	 */
-	this.activeControllers 	= []; // Alias, Controller map
+	this.activeControllers = []; // Alias, Controller map
 	
 	/**
 	 * Map of all the services (alias, classpath) available for the application.
 	 */
-	this.services	= [];
+	this.services = [];
 	
 	/**
 	 * Map to query active services (alias, object) which are already initialised.
@@ -84,7 +86,7 @@ cmt.api.Application = function( options ) {
 	this.activeServices	= [];
 };
 
-// Application Globals -----------------------------------
+// == Application Globals =================
 
 //Defaults
 cmt.api.Application.CONTROLLER_DEFAULT	= 'default';			// Default Controller Alias
@@ -122,7 +124,7 @@ cmt.api.Application.STATIC_BLUR			=  '.cmt-blur';			// The class to be set for t
  * for an action. The post processor method can define logic to handle response and use appropriate templating engine to update view.
  */
 
-// Application Initialisation ----------------------------
+// == Application Initialisation ==========
 
 cmt.api.Application.prototype.init = function( options ) {
 
@@ -130,7 +132,7 @@ cmt.api.Application.prototype.init = function( options ) {
 	jQuery.extend( this.config, options );
 }
 
-// Manage Application Controllers ------------------------
+// == Applications Controllers ============
 
 /**
  * It maps the controller to registry by accepting alias and path.
@@ -245,7 +247,7 @@ cmt.api.Application.prototype.findController = function( alias, options, factory
 	}
 };
 
-// Manage Application Services ---------------------------
+// == Application Services ================
 
 /**
  * It maps the service to registry by accepting alias and path.

@@ -1,8 +1,12 @@
-// Inheritance - Crockford's approach to add inheritance. It works for all browsers. Object.create() is still not supported by all browsers.
+// Inheritance - Crockford's approach to add inheritance. It works for all browsers. 
+// Object.create() is standard way to support inheritance, but still not supported by all browsers.
+
+// == Crockford's Inheritance =============
+
 Function.prototype.inherits = function( parent ) {
 
-	var d	= 0;
-	var p 	= ( this.prototype = new parent() );
+	var d = 0;
+	var p = ( this.prototype = new parent() );
 
 	this.prototype.uber	= function( name ) {
 
@@ -15,15 +19,15 @@ Function.prototype.inherits = function( parent ) {
 
 			while( t ) {
 
-	              v		= v.constructor.prototype;
-	              t 	-= 1;
+	              v  = v.constructor.prototype;
+	              t -= 1;
 			}
 
 			f = v[ name ];
 		}
 		else {
 
-			f	= p[ name ];
+			f = p[ name ];
 
 			if( f == this[ name ] ) {
 
@@ -31,15 +35,16 @@ Function.prototype.inherits = function( parent ) {
 			}
 		}
 
-		d		+= 1;
-		r		 = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
-		d		-= 1;
+		d += 1;
+		r  = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
+		d -= 1;
 
 		return r;
 	};
 };
 
-// Hash Tag - Fix hash tag issues for SNS login
+// == Hash Tag - Clear - SNS Login ========
+
 if( window.location.hash == '#_=_' ) {
 
     if( history.replaceState ) {

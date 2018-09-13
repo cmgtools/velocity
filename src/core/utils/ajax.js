@@ -1,3 +1,5 @@
+// == Ajax Utility ========================
+
 cmt.utils.ajax = {
 
 	triggerPost: function( url, data, csrf ) {
@@ -13,10 +15,11 @@ cmt.utils.ajax = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			data     	   += "&" + csrfParam + "=" + csrfToken;
+			data += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		// Trigger request
 		jQuery.post( url, data );
 	}
+
 };

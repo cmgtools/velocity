@@ -1,14 +1,17 @@
-// TODO: Add Data Binding Support to bind data sent by server to respective ui component
-// TODO: Add Data Binding with Pagination for Data Grid
-// TODO: Add Page History and Caching Support
-
 /**
- * CMGTools API library provide methods to process AJAX request. These requests can be either form or regular
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to communicate with server and process the request and response using MVC patterns.
  */
+
+// == Global Namespace ====================
 
 cmt.api = {};
 
-// Manage Applications -----------------------------------
+// TODO: Add Data Binding Support using Model to bind data sent by server to respective ui component
+// TODO: Add Data Binding with Pagination for Data Grid
+// TODO: Add Page History and Caching Support
+
+// == Applications ========================
 
 cmt.api.Root = function( options ) {
 

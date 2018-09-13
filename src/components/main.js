@@ -1,9 +1,8 @@
 /**
  * The base file of Velocity Framework to bootstrap the required namespace and components 
- * specific to core utilities. The core utilities is a collection of commonly used utility 
- * functions.
+ * specific to components library.
  */
 
 // == Global Namespace ====================
 
-cmt.utils = cmt.utils || {};
+cmt.components = cmt.components || {};

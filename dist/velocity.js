@@ -1,25 +1,31 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-09-08
+ * Velocity - v1.0.0-alpha1 - 2018-09-13
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
  */
 
 /**
- * The library CMGTools JS require JQuery for most of it's usage.
+ * The base file of Velocity Framework to bootstrap the required namespace and components.
  */
 
-// Global Namespace for CMGTools
+// == Global Namespace ====================
+
 var cmt = cmt || {};
 
 
 /**
- * CMGTools Utilities - Collection of commonly used utility functions available for CMGTools.
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to core utilities. The core utilities is a collection of commonly used utility 
+ * functions.
  */
 
-// Global Namespace for CMGTools utilities
+// == Global Namespace ====================
+
 cmt.utils = cmt.utils || {};
 
+
+// == Ajax Utility ========================
 
 cmt.utils.ajax = {
 
@@ -36,18 +42,21 @@ cmt.utils.ajax = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			data     	   += "&" + csrfParam + "=" + csrfToken;
+			data += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		// Trigger request
 		jQuery.post( url, data );
 	}
+
 };
 
 
 /**
  * Browser utility provides commonly used browser feature detection methods.
  */
+
+// == Browser Utility =====================
 
 cmt.utils.browser = {
 
@@ -82,7 +91,8 @@ cmt.utils.browser = {
 	 */
 	isCanvas: function() {
 
-		var elem 			= document.createElement( 'canvas' );
+		var elem = document.createElement( 'canvas' );
+		
 		var canvasSupported = !!( elem.getContext && elem.getContext( '2d' ) );
 
 		return canvasSupported;
@@ -95,9 +105,10 @@ cmt.utils.browser = {
 
 		// Used image/png for testing purpose
 
-		var cvsTest 			= document.createElement( "canvas" );
-		var data				= cvsTest.toDataURL( "image/png" );
-		var toDataUrlSupported	= data.indexOf( "data:image/png" ) == 0;
+		var cvsTest	= document.createElement( "canvas" );
+		var data	= cvsTest.toDataURL( "image/png" );
+		
+		var toDataUrlSupported = data.indexOf( "data:image/png" ) == 0;
 
 		return toDataUrlSupported;
 	},
@@ -109,12 +120,18 @@ cmt.utils.browser = {
 
 		return !( typeof history.pushState === 'undefined' );
 	}
+
 };
 
 
 /**
- * Data utility provides methods to convert form elements to json format and to manipulate url parameters. The json data can be used to send request to server side apis.
+ * Data utility provides methods to convert form elements to json format and to manipulate 
+ * url parameters. The json data can be used to send request to server side apis.
+ * 
+ * It also provide other methods to manipulate data.
  */
+
+// == Data Utility ========================
 
 cmt.utils.data = {
 
@@ -123,18 +140,19 @@ cmt.utils.data = {
 	 */
 	serialiseElement: function( elementId, csrf ) {
 
-		var dataArr		= [];
-		var elements 	= null;
+		var dataArr = [];
+
+		var elements = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof elementId == 'string' ) {
 
-			elements 	= jQuery( '#' + elementId ).find( ':input' ).get();
+			elements = jQuery( '#' + elementId ).find( ':input' ).get();
 		}
 		else {
 
-			elements	= elementId.find( ':input' ).get();
+			elements = elementId.find( ':input' ).get();
 		}
 
 		jQuery.each( elements, function() {
@@ -156,7 +174,7 @@ cmt.utils.data = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			dataUrl 	   += "&" + csrfParam + "=" + csrfToken;
+			dataUrl += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		return dataUrl;
@@ -167,18 +185,19 @@ cmt.utils.data = {
 	 */
 	elementToJson: function( elementId, csrf ) {
 
-		var dataArr		= [];
-		var elements 	= null;
+		var dataArr = [];
+
+		var elements = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof elementId == 'string' ) {
 
-			elements 	= jQuery( '#' + elementId ).find( ':input' ).get();
+			elements = jQuery( '#' + elementId ).find( ':input' ).get();
 		}
 		else {
 
-			elements	= elementId.find( ':input' ).get();
+			elements = elementId.find( ':input' ).get();
 		}
 
 		jQuery.each( elements, function() {
@@ -219,7 +238,7 @@ cmt.utils.data = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			dataUrl 	   += "&" + csrfParam + "=" + csrfToken;
+			dataUrl += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		return dataUrl;
@@ -231,17 +250,17 @@ cmt.utils.data = {
 	formToJson: function( formId, csrf ) {
 
 		// Generate form data for submission
-		var formData	= null;
+		var formData = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof formId == 'string' ) {
 
-			formData	= jQuery( '#' + formId ).serializeArray();
+			formData = jQuery( '#' + formId ).serializeArray();
 		}
 		else {
 
-			formData	= formId.serializeArray();
+			formData = formId.serializeArray();
 		}
 
 		return cmt.utils.data.generateJsonMap( formData, csrf );
@@ -252,7 +271,7 @@ cmt.utils.data = {
 	 */
 	generateJsonMap: function( dataArray, csrf ) {
 
-		var json 		= {};
+		var json = {};
 
 		// Append csrf token if required
 		if( csrf && null != jQuery( 'meta[name=csrf-token]' ) ) {
@@ -324,7 +343,7 @@ cmt.utils.data = {
 			var csrfParam   = jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			requestData 	= requestData + '&' + csrfParam + '=' + csrfToken;
+			requestData = requestData + '&' + csrfParam + '=' + csrfToken;
 		}
 
 		return requestData;
@@ -340,7 +359,7 @@ cmt.utils.data = {
 	    	url = window.location.href;
 	    }
 
-	    param 		= param.replace(/[\[\]]/g, "\\$&");
+	    param = param.replace(/[\[\]]/g, "\\$&");
 
 	    var regex 	= new RegExp("[?&]" + param + "(=([^&#]*)|&|#|$)");
 		var results = regex.exec( url );
@@ -465,8 +484,8 @@ cmt.utils.data = {
 
 		var pageUrl	= window.location.href;
 
-		pageUrl 	= cmt.utils.data.removeParam( pageUrl, 'page' );
-		pageUrl 	= cmt.utils.data.removeParam( pageUrl, 'per-page' );
+		pageUrl = cmt.utils.data.removeParam( pageUrl, 'page' );
+		pageUrl = cmt.utils.data.removeParam( pageUrl, 'per-page' );
 
 		window.location	= pageUrl;
 	},
@@ -511,14 +530,19 @@ cmt.utils.data = {
 			}
 		}
 	}
+
 };
 
 
-// Inheritance - Crockford's approach to add inheritance. It works for all browsers. Object.create() is still not supported by all browsers.
+// Inheritance - Crockford's approach to add inheritance. It works for all browsers. 
+// Object.create() is standard way to support inheritance, but still not supported by all browsers.
+
+// == Crockford's Inheritance =============
+
 Function.prototype.inherits = function( parent ) {
 
-	var d	= 0;
-	var p 	= ( this.prototype = new parent() );
+	var d = 0;
+	var p = ( this.prototype = new parent() );
 
 	this.prototype.uber	= function( name ) {
 
@@ -531,15 +555,15 @@ Function.prototype.inherits = function( parent ) {
 
 			while( t ) {
 
-	              v		= v.constructor.prototype;
-	              t 	-= 1;
+	              v  = v.constructor.prototype;
+	              t -= 1;
 			}
 
 			f = v[ name ];
 		}
 		else {
 
-			f	= p[ name ];
+			f = p[ name ];
 
 			if( f == this[ name ] ) {
 
@@ -547,15 +571,16 @@ Function.prototype.inherits = function( parent ) {
 			}
 		}
 
-		d		+= 1;
-		r		 = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
-		d		-= 1;
+		d += 1;
+		r  = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
+		d -= 1;
 
 		return r;
 	};
 };
 
-// Hash Tag - Fix hash tag issues for SNS login
+// == Hash Tag - Clear - SNS Login ========
+
 if( window.location.hash == '#_=_' ) {
 
     if( history.replaceState ) {
@@ -575,10 +600,13 @@ if( window.location.hash == '#_=_' ) {
  * Image utility provides commonly used image processing methods.
  */
 
+// == Image Utility =======================
+
 cmt.utils.image = {
 
 	/**
-	 * It returns an array having width and height for the given image and target dimensions maintaining aspect ratio.
+	 * It returns an array having width and height for the given image and target 
+	 * dimensions maintaining aspect ratio.
 	 */
 	arDimensions: function( image, targetWidth, targetHeight ) {
 
@@ -634,12 +662,15 @@ cmt.utils.image = {
 		    };
 		}
 	}
+
 };
 
 
 /**
  * Object utility provides methods to initialise or manipulate objects.
  */
+
+// == Object Utility ======================
 
 cmt.utils.object = {
 
@@ -648,15 +679,16 @@ cmt.utils.object = {
 	 */
 	strToObject: function( str ) {
 
-	    var arr 		= str.split( "." );
-		var objClass	= ( window || this );
+	    var arr = str.split( "." );
+
+		var objClass = ( window || this );
 
 	    for( var i = 0, arrLength = arr.length; i < arrLength; i++ ) {
 
-	        objClass	= objClass[ arr[ i ] ];
+	        objClass = objClass[ arr[ i ] ];
 	    }
 
-		var obj		= new objClass;
+		var obj = new objClass;
 
 		if ( typeof obj !== 'object' ) {
 
@@ -673,12 +705,15 @@ cmt.utils.object = {
 
 		return ( property in object ) && ( !( property in prototype ) || prototype[ property ] !== object[ property ] );
 	}
+
 };
 
 
 /**
  * UI utility provides methods to format or manage UI elements.
  */
+
+// == UI Utility ==========================
 
 cmt.utils.ui = {
 
@@ -687,8 +722,8 @@ cmt.utils.ui = {
 	 */
 	alignMiddle: function( parent, child ) {
 
-		var parent			= jQuery( parent );
-		var child			= jQuery( child );
+		var parent	= jQuery( parent );
+		var child	= jQuery( child );
 
 		var parentHeight	= parent.height();
 		var parentWidth		= parent.width();
@@ -697,13 +732,270 @@ cmt.utils.ui = {
 
 		if( childHeight <= parentHeight && childWidth <= parentWidth ) {
 
-			var top 	= (parentHeight - childHeight) / 2;
-			var left 	= (parentWidth - childWidth) / 2;
+			var top		= (parentHeight - childHeight) / 2;
+			var left	= (parentWidth - childWidth) / 2;
 
 			child.css( { "position": "absolute", "top": top, "left": left } );
 		}
 	}
+
 };
+
+
+/**
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to components library.
+ */
+
+// == Global Namespace ====================
+
+cmt.components = cmt.components || {};
+
+
+/**
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to base of components library.
+ */
+
+// == Global Namespace ====================
+
+cmt.components.base = cmt.components.base || {};
+
+// == Components Manager ==================
+
+cmt.components.Root = function( options ) {
+
+	this.components = []; // Alias, Path map
+
+	this.activeComponents = []; // Alias, Component
+}
+
+/**
+ * It maps the component to registry by accepting alias and path.
+ *
+ * @param {string} alias
+ * @param {string} path
+ */
+cmt.components.Root.prototype.mapComponent = function( alias, path ) {
+
+	if( this.components[ alias ] == undefined ) {
+
+		this.components[ alias ] = path;
+	}
+}
+
+/**
+ * It returns the component from active components.
+ *
+ * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
+ * @returns {cmt.components.base.BaseComponent}
+ */
+cmt.components.Root.prototype.getComponent = function( alias, options, factory ) {
+
+	options = typeof options !== 'undefined' ? options : { };
+
+	if( this.components[ alias ] == undefined ) throw 'Component with alias ' + alias + ' is not registered.';
+
+	// Create and return the instance
+	if( factory ) {
+
+		var component = cmt.utils.object.strToObject( this.components[ alias ] );
+
+		// Initialise Component
+		component.init( options );
+
+		return component;
+	}
+
+	// Create singleton instance if not exist
+	if( this.activeComponents[ alias ] == undefined ) {
+
+		var component = cmt.utils.object.strToObject( this.components[ alias ] );
+
+		// Initialise Component
+		component.init( options );
+
+		// Add singleton to active registry
+		this.activeComponents[ alias ] = component;
+	}
+
+	return this.activeComponents[ alias ];
+}
+
+/**
+ * It set and update the active components.
+ *
+ * @param {string} alias
+ * @param {cmt.components.base.BaseComponent} component
+ */
+cmt.components.Root.prototype.setComponent = function( alias, component ) {
+
+	if( this.activeComponents[ alias ] == undefined ) {
+
+		this.activeComponents[ alias ] = component;
+	}
+}
+
+/**
+ * It maps the component to registry and add it to active components.
+ *
+ * @param {string} alias
+ * @param {string} classpath
+ * @param {object} options
+ * @returns {cmt.components.base.BaseComponent}
+ */
+cmt.components.Root.prototype.registerComponent = function( alias, classpath, options ) {
+
+	this.mapComponent( alias, classpath );
+
+	return this.getComponent( alias, options );
+};
+
+cmt.components.root = new cmt.components.Root();
+
+
+cmt.components.base.BaseComponent = function( options ) {
+
+};
+
+// Initialise --------------------
+
+cmt.components.base.BaseComponent.prototype.init = function( options ) {
+
+	// Initialise component
+};
+
+
+cmt.components.base.ActionsComponent = function() {
+
+	this.counter = 0;
+
+	this.documentHeight = 0;
+	this.screenWidth	= 0;
+
+	this.options = null;
+};
+
+cmt.components.base.ActionsComponent.inherits( cmt.components.base.BaseComponent );
+
+cmt.components.base.ActionsComponent.prototype.defaults = {
+	listAlignment: 'left' // Can be either left or right
+};
+
+// Initialise --------------------
+
+cmt.components.base.ActionsComponent.prototype.init = function( options ) {
+
+	// Configure Object
+	this.documentHeight = jQuery( document ).height();
+	this.screenWidth	= jQuery( window ).width();
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.ActionsComponent.prototype.initElements = function( elements ) {
+
+	var self = this;
+
+	// Iterate and initialise the jQuery elements
+	elements.each( function() {
+
+		var element = jQuery( this );
+
+		self.initElement( element );
+
+		self.counter++;
+	});
+};
+
+cmt.components.base.ActionsComponent.prototype.initElement = function( element ) {
+
+	var self = this;
+
+	var index = self.counter;
+	
+	var screenWidth = self.screenWidth;
+
+	var data	= element.find( '.actions-list-data' );
+	var align	= self.options.listAlignment;
+
+	// Target
+	element.find( '.actions-list-title' ).attr( 'data-target', '#actions-list-data-' + index );
+
+	// Identifier
+	element.attr( 'data-id', index );
+	data.attr( 'data-id', index );
+
+	// Configure Ids
+	element.attr( 'id', 'actions-list-' + index );
+	data.attr( 'id', 'actions-list-data-' + index );
+
+	// Detach
+	data = data.detach();
+
+	// Append to Body
+	data.appendTo( 'body' );
+
+	// Alignment
+	if( cmt.utils.data.hasAttribute( data, 'data-alignment' ) ) {
+
+		align = data.attr( 'data-alignment' );
+	}
+
+	element.find( '.actions-list-title' ).click( function() {
+
+		if( data.is( ':hidden' ) ) {
+
+			var offset	= element.offset();
+			var show	= align;
+
+			var dataTop		= offset.top + element.height();
+			var dataLeft	= offset.left;
+			var dataRight	= screenWidth - offset.left - element.width();
+
+			var dataWidth = data.width();
+
+			// Swap Alignment - Left to Right
+			if( align == 'left' && ( offset.left + dataWidth + 5 ) > screenWidth ) {
+
+				show = 'right';
+			}
+			// Swap Alignment - Right to Left
+			else if( align == 'right' && ( offset.left + dataWidth + 5 ) > element.width() ) {
+
+				show = 'left';
+			}
+
+			if( show == 'left' ) {
+
+				data.css( { top: dataTop, left: dataLeft } );
+			}
+			else if( show == 'right' ) {
+
+				data.css( { top: dataTop, right: dataRight } );
+			}
+
+			data.slideDown( 'slow' );
+		}
+		else {
+
+			data.slideUp( 'slow' );
+		}
+	});
+};
+
+
+/**
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to jQuery implementation of components library.
+ */
+
+// == Global Namespace ====================
+
+cmt.components.jquery = cmt.components.jquery || {};
 
 
 /**
@@ -788,70 +1080,31 @@ cmt.utils.ui = {
 
 
 /**
- * Actions list having hidden list displayed when user click on list title.
+ * Actions list having hidden action list displayed when user click on list title.
  */
 
-( function( cmtjq ) {
+jQuery.fn.cmtActions = function( options ) {
 
-	cmtjq.fn.cmtActions = function( options ) {
+	var component = null;
+	
+	// Init Elements
+	try {
+		
+		component = cmt.components.root.getComponent( 'actions' );
 
-		// == Init == //
+		component.initElements( this );
+	}
+	// Init Component and Elements
+	catch( err ) {
+		
+		component = cmt.components.root.registerComponent( 'actions', 'cmt.components.base.ActionsComponent' );
 
-		// Configure Plugin
-		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtFormInfo.defaults, options );
-		var actions		= this;
+		component.initElements( this);
+	}
 
-		// Iterate and initialise all the menus
-		actions.each( function( index, val ) {
-
-			var list = cmtjq( this );
-
-			init( list, index );
-		});
-
-		// return control
-		return;
-
-		// == Private Functions == //
-
-		function init( list, index ) {
-
-			var data = list.find( '.actions-list-data' );
-
-			list.attr( 'data-id', index );
-			list.find( '.actions-list-title' ).attr( 'data-target', '#actions-list-data-' + index );
-			data.attr( 'id', 'actions-list-data-' + index );
-
-			// Detach
-			data = data.detach();
-
-			// Append to Body
-			data.appendTo( "body" );
-
-			list.find( '.actions-list-title' ).click( function() {
-
-				var offset = list.offset();
-
-				data.css( { top: ( offset.top + list.height() ), left: offset.left } );
-
-				if( data.is( ':hidden' ) ) {
-
-					data.slideDown( 'slow' );
-				}
-				else {
-					
-					data.slideUp( 'slow' );
-				}
-			});
-		}
-	};
-
-	// Default Settings
-	cmtjq.fn.cmtActions.defaults = {
-		position: 'tr'
-	};
-
-})( jQuery );
+	// return control
+	return;
+};
 
 
 /**
@@ -4522,17 +4775,20 @@ function hideMessagePopup() {
 })( jQuery );
 
 
-// TODO: Add Data Binding Support to bind data sent by server to respective ui component
-// TODO: Add Data Binding with Pagination for Data Grid
-// TODO: Add Page History and Caching Support
-
 /**
- * CMGTools API library provide methods to process AJAX request. These requests can be either form or regular
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to communicate with server and process the request and response using MVC patterns.
  */
+
+// == Global Namespace ====================
 
 cmt.api = {};
 
-// Manage Applications -----------------------------------
+// TODO: Add Data Binding Support using Model to bind data sent by server to respective ui component
+// TODO: Add Data Binding with Pagination for Data Grid
+// TODO: Add Page History and Caching Support
+
+// == Applications ========================
 
 cmt.api.Root = function( options ) {
 
@@ -4625,15 +4881,16 @@ cmt.api.root = new cmt.api.Root();
 /**
  * Key Concepts
  * -------------------------
- * 1. Application
- * 2. Controller
- * 3. Action
- * 4. User
- * 5. Route
- * 6. Request Element
- * 7. Trigger Element
- * 8. Get, Post, Put and Delete
- * 9. View
+ *  1. Application
+ *  2. Controller
+ *  3. Service
+ *  4. Action
+ *  5. User
+ *  6. Route
+ *  7. Request Element
+ *  8. Trigger Element
+ *  9. Get, Post, Put and Delete
+ * 10. View
  *
  * An application is a collection of app config and controllers. Each controller can define several actions that can be executed by app user.
  * A project can create multiple applications based on it's needs. The request triggers present within request elements use the Request Processing Engine
@@ -4647,7 +4904,7 @@ cmt.api.root = new cmt.api.Root();
  * sent back by server.
  */
 
-// Application -------------------------------------------
+// == Application =========================
 
 cmt.api.Application = function( options ) {
 
@@ -4668,7 +4925,7 @@ cmt.api.Application = function( options ) {
 	jQuery.extend( this.config, options );
 
 	// Default controller to be used as fallback in case no controller is mentioned
-	var defaultController	= cmt.api.Application.CONTROLLER_DEFAULT;
+	var defaultController = cmt.api.Application.CONTROLLER_DEFAULT;
 
 	// TODO: Add Apix and REST based default controllers to handle CRUD operations.
 
@@ -4689,18 +4946,19 @@ cmt.api.Application = function( options ) {
 	/**
 	 * An exhaustive map of all the controllers (alias, classpath) available for the application. Each application can use this map to maintain it's controllers list.
 	 */
-	this.controllers 						= []; // Alias, Path map
-	this.controllers[ defaultController ] 	= 'cmt.api.controllers.RequestController';
+	this.controllers = []; // Alias, Path map
+
+	this.controllers[ defaultController ] = 'cmt.api.controllers.RequestController';
 
 	/**
 	 * Map of all the active controllers (alias, object) which are already initialised. It will save us from re-initialising controllers.
 	 */
-	this.activeControllers 	= []; // Alias, Controller map
+	this.activeControllers = []; // Alias, Controller map
 	
 	/**
 	 * Map of all the services (alias, classpath) available for the application.
 	 */
-	this.services	= [];
+	this.services = [];
 	
 	/**
 	 * Map to query active services (alias, object) which are already initialised.
@@ -4708,7 +4966,7 @@ cmt.api.Application = function( options ) {
 	this.activeServices	= [];
 };
 
-// Application Globals -----------------------------------
+// == Application Globals =================
 
 //Defaults
 cmt.api.Application.CONTROLLER_DEFAULT	= 'default';			// Default Controller Alias
@@ -4746,7 +5004,7 @@ cmt.api.Application.STATIC_BLUR			=  '.cmt-blur';			// The class to be set for t
  * for an action. The post processor method can define logic to handle response and use appropriate templating engine to update view.
  */
 
-// Application Initialisation ----------------------------
+// == Application Initialisation ==========
 
 cmt.api.Application.prototype.init = function( options ) {
 
@@ -4754,7 +5012,7 @@ cmt.api.Application.prototype.init = function( options ) {
 	jQuery.extend( this.config, options );
 }
 
-// Manage Application Controllers ------------------------
+// == Applications Controllers ============
 
 /**
  * It maps the controller to registry by accepting alias and path.
@@ -4869,7 +5127,7 @@ cmt.api.Application.prototype.findController = function( alias, options, factory
 	}
 };
 
-// Manage Application Services ---------------------------
+// == Application Services ================
 
 /**
  * It maps the service to registry by accepting alias and path.
@@ -4999,7 +5257,7 @@ cmt.api.controllers.BaseController.prototype.init = function( options ) {
  */
 cmt.api.controllers.ActionController = function( options ) {
 
-	this.requestData	= null;	// Request data for post requests
+	this.requestData = null;	// Request data for post requests
 };
 
 // Initialise --------------------
