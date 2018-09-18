@@ -53,11 +53,11 @@ cmt.components.base.ActionsComponent.prototype.initElement = function( element )
 	var align	= self.options.listAlignment;
 
 	// Target
-	element.find( '.actions-list-title' ).attr( 'data-target', '#actions-list-data-' + index );
+	element.find( '.actions-list-title' ).attr( 'ldata-target', '#actions-list-data-' + index );
 
 	// Identifier
-	element.attr( 'data-id', index );
-	data.attr( 'data-id', index );
+	element.attr( 'ldata-id', index );
+	data.attr( 'ldata-id', index );
 
 	// Configure Ids
 	element.attr( 'id', 'actions-list-' + index );
@@ -70,9 +70,9 @@ cmt.components.base.ActionsComponent.prototype.initElement = function( element )
 	data.appendTo( 'body' );
 
 	// Alignment
-	if( cmt.utils.data.hasAttribute( data, 'data-alignment' ) ) {
+	if( cmt.utils.data.hasAttribute( data, 'ldata-alignment' ) ) {
 
-		align = data.attr( 'data-alignment' );
+		align = data.attr( 'ldata-alignment' );
 	}
 
 	element.find( '.actions-list-title' ).click( function() {

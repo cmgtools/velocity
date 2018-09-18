@@ -58,3 +58,22 @@ if( window.location.hash == '#_=_' ) {
         window.location.hash = '';
     }
 }
+
+// == Object Size =========================
+
+// Static method to get the size of associative arrays
+Object.size = function( arr ) {
+
+    var size = 0;
+
+	// Iterate over all properties
+    for( var key in arr ) {
+
+        if( arr.hasOwnProperty( key ) ) {
+			
+			size++;
+		}
+    }
+
+    return size;
+};
