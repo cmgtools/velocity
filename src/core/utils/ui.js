@@ -26,6 +26,35 @@ cmt.utils.ui = {
 
 			child.css( { "position": "absolute", "top": top, "left": left } );
 		}
-	}
+	},
 
+	// Initialise Custom Select
+	initSelect: function( selector ) {
+		
+		jQuery( selector ).cmtSelect( { iconHtml: '<span class="cmti cmti-chevron-down"></span>' } );
+	},
+
+	// Initialise Custom Select
+	initSelectElement: function( element ) {
+		
+		element.cmtSelect( { iconHtml: '<span class="cmti cmti-chevron-down"></span>' } );
+	},
+	
+	// Initialise Actions
+	initActions: function( selector ) {
+		
+		var actions = jQuery( selector );
+
+		// Actions
+		actions.cmtActions();
+		actions.find( '.cmt-auto-hide' ).cmtAutoHide();
+	},
+	
+	// Initialise Actions
+	initActionsElement: function( element ) {
+
+		// Actions
+		element.cmtActions();
+		element.find( '.cmt-auto-hide' ).cmtAutoHide();
+	}
 };
