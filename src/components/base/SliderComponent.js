@@ -286,9 +286,21 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 		currentSlide.attr( 'ldata-id', newIndex );
 	});
 
-	this.filmstrip.find( '.slider-slide[ldata-id=1]' ).before( slideHtml );
+	var slide = this.filmstrip.find( '.slider-slide[ldata-id=1]' );
 
-	var slide = this.filmstrip.find( '.slider-slide[ldata-id=1]' ).prev();
+	if( slide.length == 0 ) {
+
+		this.filmstrip.append( slideHtml );
+
+		slide = this.filmstrip.find( ':first-child' )[ 0 ];
+		slide = jQuery( slide );
+	}
+	else {
+
+		this.filmstrip.find( '.slider-slide[ldata-id=1]' ).before( slideHtml );
+
+		slide = slide.prev();
+	}
 
 	slide.attr( 'ldata-id', 0 );
 	slide.addClass( 'slider-slide' );
