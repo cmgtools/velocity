@@ -28,12 +28,22 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	preSlideChange: null,
 	// Listener Callback for post processing
 	postSlideChange: null,
-	circular: true
+	circular: true,
+	// Collage
+	collage: false,
+	collageLimit: 5,
+	collageConfig: null
 };
 
 // == Slider Component ====================
 
 cmt.components.base.SliderComponent.prototype.init = function( options ) {
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.SliderComponent.prototype.resetOptions = function( options ) {
 
 	// Merge Options
 	this.options = jQuery.extend( {}, this.defaults, options );
@@ -86,8 +96,9 @@ cmt.components.base.SliderComponent.prototype.removeSlide = function( sliderKey,
 
 cmt.components.base.Slider = function( component, element ) {
 
-	// Component Options
-	this.component = component;
+	// Component & Options
+	this.component	= component;
+	this.options	= component.options;
 
 	// The Element
 	this.element = element;
@@ -122,16 +133,51 @@ cmt.components.base.Slider.prototype.init = function() {
 
 // Update View
 cmt.components.base.Slider.prototype.initView = function() {
+	
+	var self = this;
+
+	var options = this.options;
+	var slides	= this.element.children();
+
+	// Generate Collage
+	if( options.collage && slides.length > 0 && slides.length <= options.collageLimit ) {
+
+		this.element.css( 'height', 'auto' );
+
+		var collage = new cmt.components.base.Collage();
+
+		collage.limit	= options.collageLimit;
+		collage.config	= null != options.collageConfig ? options.collageConfig : collage.config;
+
+		var html = collage.generateView( this.element );
+
+		this.element.html( html );
+
+		this.slides = this.element.find( '.cl-wrap, .cr-wrap' );
+
+		// Set slides position on filmstrip
+		this.slides.each( function() {
+
+			var currentSlide = jQuery( this );
+
+			self.resetSlide( currentSlide );
+		});
+		
+		// Index
+		this.indexSlides();
+
+		return;
+	}
 
 	// Add slide class to all the slides
-	this.element.children().each( function() {
+	slides.each( function() {
 
 		var slide = jQuery( this );
 
 		slide.addClass( 'slider-slide' );
 	});
 
-	var slides = this.element.find( '.slider-slide' ).detach();
+	slides = this.element.find( '.slider-slide' ).detach();
 
 	// Slides
 	var view = '<div class="slider-slides-wrap"><div class="slider-slides"></div></div>';
@@ -147,9 +193,9 @@ cmt.components.base.Slider.prototype.initView = function() {
 // Make filmstrip of all slides
 cmt.components.base.Slider.prototype.normalise = function() {
 
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	// Controls
 	this.leftControl	= element.find( '.slider-control-left' );
@@ -188,9 +234,9 @@ cmt.components.base.Slider.prototype.normalise = function() {
 	if( this.filmstrip.width() < element.width() ) {
 
 		// Notify the Callback for lower width
-		if( null !== component.options.smallerContent ) {
+		if( null !== options.smallerContent ) {
 
-			component.options.smallerContent( element, this.filmstrip );
+			options.smallerContent( element, this.filmstrip );
 		}
 	}
 	
@@ -213,9 +259,9 @@ cmt.components.base.Slider.prototype.indexSlides = function() {
 // Initialise the Slider controls
 cmt.components.base.Slider.prototype.initControls = function() {
 	
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	if( this.filmstrip.width() < element.width() ) {
 
@@ -231,14 +277,14 @@ cmt.components.base.Slider.prototype.initControls = function() {
 	}
 
 	// Show Controls
-	var lControlContent	= component.options.lControlContent;
-	var rControlContent	= component.options.rControlContent;
+	var lControlContent	= options.lControlContent;
+	var rControlContent	= options.rControlContent;
 
 	// Init Listeners
 	this.leftControl.html( lControlContent );
 	this.rightControl.html( rControlContent );
 
-	if( !component.options.circular ) {
+	if( !options.circular ) {
 
 		this.leftControl.hide();
 		this.rightControl.show();
@@ -248,7 +294,7 @@ cmt.components.base.Slider.prototype.initControls = function() {
 
 	this.leftControl.click( function() {
 
-		if( component.options.circular ) {
+		if( options.circular ) {
 
 			self.showPrevSlide();
 		}
@@ -262,7 +308,7 @@ cmt.components.base.Slider.prototype.initControls = function() {
 
 	this.rightControl.click( function() {
 
-		if( component.options.circular ) {
+		if( options.circular ) {
 
 			self.showNextSlide();
 		}
@@ -334,10 +380,10 @@ cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
-	var component	= this.component;
-	var element		= this.element;
+	var options = this.options;
+	var element	= this.element;
 
-	if( null !== component.options.onSlideClick ) {
+	if( null !== options.onSlideClick ) {
 
 		// remove existing click event
 		slide.unbind( 'click' );
@@ -345,7 +391,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		// reset click event
 		slide.click( function() {
 
-			component.options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
 		});
 	}
 };
@@ -375,16 +421,16 @@ cmt.components.base.Slider.prototype.resetSlides = function() {
 // Show Previous Slide on clicking next button
 cmt.components.base.Slider.prototype.showNextSlide = function() {
 
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	var firstSlide = this.slides.first();
 
 	// do pre processing
-	if( null !== component.options.preSlideChange ) {
+	if( null !== options.preSlideChange ) {
 
-		component.options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 
 	// do animation - animate slider
@@ -408,25 +454,25 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	firstSlide = this.slides.first();
 
 	// do post processing
-	if( null !== component.options.postSlideChange ) {
+	if( null !== options.postSlideChange ) {
 
-		component.options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 }
 
 // Show Next Slide on clicking previous button
 cmt.components.base.Slider.prototype.showPrevSlide = function() {
 
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	var firstSlide = this.slides.first();
 
 	// do pre processing
-	if( null !== component.options.preSlideChange ) {
+	if( null !== options.preSlideChange ) {
 
-		component.options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 
 	// Remove last and append to first
@@ -452,9 +498,9 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	firstSlide = this.slides.first();
 
 	// do post processing
-	if( null !== component.options.postSlideChange ) {
+	if( null !== options.postSlideChange ) {
 
-		component.options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 }
 

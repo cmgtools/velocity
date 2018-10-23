@@ -13,6 +13,8 @@
 			// Init Elements
 			try {
 
+				component.resetOptions( options );
+
 				component.initSliders( this );
 			}
 			// Init Component and Elements

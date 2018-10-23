@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-10-21
+ * Velocity - v1.0.0-alpha1 - 2018-10-24
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1036,6 +1036,133 @@ cmt.components.base.ActionsComponent.prototype.initElement = function( element )
 };
 
 
+// == Collage =============================
+
+cmt.components.base.Collage = function() {
+
+	// Max Images
+	this.limit = 5;
+	
+	// Image Counter
+	this.counter = 0;
+
+	// Images Arrangement - 1 to 5 images
+	this.config = [
+		// 1 image - One row having 1 image
+		[
+			{ cr: { w: "f", h: "xl" } }
+		],
+		// 2 images - One row having 2 images
+		[
+			{ cl: { w: "h", h: "l" } },
+			{ cb: { w: "0", h: "l" } },
+			{ cl: { w: "h", h: "l" } }
+		],
+		// 3 images - One row having 1 image in first column and 2 images in 2nd column
+		[
+			{ cl: { w: "h", h: "xl" } },
+			{ cb: { w: "0", h: "xl" } },
+			{ cle: { w: "h", h: "xl", c: [
+				{ cr: { w: "f", h: "m" } },
+				{ cr: { w: "f", h: "m" } }
+			] } }
+		],
+		// 4 images - First row having 1 image, Second row having 3 images
+		[
+			{ cr: { w: "f", h: "xl" } },
+			{ cre: { w: "f", h: "l", c: [
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "1", h: "l" } },
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "1", h: "l" } },
+				{ cl: { w: "ot", h: "l" } }
+			] } }
+		],
+		// 5 images - First row having 2 images, Second row having 3 images
+		[
+			{ cre: { w: "f", h: "xl", c: [
+				{ cl: { w: "h", h: "xl" } },
+				{ cb: { w: "0", h: "xl" } },
+				{ cl: { w: "h", h: "xl" } }
+			] } },
+			{ cre: { w: "f", h: "l", c: [
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "0", h: "l" } },
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "0", h: "l" } },
+				{ cl: { w: "ot", h: "l" } }
+			] } }
+		]
+	];
+};
+
+cmt.components.base.Collage.prototype.generateView = function( element ) {
+
+	var slides	= element.children();
+	var config	= this.config[ slides.length ];
+
+	var html = this.generateConfigView( config, slides );
+
+	return html;
+};
+
+cmt.components.base.Collage.prototype.generateConfigView = function( config, slides, wrapper ) {
+
+	var html = null != wrapper ? "<div class=\"" + wrapper + "\">" : "<div class=\"crl-wrap\">";
+
+	for( var i = 0; i < config.length; i++ ) {
+
+		var con		= config[ i ];
+		var slide	= jQuery( slides[ this.counter ] );
+
+		if( cmt.utils.object.hasProperty( con, "cr" ) ) {
+			
+			slide.addClass( "cr-wrap" );
+
+			html += "<div class=\"cr cr-w-" + con.cr.w + " cr-h-" + con.cr.h + "\">" + slides[ this.counter ].outerHTML + "</div>";
+
+			this.counter++;
+		}
+		else if( cmt.utils.object.hasProperty( con, "cl" ) ) {
+			
+			slide.addClass( "cl-wrap" );
+
+			html += "<div class=\"cl cl-w-" + con.cl.w + " cl-h-" + con.cl.h + "\">" + slides[ this.counter ].outerHTML + "</div>";
+
+			this.counter++;
+		}
+		else if( cmt.utils.object.hasProperty( con, "cb" ) ) {
+
+			html += "<div class=\"cb cb-w-" + con.cb.w + " cb-h-" + con.cb.h + "\"></div>";
+		}
+		else if( cmt.utils.object.hasProperty( con, "cle" ) ) {
+
+			html += "<div class=\"cl cl-w-" + con.cle.w + " cl-h-" + con.cle.h + "\">";
+
+			if( cmt.utils.object.hasProperty( con.cle, "c" ) ) {
+
+				html += this.generateConfigView( con.cle.c, slides, "cle-wrap" );
+			}
+
+			html += "</div>";
+		}
+		else if( cmt.utils.object.hasProperty( con, "cre" ) ) {
+
+			html += "<div class=\"cr cr-w-" + con.cre.w + " cr-h-" + con.cre.h + "\">";
+
+			if( cmt.utils.object.hasProperty( con.cre, "c" ) ) {
+
+				html += this.generateConfigView( con.cre.c, slides, "cre-wrap" );
+			}
+
+			html += "</div>";
+		}
+	}
+
+	return html + "</div>";	
+};
+
+
 cmt.components.base.SliderComponent = function() {
 
 	// Id Tracker
@@ -1066,12 +1193,22 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	preSlideChange: null,
 	// Listener Callback for post processing
 	postSlideChange: null,
-	circular: true
+	circular: true,
+	// Collage
+	collage: false,
+	collageLimit: 5,
+	collageConfig: null
 };
 
 // == Slider Component ====================
 
 cmt.components.base.SliderComponent.prototype.init = function( options ) {
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.SliderComponent.prototype.resetOptions = function( options ) {
 
 	// Merge Options
 	this.options = jQuery.extend( {}, this.defaults, options );
@@ -1124,8 +1261,9 @@ cmt.components.base.SliderComponent.prototype.removeSlide = function( sliderKey,
 
 cmt.components.base.Slider = function( component, element ) {
 
-	// Component Options
-	this.component = component;
+	// Component & Options
+	this.component	= component;
+	this.options	= component.options;
 
 	// The Element
 	this.element = element;
@@ -1160,16 +1298,51 @@ cmt.components.base.Slider.prototype.init = function() {
 
 // Update View
 cmt.components.base.Slider.prototype.initView = function() {
+	
+	var self = this;
+
+	var options = this.options;
+	var slides	= this.element.children();
+
+	// Generate Collage
+	if( options.collage && slides.length > 0 && slides.length <= options.collageLimit ) {
+
+		this.element.css( 'height', 'auto' );
+
+		var collage = new cmt.components.base.Collage();
+
+		collage.limit	= options.collageLimit;
+		collage.config	= null != options.collageConfig ? options.collageConfig : collage.config;
+
+		var html = collage.generateView( this.element );
+
+		this.element.html( html );
+
+		this.slides = this.element.find( '.cl-wrap, .cr-wrap' );
+
+		// Set slides position on filmstrip
+		this.slides.each( function() {
+
+			var currentSlide = jQuery( this );
+
+			self.resetSlide( currentSlide );
+		});
+		
+		// Index
+		this.indexSlides();
+
+		return;
+	}
 
 	// Add slide class to all the slides
-	this.element.children().each( function() {
+	slides.each( function() {
 
 		var slide = jQuery( this );
 
 		slide.addClass( 'slider-slide' );
 	});
 
-	var slides = this.element.find( '.slider-slide' ).detach();
+	slides = this.element.find( '.slider-slide' ).detach();
 
 	// Slides
 	var view = '<div class="slider-slides-wrap"><div class="slider-slides"></div></div>';
@@ -1185,9 +1358,9 @@ cmt.components.base.Slider.prototype.initView = function() {
 // Make filmstrip of all slides
 cmt.components.base.Slider.prototype.normalise = function() {
 
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	// Controls
 	this.leftControl	= element.find( '.slider-control-left' );
@@ -1226,9 +1399,9 @@ cmt.components.base.Slider.prototype.normalise = function() {
 	if( this.filmstrip.width() < element.width() ) {
 
 		// Notify the Callback for lower width
-		if( null !== component.options.smallerContent ) {
+		if( null !== options.smallerContent ) {
 
-			component.options.smallerContent( element, this.filmstrip );
+			options.smallerContent( element, this.filmstrip );
 		}
 	}
 	
@@ -1251,9 +1424,9 @@ cmt.components.base.Slider.prototype.indexSlides = function() {
 // Initialise the Slider controls
 cmt.components.base.Slider.prototype.initControls = function() {
 	
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	if( this.filmstrip.width() < element.width() ) {
 
@@ -1269,14 +1442,14 @@ cmt.components.base.Slider.prototype.initControls = function() {
 	}
 
 	// Show Controls
-	var lControlContent	= component.options.lControlContent;
-	var rControlContent	= component.options.rControlContent;
+	var lControlContent	= options.lControlContent;
+	var rControlContent	= options.rControlContent;
 
 	// Init Listeners
 	this.leftControl.html( lControlContent );
 	this.rightControl.html( rControlContent );
 
-	if( !component.options.circular ) {
+	if( !options.circular ) {
 
 		this.leftControl.hide();
 		this.rightControl.show();
@@ -1286,7 +1459,7 @@ cmt.components.base.Slider.prototype.initControls = function() {
 
 	this.leftControl.click( function() {
 
-		if( component.options.circular ) {
+		if( options.circular ) {
 
 			self.showPrevSlide();
 		}
@@ -1300,7 +1473,7 @@ cmt.components.base.Slider.prototype.initControls = function() {
 
 	this.rightControl.click( function() {
 
-		if( component.options.circular ) {
+		if( options.circular ) {
 
 			self.showNextSlide();
 		}
@@ -1372,10 +1545,10 @@ cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
-	var component	= this.component;
-	var element		= this.element;
+	var options = this.options;
+	var element	= this.element;
 
-	if( null !== component.options.onSlideClick ) {
+	if( null !== options.onSlideClick ) {
 
 		// remove existing click event
 		slide.unbind( 'click' );
@@ -1383,7 +1556,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		// reset click event
 		slide.click( function() {
 
-			component.options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
 		});
 	}
 };
@@ -1413,16 +1586,16 @@ cmt.components.base.Slider.prototype.resetSlides = function() {
 // Show Previous Slide on clicking next button
 cmt.components.base.Slider.prototype.showNextSlide = function() {
 
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	var firstSlide = this.slides.first();
 
 	// do pre processing
-	if( null !== component.options.preSlideChange ) {
+	if( null !== options.preSlideChange ) {
 
-		component.options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 
 	// do animation - animate slider
@@ -1446,25 +1619,25 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	firstSlide = this.slides.first();
 
 	// do post processing
-	if( null !== component.options.postSlideChange ) {
+	if( null !== options.postSlideChange ) {
 
-		component.options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 }
 
 // Show Next Slide on clicking previous button
 cmt.components.base.Slider.prototype.showPrevSlide = function() {
 
-	var self		= this;
-	var component	= this.component;
-	var element		= this.element;
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
 
 	var firstSlide = this.slides.first();
 
 	// do pre processing
-	if( null !== component.options.preSlideChange ) {
+	if( null !== options.preSlideChange ) {
 
-		component.options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 
 	// Remove last and append to first
@@ -1490,9 +1663,9 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	firstSlide = this.slides.first();
 
 	// do post processing
-	if( null !== component.options.postSlideChange ) {
+	if( null !== options.postSlideChange ) {
 
-		component.options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
 }
 
@@ -4645,6 +4818,8 @@ function hideMessagePopup() {
 
 			// Init Elements
 			try {
+
+				component.resetOptions( options );
 
 				component.initSliders( this );
 			}
