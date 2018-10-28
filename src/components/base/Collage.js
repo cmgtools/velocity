@@ -61,7 +61,7 @@ cmt.components.base.Collage = function() {
 cmt.components.base.Collage.prototype.generateView = function( element ) {
 
 	var slides	= element.children();
-	var config	= this.config[ slides.length ];
+	var config	= this.config[ slides.length - 1 ];
 
 	var html = this.generateConfigView( config, slides );
 
