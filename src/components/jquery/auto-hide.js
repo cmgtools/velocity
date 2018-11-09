@@ -27,7 +27,7 @@
 
 		function init( trigger ) {
 
-			var hide = jQuery( trigger.attr( 'data-target' ) );
+			var hide = jQuery( trigger.attr( 'ldata-target' ) );
 
 			jQuery( window ).click( function( e ) {
 
