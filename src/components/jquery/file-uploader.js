@@ -348,6 +348,7 @@
 					break;
 				}
 				case "document":
+				case "mixed":
 				case "compressed":
 				case "shared": {
 
