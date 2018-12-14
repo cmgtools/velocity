@@ -137,6 +137,13 @@ function showPopup( popupSelector ) {
 
 function closePopup( popupSelector ) {
 
+	var popup = jQuery( popupSelector );
+
+	if( popup.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': '', 'height': '', 'margin-right': '' } );
+	}
+
 	jQuery( popupSelector ).fadeOut( 'fast' );
 }
 
