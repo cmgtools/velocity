@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-11-29
+ * Velocity - v1.0.0-alpha1 - 2018-12-14
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1197,7 +1197,10 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	// Collage
 	collage: false,
 	collageLimit: 5,
-	collageConfig: null
+	collageConfig: null,
+	// Lightbox
+	lightbox: false,
+	lightboxId: 'lightbox-slider'
 };
 
 // == Slider Component ====================
@@ -1389,7 +1392,7 @@ cmt.components.base.Slider.prototype.normalise = function() {
 
 		var currentSlide = jQuery( this );
 
-		currentSlide.css( 'left', currentPosition );
+		currentSlide.css( { 'width': self.slideWidth, 'left': currentPosition } );
 
 		currentPosition += self.slideWidth;
 
@@ -1545,6 +1548,8 @@ cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
+	var self = this;
+
 	var options = this.options;
 	var element	= this.element;
 
@@ -1557,6 +1562,14 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		slide.click( function() {
 
 			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+		});
+	}
+
+	if( options.lightbox ) {
+
+		slide.click( function() {
+
+			self.showLightbox( slide, slide.attr( 'ldata-id' ) );
 		});
 	}
 };
@@ -1689,7 +1702,7 @@ cmt.components.base.Slider.prototype.moveToLeft = function() {
 	if( remaining > ( sliderWidth - moveBy ) ) {
 
 		// do animation - animate slider
-		this.animate(
+		this.filmstrip.animate(
 			{ left: leftPosition },
 			{
 				duration: 500,
@@ -1759,6 +1772,82 @@ cmt.components.base.Slider.prototype.moveToRight = function() {
 		this.filmstrip.position( { at: "left top" } );
 	}
 };
+
+// Move to left on clicking next button
+cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
+
+	var self		= this;
+	var element		= this.element;
+	var lightboxId	= this.options.lightboxId;
+	var lightbox	= jQuery( '#' + lightboxId );
+
+	// Configure
+	var screenWidth		= jQuery( window ).width();
+	var screenHeight	= jQuery( window ).height();
+
+	var lightboxData = lightbox.find( '.lightbox-data' );
+
+	var widthRatio	= screenWidth/12;
+	var heightRatio	= screenHeight/12;
+
+	lightboxData.css( { top: heightRatio, left: widthRatio, width: ( widthRatio * 10 ), height: ( heightRatio * 10 ) } );
+
+	var sliderHtml = '<div class="slider slider-basic slider-lightbox">';
+
+	// Prepare Gallery
+	element.find( '.slider-slide, .slide, .cl-wrap, .cr-wrap' ).each( function() {
+
+		var slide	= jQuery( this );
+		var slId	= slide.attr( 'ldata-id' );
+
+		var thumbUrl = slide.attr( 'thumb-url' );
+		var imageUrl = slide.attr( 'image-url' );
+
+		if( slideId == slId ) {
+
+			sliderHtml += '<div class="active"><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+
+			lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+		}
+		else {
+
+			sliderHtml += '<div><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+		}
+	});
+
+	sliderHtml += '</div>';
+
+	lightboxData.find( '.wrap-gallery' ).html( sliderHtml );
+
+	if( lightbox.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
+	}
+
+	lightbox.fadeIn( 'slow' );
+
+	// Sliders
+	lightboxData.find( '.slider-lightbox' ).cmtSlider({
+		lControlContent: '<i class="fa fa-2x fa-angle-left valign-center"></i>',
+		rControlContent: '<i class="fa fa-2x fa-angle-right valign-center"></i>',
+		circular: false,
+		onSlideClick: self.setLightboxBkg
+	});
+}
+
+cmt.components.base.Slider.prototype.setLightboxBkg = function( slider, slide, slideId ) {
+
+	var imageUrl = slide.find( '.bkg-image' ).attr( 'image-url' );
+
+	var bkg = slider.closest( '.lightbox-slider-wrap' ).find( '.lightbox-data-bkg' );
+
+	slider.find( '.slide' ).removeClass( 'active' );
+	slide.addClass( 'active' );
+
+	bkg.hide();
+	bkg.css( 'background-image', 'url(' + imageUrl + ')');
+	bkg.fadeIn( 'slow' );
+}
 
 
 /**
@@ -4055,7 +4144,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 			// Close Listener
 			popupData.children( '.popup-close' ).click( function() {
 
-				popup.fadeOut( 'slow' );
+				closePopup( popup );
 			});
 
 			// Modal Window
@@ -4063,40 +4152,72 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 				// Move modal popups to body element
 				popup.appendTo( 'body' );
-
-				// Parent to cover document
-				popup.css( { 'top': '0px', 'left': '0px', 'height': documentHeight, 'width': screenWidth } );
-
+				
 				// Background
-				var bkg			= popup.find( '.popup-screen' );
-
-				if( bkg.length > 0 ) {
-
-					bkg.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
-				}
+				var bkg = popup.find( '.popup-screen' );
 
 				// Filler Layer to listen for close
-				var bkgFiller	= popup.find( '.popup-screen-listener' );
+				var bkgFiller = popup.find( '.popup-screen-listener' );
+
+				if( !popup.hasClass( 'popup-modal' ) ) {
+
+					// Parent to cover document
+					popup.css( { 'top': '0px', 'left': '0px', 'height': documentHeight, 'width': screenWidth } );
+
+					if( bkg.length > 0 ) {
+
+						bkg.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
+					}
+
+					if( bkgFiller.length > 0 ) {
+
+						bkgFiller.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
+					}
+				}
 
 				if( bkgFiller.length > 0 ) {
 
-					bkgFiller.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
-
 					bkgFiller.click( function() {
 
-						popup.fadeOut( 'fast' );
+						closePopup( popup );
 					});
 				}
 
 				// Child at center of parent
 				popup.show(); // Need some better solution if it shows flicker effect
 
-				var popupDataHeight	=  popupData.height();
-				var popupDataWidth	=  popupData.width();
+				var popupDataHeight	=  popupData.outerHeight();
+				var popupDataWidth	=  popupData.outerWidth();
 
 				popup.hide();
 
-				popupData.css( { 'top': screenHeight/2 - popupDataHeight/2, 'left': screenWidth/2 - popupDataWidth/2 } );
+				if( popupDataHeight <= screenHeight ) {
+
+					popupData.css( { 'top': ( screenHeight/2 - popupDataHeight/2 ) } );
+				}
+				else {
+					
+					popupData.css( { 'top': 10 } );
+				}
+
+				if( popupDataWidth <= screenWidth ) {
+
+					popupData.css( { 'left': ( screenWidth/2 - popupDataWidth/2 ) } );
+				}
+				else {
+
+					popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
+				}
+			}
+		}
+
+		function closePopup( popup ) {
+
+			popup.fadeOut( 'slow' );
+
+			if( settings.modal ) {
+
+				jQuery( 'body' ).css( { 'overflow': '', 'height': '', 'margin-right': '' } );
 			}
 		}
 	};
@@ -4112,7 +4233,14 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 function showPopup( popupSelector ) {
 
-	jQuery( popupSelector ).fadeIn( 'slow' );
+	var popup = jQuery( popupSelector );
+
+	if( popup.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
+	}
+
+	popup.fadeIn( 'slow' );
 }
 
 function closePopup( popupSelector ) {

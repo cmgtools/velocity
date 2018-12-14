@@ -32,7 +32,10 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	// Collage
 	collage: false,
 	collageLimit: 5,
-	collageConfig: null
+	collageConfig: null,
+	// Lightbox
+	lightbox: false,
+	lightboxId: 'lightbox-slider'
 };
 
 // == Slider Component ====================
@@ -224,7 +227,7 @@ cmt.components.base.Slider.prototype.normalise = function() {
 
 		var currentSlide = jQuery( this );
 
-		currentSlide.css( 'left', currentPosition );
+		currentSlide.css( { 'width': self.slideWidth, 'left': currentPosition } );
 
 		currentPosition += self.slideWidth;
 
@@ -380,6 +383,8 @@ cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
+	var self = this;
+
 	var options = this.options;
 	var element	= this.element;
 
@@ -392,6 +397,14 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		slide.click( function() {
 
 			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+		});
+	}
+
+	if( options.lightbox ) {
+
+		slide.click( function() {
+
+			self.showLightbox( slide, slide.attr( 'ldata-id' ) );
 		});
 	}
 };
@@ -524,7 +537,7 @@ cmt.components.base.Slider.prototype.moveToLeft = function() {
 	if( remaining > ( sliderWidth - moveBy ) ) {
 
 		// do animation - animate slider
-		this.animate(
+		this.filmstrip.animate(
 			{ left: leftPosition },
 			{
 				duration: 500,
@@ -594,3 +607,79 @@ cmt.components.base.Slider.prototype.moveToRight = function() {
 		this.filmstrip.position( { at: "left top" } );
 	}
 };
+
+// Move to left on clicking next button
+cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
+
+	var self		= this;
+	var element		= this.element;
+	var lightboxId	= this.options.lightboxId;
+	var lightbox	= jQuery( '#' + lightboxId );
+
+	// Configure
+	var screenWidth		= jQuery( window ).width();
+	var screenHeight	= jQuery( window ).height();
+
+	var lightboxData = lightbox.find( '.lightbox-data' );
+
+	var widthRatio	= screenWidth/12;
+	var heightRatio	= screenHeight/12;
+
+	lightboxData.css( { top: heightRatio, left: widthRatio, width: ( widthRatio * 10 ), height: ( heightRatio * 10 ) } );
+
+	var sliderHtml = '<div class="slider slider-basic slider-lightbox">';
+
+	// Prepare Gallery
+	element.find( '.slider-slide, .slide, .cl-wrap, .cr-wrap' ).each( function() {
+
+		var slide	= jQuery( this );
+		var slId	= slide.attr( 'ldata-id' );
+
+		var thumbUrl = slide.attr( 'thumb-url' );
+		var imageUrl = slide.attr( 'image-url' );
+
+		if( slideId == slId ) {
+
+			sliderHtml += '<div class="active"><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+
+			lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+		}
+		else {
+
+			sliderHtml += '<div><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+		}
+	});
+
+	sliderHtml += '</div>';
+
+	lightboxData.find( '.wrap-gallery' ).html( sliderHtml );
+
+	if( lightbox.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
+	}
+
+	lightbox.fadeIn( 'slow' );
+
+	// Sliders
+	lightboxData.find( '.slider-lightbox' ).cmtSlider({
+		lControlContent: '<i class="fa fa-2x fa-angle-left valign-center"></i>',
+		rControlContent: '<i class="fa fa-2x fa-angle-right valign-center"></i>',
+		circular: false,
+		onSlideClick: self.setLightboxBkg
+	});
+}
+
+cmt.components.base.Slider.prototype.setLightboxBkg = function( slider, slide, slideId ) {
+
+	var imageUrl = slide.find( '.bkg-image' ).attr( 'image-url' );
+
+	var bkg = slider.closest( '.lightbox-slider-wrap' ).find( '.lightbox-data-bkg' );
+
+	slider.find( '.slide' ).removeClass( 'active' );
+	slide.addClass( 'active' );
+
+	bkg.hide();
+	bkg.css( 'background-image', 'url(' + imageUrl + ')');
+	bkg.fadeIn( 'slow' );
+}
