@@ -25,6 +25,7 @@ cmt.components.base.GalleryComponent.prototype.defaults = {
 	collageConfig: null,
 	// Lightbox
 	lightbox: false,
+	lightboxBkg: true, // Image as Background or Wrap the Image
 	lightboxId: 'lightbox-slider'
 };
 
@@ -321,7 +322,12 @@ cmt.components.base.Gallery.prototype.showLightbox = function( item, itemId ) {
 	var widthRatio	= screenWidth/12;
 	var heightRatio	= screenHeight/12;
 
-	lightboxData.css( { top: heightRatio, left: widthRatio, width: ( widthRatio * 10 ), height: ( heightRatio * 10 ) } );
+	lightboxData.css( { top: heightRatio/2, left: widthRatio/2, width: ( widthRatio * 11 ), height: ( heightRatio * 11 ) } );
+
+	if( self.options.lightboxBkg ) {
+		
+		lightbox.find( '.lightbox-data-bkg' ).addClass( 'lightbox-bkg-wrap' );
+	}
 
 	var sliderHtml = '<div class="slider slider-basic slider-lightbox">';
 
@@ -338,7 +344,14 @@ cmt.components.base.Gallery.prototype.showLightbox = function( item, itemId ) {
 
 			sliderHtml += '<div class="active"><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
 
-			lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+			if( self.options.lightboxBkg ) {
+
+				lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+			}
+			else {
+				
+				lightbox.find( '.lightbox-data-bkg' ).html( '<img src="' + imageUrl + '"/>' );
+			}
 		}
 		else {
 
@@ -375,6 +388,15 @@ cmt.components.base.Gallery.prototype.setLightboxBkg = function( slider, slide, 
 	slide.addClass( 'active' );
 
 	bkg.hide();
-	bkg.css( 'background-image', 'url(' + imageUrl + ')');
+
+	if( bkg.hasClass( 'lightbox-bkg-wrap' ) ) {
+
+		bkg.css( 'background-image', 'url(' + imageUrl + ')');
+	}
+	else {
+		
+		bkg.html( '<img src="' + imageUrl + '"/>' );
+	}
+
 	bkg.fadeIn( 'slow' );
 }
