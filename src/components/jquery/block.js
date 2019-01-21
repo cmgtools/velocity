@@ -111,14 +111,21 @@
 				if( null != heightAutoMobile && heightAutoMobile ) {
 
 					if( window.innerWidth <= heightAutoMobileWidth ) {
+						
+						if( fullHeight ) {
 
-						block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
+							block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
 
-						var contentWrap = block.children( '.block-content-wrap' );
+							var contentWrap = block.children( '.block-content-wrap' );
 
-						if( contentWrap.hasClass( 'valign-center' ) ) {
+							if( contentWrap.hasClass( 'valign-center' ) ) {
 
-							contentWrap.removeClass( 'valign-center' );
+								contentWrap.removeClass( 'valign-center' );
+							}
+						}
+						else {
+							
+							block.css( { 'height': 'auto' } );
 						}
 					}
 				}

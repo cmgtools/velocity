@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-01-11
+ * Velocity - v1.0.0-alpha1 - 2019-01-21
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -2616,14 +2616,21 @@ cmt.components.jquery = cmt.components.jquery || {};
 				if( null != heightAutoMobile && heightAutoMobile ) {
 
 					if( window.innerWidth <= heightAutoMobileWidth ) {
+						
+						if( fullHeight ) {
 
-						block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
+							block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
 
-						var contentWrap = block.children( '.block-content-wrap' );
+							var contentWrap = block.children( '.block-content-wrap' );
 
-						if( contentWrap.hasClass( 'valign-center' ) ) {
+							if( contentWrap.hasClass( 'valign-center' ) ) {
 
-							contentWrap.removeClass( 'valign-center' );
+								contentWrap.removeClass( 'valign-center' );
+							}
+						}
+						else {
+							
+							block.css( { 'height': 'auto' } );
 						}
 					}
 				}
