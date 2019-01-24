@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-01-21
+ * Velocity - v1.0.0-alpha1 - 2019-01-24
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -5617,8 +5617,13 @@ function hideMessagePopup() {
 
 		function init( tabPanel ) {
 
-			var links	= tabPanel.find( '.tab-link' );
-			var tabs	= tabPanel.find( '.tab-content' );
+			var links	= tabPanel.find( '.tab-links-wrap' ).first().find( '.tab-link' );
+			var tabs	= tabPanel.find( '.tab-content-wrap' ).first();
+			var nested	= tabs.find('.tab-content-wrap .tab-content' );
+
+			tabs = tabs.find( '.tab-content' ).not( nested );
+
+			tabs.hide();
 
 			// Activate first
 			jQuery( links[ 0 ] ).addClass( 'active' );
