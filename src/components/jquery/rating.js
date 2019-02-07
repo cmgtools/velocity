@@ -53,7 +53,7 @@
 		var stars		= [];
 		var icons		= [];
 		var messages	= [];
-		var selected 	= ( rating.find( '.selected' ).length == 1 ) ? parseInt( rating.find( '.selected' ).attr( 'star' ) ) : 0;
+		var selected 	= ( rating.find( '.star.selected' ).length == 1 ) ? parseInt( rating.find( '.star.selected' ).attr( 'star' ) ) : 0;
 		var disabled	= rating.hasClass( 'disabled' );
 		var readOnly	= rating.hasClass( 'read-only' );
 		var settings	= rating.data( 'cmtRateSettings' );
