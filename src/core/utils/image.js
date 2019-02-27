@@ -2,10 +2,13 @@
  * Image utility provides commonly used image processing methods.
  */
 
+// == Image Utility =======================
+
 cmt.utils.image = {
 
 	/**
-	 * It returns an array having width and height for the given image and target dimensions maintaining aspect ratio.
+	 * It returns an array having width and height for the given image and target 
+	 * dimensions maintaining aspect ratio.
 	 */
 	arDimensions: function( image, targetWidth, targetHeight ) {
 
@@ -61,4 +64,5 @@ cmt.utils.image = {
 		    };
 		}
 	}
+
 };

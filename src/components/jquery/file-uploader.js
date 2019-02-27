@@ -48,7 +48,7 @@
 					fileUploader.addClass( 'file-uploader-direct' );
 
 					btnChooser.hide();
-					
+
 					if( settings.toggle ) {
 
 						fileUploader.find( '.chooser-wrap' ).show();
@@ -59,7 +59,7 @@
 				btnChooser.click( function() {
 
 					if( settings.toggle ) {
-						
+
 						// Swap Chooser and Dragger
 						fileUploader.find( '.chooser-wrap' ).fadeToggle( 'slow' );
 						fileUploader.find( '.file-wrap' ).fadeToggle( 'fast' );
@@ -75,7 +75,7 @@
 					resetUploader( fileUploader );
 				});
 			}
-			
+
 			// Always Show File Wrap and Chooser and keep Dragger hidden
 			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
 
@@ -132,7 +132,7 @@
 			// Clear Old Values
 			if( cmt.utils.browser.isCanvas() && fileUploader.attr( 'type' ) == 'image' ) {
 
-				var canvasArr	= fileUploader.find( '.file-dragger canvas' );
+				var canvasArr = fileUploader.find( '.file-dragger canvas' );
 
 				if( canvasArr.length > 0 ) {
 
@@ -146,7 +146,7 @@
 			var progressContainer = fileUploader.find( '.file-preloader .file-preloader-bar' );
 
 			// Modern Uploader
-			if ( cmt.utils.browser.isFileApi() ) {
+			if( cmt.utils.browser.isFileApi() ) {
 
 				progressContainer.css( "width", "0%" );
 			}
@@ -162,8 +162,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			// TODO: add class hover to drag
-			// event.target.className = ( event.type == "dragover" ? "hover" : "" );
+			event.target.className = ( event.type == "dragover" ? "dragger-hover" : "" );
 		}
 
 		function handleFile( event, fileUploader ) {
@@ -180,11 +179,14 @@
 			// Draw if image
 			if( settings.preview && cmt.utils.browser.isCanvas() && type == 'image' ) {
 
-				var canvas	= fileUploader.find( '.file-dragger canvas' );
+				var canvas = fileUploader.find( '.file-dragger canvas' );
 
-				canvas.show();
+				if( canvas.length > 0 ) {
 
-				cmt.utils.image.drawAtCanvasCenter( canvas[0], files[0] );
+					canvas.show();
+
+					cmt.utils.image.drawAtCanvasCenter( canvas[0], files[0] );
+				}
 			}
 
 			// Upload File
@@ -230,7 +232,7 @@
 
 							if( jsonResponse[ 'result' ] == 1 ) {
 
-								var responseData	= jsonResponse[ 'data' ];
+								var responseData = jsonResponse[ 'data' ];
 
 								if( settings.uploadListener ) {
 
@@ -254,7 +256,7 @@
 					}
 				};
 
-				var urlParams	= fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
+				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
 
 				// start upload
 				xhr.open("POST", urlParams, true );
@@ -307,7 +309,7 @@
 				}
 				else {
 
-					var errors	= response[ 'errors' ];
+					var errors = response[ 'errors' ];
 
 					alert( errors.error );
 				}
@@ -331,7 +333,7 @@
 
 				case "image": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<img src='" + result['tempUrl'] + "' class='fluid' />" );
+					fileUploader.find( '.file-data' ).html( "<img src='" + result['tempUrl'] + "' class='fluid' />" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -339,17 +341,18 @@
 				}
 				case "video": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<video src='" + result['tempUrl'] + "' controls class='fluid'>Video not supported.</video>" );
+					fileUploader.find( '.file-data' ).html( "<video src='" + result['tempUrl'] + "' controls class='fluid'>Video not supported.</video>" );
 
 					updateFileData( fileUploader, type, result );
 
 					break;
 				}
 				case "document":
+				case "mixed":
 				case "compressed":
 				case "shared": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='cmti cmti-3x cmti-check'></i>" );
+					fileUploader.find( '.file-data' ).html( "<i class='" + settings.docSuccessIcon + "'></i>" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -368,7 +371,8 @@
 				}
 			}
 
-			// Show Postaction
+			// Show Clear and Postaction
+			fileUploader.find( '.file-clear' ).fadeIn();
 			fileUploader.find( '.post-action' ).fadeIn();
 		}
 
@@ -397,7 +401,8 @@
 		direct: false,
 		uploadListener: null,
 		preview: true,
-		toggle: true
+		toggle: true,
+		docSuccessIcon: 'cmti cmti-3x cmti-check'
 	};
 
 })( jQuery );

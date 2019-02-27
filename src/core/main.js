@@ -1,6 +1,7 @@
 /**
- * The library CMGTools JS require JQuery for most of it's usage.
+ * The base file of Velocity Framework to bootstrap the required namespace and components.
  */
 
-// Global Namespace for CMGTools
+// == Global Namespace ====================
+
 var cmt = cmt || {};

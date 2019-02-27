@@ -1,15 +1,16 @@
 /**
  * Key Concepts
  * -------------------------
- * 1. Application
- * 2. Controller
- * 3. Action
- * 4. User
- * 5. Route
- * 6. Request Element
- * 7. Trigger Element
- * 8. Get, Post, Put and Delete
- * 9. View
+ *  1. Application
+ *  2. Controller
+ *  3. Service
+ *  4. Action
+ *  5. User
+ *  6. Route
+ *  7. Request Element
+ *  8. Trigger Element
+ *  9. Get, Post, Put and Delete
+ * 10. View
  *
  * An application is a collection of app config and controllers. Each controller can define several actions that can be executed by app user.
  * A project can create multiple applications based on it's needs. The request triggers present within request elements use the Request Processing Engine
@@ -23,7 +24,7 @@
  * sent back by server.
  */
 
-// Application -------------------------------------------
+// == Application =========================
 
 cmt.api.Application = function( options ) {
 
@@ -44,7 +45,7 @@ cmt.api.Application = function( options ) {
 	jQuery.extend( this.config, options );
 
 	// Default controller to be used as fallback in case no controller is mentioned
-	var defaultController	= cmt.api.Application.CONTROLLER_DEFAULT;
+	var defaultController = cmt.api.Application.CONTROLLER_DEFAULT;
 
 	// TODO: Add Apix and REST based default controllers to handle CRUD operations.
 
@@ -65,16 +66,27 @@ cmt.api.Application = function( options ) {
 	/**
 	 * An exhaustive map of all the controllers (alias, classpath) available for the application. Each application can use this map to maintain it's controllers list.
 	 */
-	this.controllers 						= []; // Alias, Path map
-	this.controllers[ defaultController ] 	= 'cmt.api.controllers.RequestController';
+	this.controllers = []; // Alias, Path map
+
+	this.controllers[ defaultController ] = 'cmt.api.controllers.RequestController';
 
 	/**
 	 * Map of all the active controllers (alias, object) which are already initialised. It will save us from re-initialising controllers.
 	 */
-	this.activeControllers 	= []; // Alias, Controller map
+	this.activeControllers = []; // Alias, Controller map
+	
+	/**
+	 * Map of all the services (alias, classpath) available for the application.
+	 */
+	this.services = [];
+	
+	/**
+	 * Map to query active services (alias, object) which are already initialised.
+	 */
+	this.activeServices	= [];
 };
 
-// Application Globals -----------------------------------
+// == Application Globals =================
 
 //Defaults
 cmt.api.Application.CONTROLLER_DEFAULT	= 'default';			// Default Controller Alias
@@ -112,7 +124,7 @@ cmt.api.Application.STATIC_BLUR			=  '.cmt-blur';			// The class to be set for t
  * for an action. The post processor method can define logic to handle response and use appropriate templating engine to update view.
  */
 
-// Application Initialisation ----------------------------
+// == Application Initialisation ==========
 
 cmt.api.Application.prototype.init = function( options ) {
 
@@ -120,7 +132,7 @@ cmt.api.Application.prototype.init = function( options ) {
 	jQuery.extend( this.config, options );
 }
 
-// Manage Application Controllers ------------------------
+// == Applications Controllers ============
 
 /**
  * It maps the controller to registry by accepting alias and path.
@@ -140,10 +152,11 @@ cmt.api.Application.prototype.mapController = function( alias, path ) {
  * It returns the controller from active controllers.
  *
  * @param {string} alias
+ * @param {object} options
  * @param {boolean} factory
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.getController = function( alias, factory, options ) {
+cmt.api.Application.prototype.getController = function( alias, options, factory ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 	factory = typeof factory !== 'undefined' ? factory : false; // Use singleton from registry if not passed
@@ -194,29 +207,32 @@ cmt.api.Application.prototype.setController = function( alias, controller ) {
  * It maps the controller to registry and add it to active controllers.
  *
  * @param {string} alias
- * @param {boolean} factory
+ * @param {string} classpath
+ * @param {object} options
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.registerController = function( alias, path, options ) {
+cmt.api.Application.prototype.registerController = function( alias, classpath, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	this.addController( alias, path );
+	this.mapController( alias, classpath );
 
-	return this.getController( alias, false, options );
+	return this.getController( alias, options, false );
 };
 
 /**
  * It find the controller and return default controller in case not found.
  *
  * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.findController = function( alias, factory ) {
+cmt.api.Application.prototype.findController = function( alias, options, factory ) {
 
 	try {
 
-		return this.getController( alias, factory );
+		return this.getController( alias, options, factory );
 	}
 	catch( err ) {
 
@@ -229,4 +245,89 @@ cmt.api.Application.prototype.findController = function( alias, factory ) {
 			return this.findController( cmt.api.Application.CONTROLLER_DEFAULT );
 		}
 	}
+};
+
+// == Application Services ================
+
+/**
+ * It maps the service to registry by accepting alias and path.
+ *
+ * @param {string} alias
+ * @param {string} path
+ */
+cmt.api.Application.prototype.mapService = function( alias, path ) {
+
+	if( this.services[ alias ] == undefined ) {
+
+		this.services[ alias ] = path;
+	}
+}
+
+/**
+ * It returns the service from active services.
+ *
+ * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
+ * @returns {cmt.api.services.BaseService}
+ */
+cmt.api.Application.prototype.getService = function( alias, options, factory ) {
+
+	options = typeof options !== 'undefined' ? options : { };
+
+	if( this.services[ alias ] == undefined ) throw 'Service with alias ' + alias + ' is not registered.';
+
+	// Create and return the instance
+	if( factory ) {
+
+		var service = cmt.utils.object.strToObject( this.services[ alias ] );
+
+		// Initialise Service
+		service.init( options );
+
+		return service;
+	}
+
+	// Create singleton instance if not exist
+	if( this.activeServices[ alias ] == undefined ) {
+
+		var service = cmt.utils.object.strToObject( this.services[ alias ] );
+
+		// Initialise Service
+		service.init( options );
+
+		// Add singleton to active registry
+		this.activeServices[ alias ] = service;
+	}
+
+	return this.activeServices[ alias ];
+}
+
+/**
+ * It set and update the active services.
+ *
+ * @param {string} alias
+ * @param {cmt.api.services.BaseService} service
+ */
+cmt.api.Application.prototype.setService = function( alias, service ) {
+
+	if( this.activeServices[ alias ] == undefined ) {
+
+		this.activeServices[ alias ] = service;
+	}
+}
+
+/**
+ * It maps the service to registry and add it to active services.
+ *
+ * @param {string} alias
+ * @param {string} classpath
+ * @param {object} options
+ * @returns {cmt.api.services.BaseService}
+ */
+cmt.api.Application.prototype.registerService = function( alias, classpath, options ) {
+
+	this.mapService( alias, classpath );
+
+	return this.getService( alias, options );
 };

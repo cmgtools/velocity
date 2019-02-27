@@ -1,25 +1,31 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2018-07-04
+ * Velocity - v1.0.0-alpha1 - 2019-02-07
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
  */
 
 /**
- * The library CMGTools JS require JQuery for most of it's usage.
+ * The base file of Velocity Framework to bootstrap the required namespace and components.
  */
 
-// Global Namespace for CMGTools
+// == Global Namespace ====================
+
 var cmt = cmt || {};
 
 
 /**
- * CMGTools Utilities - Collection of commonly used utility functions available for CMGTools.
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to core utilities. The core utilities is a collection of commonly used utility 
+ * functions.
  */
 
-// Global Namespace for CMGTools utilities
+// == Global Namespace ====================
+
 cmt.utils = cmt.utils || {};
 
+
+// == Ajax Utility ========================
 
 cmt.utils.ajax = {
 
@@ -36,18 +42,21 @@ cmt.utils.ajax = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			data     	   += "&" + csrfParam + "=" + csrfToken;
+			data += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		// Trigger request
 		jQuery.post( url, data );
 	}
+
 };
 
 
 /**
  * Browser utility provides commonly used browser feature detection methods.
  */
+
+// == Browser Utility =====================
 
 cmt.utils.browser = {
 
@@ -82,7 +91,8 @@ cmt.utils.browser = {
 	 */
 	isCanvas: function() {
 
-		var elem 			= document.createElement( 'canvas' );
+		var elem = document.createElement( 'canvas' );
+		
 		var canvasSupported = !!( elem.getContext && elem.getContext( '2d' ) );
 
 		return canvasSupported;
@@ -95,9 +105,10 @@ cmt.utils.browser = {
 
 		// Used image/png for testing purpose
 
-		var cvsTest 			= document.createElement( "canvas" );
-		var data				= cvsTest.toDataURL( "image/png" );
-		var toDataUrlSupported	= data.indexOf( "data:image/png" ) == 0;
+		var cvsTest	= document.createElement( "canvas" );
+		var data	= cvsTest.toDataURL( "image/png" );
+		
+		var toDataUrlSupported = data.indexOf( "data:image/png" ) == 0;
 
 		return toDataUrlSupported;
 	},
@@ -109,12 +120,18 @@ cmt.utils.browser = {
 
 		return !( typeof history.pushState === 'undefined' );
 	}
+
 };
 
 
 /**
- * Data utility provides methods to convert form elements to json format and to manipulate url parameters. The json data can be used to send request to server side apis.
+ * Data utility provides methods to convert form elements to json format and to manipulate 
+ * url parameters. The json data can be used to send request to server side apis.
+ * 
+ * It also provide other methods to manipulate data.
  */
+
+// == Data Utility ========================
 
 cmt.utils.data = {
 
@@ -123,18 +140,19 @@ cmt.utils.data = {
 	 */
 	serialiseElement: function( elementId, csrf ) {
 
-		var dataArr		= [];
-		var elements 	= null;
+		var dataArr = [];
+
+		var elements = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof elementId == 'string' ) {
 
-			elements 	= jQuery( '#' + elementId ).find( ':input' ).get();
+			elements = jQuery( '#' + elementId ).find( ':input' ).get();
 		}
 		else {
 
-			elements	= elementId.find( ':input' ).get();
+			elements = elementId.find( ':input' ).get();
 		}
 
 		jQuery.each( elements, function() {
@@ -156,7 +174,7 @@ cmt.utils.data = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			dataUrl 	   += "&" + csrfParam + "=" + csrfToken;
+			dataUrl += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		return dataUrl;
@@ -167,18 +185,19 @@ cmt.utils.data = {
 	 */
 	elementToJson: function( elementId, csrf ) {
 
-		var dataArr		= [];
-		var elements 	= null;
+		var dataArr = [];
+
+		var elements = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof elementId == 'string' ) {
 
-			elements 	= jQuery( '#' + elementId ).find( ':input' ).get();
+			elements = jQuery( '#' + elementId ).find( ':input' ).get();
 		}
 		else {
 
-			elements	= elementId.find( ':input' ).get();
+			elements = elementId.find( ':input' ).get();
 		}
 
 		jQuery.each( elements, function() {
@@ -219,7 +238,7 @@ cmt.utils.data = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			dataUrl 	   += "&" + csrfParam + "=" + csrfToken;
+			dataUrl += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		return dataUrl;
@@ -231,17 +250,17 @@ cmt.utils.data = {
 	formToJson: function( formId, csrf ) {
 
 		// Generate form data for submission
-		var formData	= null;
+		var formData = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof formId == 'string' ) {
 
-			formData	= jQuery( '#' + formId ).serializeArray();
+			formData = jQuery( '#' + formId ).serializeArray();
 		}
 		else {
 
-			formData	= formId.serializeArray();
+			formData = formId.serializeArray();
 		}
 
 		return cmt.utils.data.generateJsonMap( formData, csrf );
@@ -252,7 +271,7 @@ cmt.utils.data = {
 	 */
 	generateJsonMap: function( dataArray, csrf ) {
 
-		var json 		= {};
+		var json = {};
 
 		// Append csrf token if required
 		if( csrf && null != jQuery( 'meta[name=csrf-token]' ) ) {
@@ -324,7 +343,7 @@ cmt.utils.data = {
 			var csrfParam   = jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			requestData 	= requestData + '&' + csrfParam + '=' + csrfToken;
+			requestData = requestData + '&' + csrfParam + '=' + csrfToken;
 		}
 
 		return requestData;
@@ -340,7 +359,7 @@ cmt.utils.data = {
 	    	url = window.location.href;
 	    }
 
-	    param 		= param.replace(/[\[\]]/g, "\\$&");
+	    param = param.replace(/[\[\]]/g, "\\$&");
 
 	    var regex 	= new RegExp("[?&]" + param + "(=([^&#]*)|&|#|$)");
 		var results = regex.exec( url );
@@ -440,14 +459,33 @@ cmt.utils.data = {
 	},
 
 	/**
+	 * Add or Update url param
+	 */
+	updateUriParam: function( uri, key, value ) {
+
+		var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+
+		var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+
+		if( uri.match( re ) ) {
+
+			return uri.replace( re, '$1' + key + "=" + value + '$2' );
+		}
+		else {
+
+			return uri + separator + key + "=" + value;
+		}
+	},
+
+	/**
 	 * Refresh current grid.
 	 */
 	refreshGrid: function() {
 
 		var pageUrl	= window.location.href;
 
-		pageUrl 	= cmt.utils.data.removeParam( pageUrl, 'page' );
-		pageUrl 	= cmt.utils.data.removeParam( pageUrl, 'per-page' );
+		pageUrl = cmt.utils.data.removeParam( pageUrl, 'page' );
+		pageUrl = cmt.utils.data.removeParam( pageUrl, 'per-page' );
 
 		window.location	= pageUrl;
 	},
@@ -465,15 +503,46 @@ cmt.utils.data = {
 		}
 		
 		return false;
+	},
+	
+	/**
+	 * Late binder to bind CL Editor for elements hidden at start.
+	 */
+	bindEditor: function( selector ) {
+
+		var lateBinder = jQuery( selector );
+
+		if( jQuery.cleditor && !lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			var controls = 'bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | outdent indent | alignleft center alignright justify | undo redo | rule link unlink | source';
+
+			lateBinder.cleditor( { docType: '<!DOCTYPE html>', controls: controls, height: 165 } );
+		}
+		else if( lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			if( lateBinder.hasClass( 'add' ) ) {
+
+				lateBinder.val( '' ).blur();
+			}
+			else {
+
+				lateBinder.val( lateBinder.val() ).blur();
+			}
+		}
 	}
+
 };
 
 
-// Inheritance - Crockford's approach to add inheritance. It works for all browsers. Object.create() is still not supported by all browsers.
+// Inheritance - Crockford's approach to add inheritance. It works for all browsers. 
+// Object.create() is standard way to support inheritance, but still not supported by all browsers.
+
+// == Crockford's Inheritance =============
+
 Function.prototype.inherits = function( parent ) {
 
-	var d	= 0;
-	var p 	= ( this.prototype = new parent() );
+	var d = 0;
+	var p = ( this.prototype = new parent() );
 
 	this.prototype.uber	= function( name ) {
 
@@ -486,15 +555,15 @@ Function.prototype.inherits = function( parent ) {
 
 			while( t ) {
 
-	              v		= v.constructor.prototype;
-	              t 	-= 1;
+	              v  = v.constructor.prototype;
+	              t -= 1;
 			}
 
 			f = v[ name ];
 		}
 		else {
 
-			f	= p[ name ];
+			f = p[ name ];
 
 			if( f == this[ name ] ) {
 
@@ -502,15 +571,16 @@ Function.prototype.inherits = function( parent ) {
 			}
 		}
 
-		d		+= 1;
-		r		 = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
-		d		-= 1;
+		d += 1;
+		r  = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
+		d -= 1;
 
 		return r;
 	};
 };
 
-// Hash Tag - Fix hash tag issues for SNS login
+// == Hash Tag - Clear - SNS Login ========
+
 if( window.location.hash == '#_=_' ) {
 
     if( history.replaceState ) {
@@ -525,15 +595,37 @@ if( window.location.hash == '#_=_' ) {
     }
 }
 
+// == Object Size =========================
+
+// Static method to get the size of associative arrays
+Object.size = function( arr ) {
+
+    var size = 0;
+
+	// Iterate over all properties
+    for( var key in arr ) {
+
+        if( arr.hasOwnProperty( key ) ) {
+			
+			size++;
+		}
+    }
+
+    return size;
+};
+
 
 /**
  * Image utility provides commonly used image processing methods.
  */
 
+// == Image Utility =======================
+
 cmt.utils.image = {
 
 	/**
-	 * It returns an array having width and height for the given image and target dimensions maintaining aspect ratio.
+	 * It returns an array having width and height for the given image and target 
+	 * dimensions maintaining aspect ratio.
 	 */
 	arDimensions: function( image, targetWidth, targetHeight ) {
 
@@ -589,12 +681,15 @@ cmt.utils.image = {
 		    };
 		}
 	}
+
 };
 
 
 /**
  * Object utility provides methods to initialise or manipulate objects.
  */
+
+// == Object Utility ======================
 
 cmt.utils.object = {
 
@@ -603,15 +698,16 @@ cmt.utils.object = {
 	 */
 	strToObject: function( str ) {
 
-	    var arr 		= str.split( "." );
-		var objClass	= ( window || this );
+	    var arr = str.split( "." );
+
+		var objClass = ( window || this );
 
 	    for( var i = 0, arrLength = arr.length; i < arrLength; i++ ) {
 
-	        objClass	= objClass[ arr[ i ] ];
+	        objClass = objClass[ arr[ i ] ];
 	    }
 
-		var obj		= new objClass;
+		var obj = new objClass;
 
 		if ( typeof obj !== 'object' ) {
 
@@ -628,12 +724,15 @@ cmt.utils.object = {
 
 		return ( property in object ) && ( !( property in prototype ) || prototype[ property ] !== object[ property ] );
 	}
+
 };
 
 
 /**
  * UI utility provides methods to format or manage UI elements.
  */
+
+// == UI Utility ==========================
 
 cmt.utils.ui = {
 
@@ -642,8 +741,8 @@ cmt.utils.ui = {
 	 */
 	alignMiddle: function( parent, child ) {
 
-		var parent			= jQuery( parent );
-		var child			= jQuery( child );
+		var parent	= jQuery( parent );
+		var child	= jQuery( child );
 
 		var parentHeight	= parent.height();
 		var parentWidth		= parent.width();
@@ -652,13 +751,1539 @@ cmt.utils.ui = {
 
 		if( childHeight <= parentHeight && childWidth <= parentWidth ) {
 
-			var top 	= (parentHeight - childHeight) / 2;
-			var left 	= (parentWidth - childWidth) / 2;
+			var top		= (parentHeight - childHeight) / 2;
+			var left	= (parentWidth - childWidth) / 2;
 
 			child.css( { "position": "absolute", "top": top, "left": left } );
 		}
+	},
+
+	// Initialise Custom Select
+	initSelect: function( selector ) {
+		
+		jQuery( selector ).cmtSelect( { iconHtml: '<span class="cmti cmti-chevron-down"></span>' } );
+	},
+
+	// Initialise Custom Select
+	initSelectElement: function( element ) {
+		
+		element.cmtSelect( { iconHtml: '<span class="cmti cmti-chevron-down"></span>' } );
+	},
+	
+	// Initialise Actions
+	initActions: function( selector ) {
+		
+		var actions = jQuery( selector );
+
+		// Actions
+		actions.cmtActions();
+		actions.find( '.cmt-auto-hide' ).cmtAutoHide();
+	},
+	
+	// Initialise Actions
+	initActionsElement: function( element ) {
+
+		// Actions
+		element.cmtActions();
+		element.find( '.cmt-auto-hide' ).cmtAutoHide();
 	}
 };
+
+
+/**
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to components library.
+ */
+
+// == Global Namespace ====================
+
+cmt.components = cmt.components || {};
+
+
+/**
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to base of components library.
+ */
+
+// == Global Namespace ====================
+
+cmt.components.base = cmt.components.base || {};
+
+// == Components Manager ==================
+
+cmt.components.Root = function( options ) {
+
+	this.components = []; // Alias, Path map
+
+	this.activeComponents = []; // Alias, Component
+}
+
+/**
+ * It maps the component to registry by accepting alias and path.
+ *
+ * @param {string} alias
+ * @param {string} path
+ */
+cmt.components.Root.prototype.mapComponent = function( alias, path ) {
+
+	if( this.components[ alias ] == undefined ) {
+
+		this.components[ alias ] = path;
+	}
+}
+
+/**
+ * It returns the component from active components.
+ *
+ * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
+ * @returns {cmt.components.base.BaseComponent}
+ */
+cmt.components.Root.prototype.getComponent = function( alias, options, factory ) {
+
+	options = typeof options !== 'undefined' ? options : { };
+
+	if( this.components[ alias ] == undefined ) throw 'Component with alias ' + alias + ' is not registered.';
+
+	// Create and return the instance
+	if( factory ) {
+
+		var component = cmt.utils.object.strToObject( this.components[ alias ] );
+
+		// Initialise Component
+		component.init( options );
+
+		return component;
+	}
+
+	// Create singleton instance if not exist
+	if( this.activeComponents[ alias ] == undefined ) {
+
+		var component = cmt.utils.object.strToObject( this.components[ alias ] );
+
+		// Initialise Component
+		component.init( options );
+
+		// Add singleton to active registry
+		this.activeComponents[ alias ] = component;
+	}
+
+	return this.activeComponents[ alias ];
+}
+
+/**
+ * It set and update the active components.
+ *
+ * @param {string} alias
+ * @param {cmt.components.base.BaseComponent} component
+ */
+cmt.components.Root.prototype.setComponent = function( alias, component ) {
+
+	if( this.activeComponents[ alias ] == undefined ) {
+
+		this.activeComponents[ alias ] = component;
+	}
+}
+
+/**
+ * It maps the component to registry and add it to active components.
+ *
+ * @param {string} alias
+ * @param {string} classpath
+ * @param {object} options
+ * @returns {cmt.components.base.BaseComponent}
+ */
+cmt.components.Root.prototype.registerComponent = function( alias, classpath, options ) {
+
+	this.mapComponent( alias, classpath );
+
+	return this.getComponent( alias, options );
+};
+
+cmt.components.root = new cmt.components.Root();
+
+
+cmt.components.base.BaseComponent = function( options ) {
+
+};
+
+// Initialise --------------------
+
+cmt.components.base.BaseComponent.prototype.init = function( options ) {
+
+	// Initialise component
+};
+
+
+cmt.components.base.ActionsComponent = function() {
+
+	this.counter = 0;
+
+	this.documentHeight = 0;
+	this.screenWidth	= 0;
+
+	this.options = null;
+};
+
+cmt.components.base.ActionsComponent.inherits( cmt.components.base.BaseComponent );
+
+cmt.components.base.ActionsComponent.prototype.defaults = {
+	listAlignment: 'left' // Can be either left or right
+};
+
+// Initialise --------------------
+
+cmt.components.base.ActionsComponent.prototype.init = function( options ) {
+
+	// Configure Object
+	this.documentHeight = jQuery( document ).height();
+	this.screenWidth	= jQuery( window ).width();
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.ActionsComponent.prototype.initElements = function( elements ) {
+
+	var self = this;
+
+	// Iterate and initialise the jQuery elements
+	elements.each( function() {
+
+		var element = jQuery( this );
+
+		self.initElement( element );
+
+		self.counter++;
+	});
+};
+
+cmt.components.base.ActionsComponent.prototype.initElement = function( element ) {
+
+	var self = this;
+
+	var index = self.counter;
+	
+	var screenWidth = self.screenWidth;
+
+	var data	= element.find( '.actions-list-data' );
+	var align	= self.options.listAlignment;
+
+	// Target
+	element.find( '.actions-list-title' ).attr( 'ldata-target', '#actions-list-data-' + index );
+
+	// Identifier
+	element.attr( 'ldata-id', index );
+	data.attr( 'ldata-id', index );
+
+	// Configure Ids
+	element.attr( 'id', 'actions-list-' + index );
+	data.attr( 'id', 'actions-list-data-' + index );
+
+	// Detach
+	data = data.detach();
+
+	// Append to Body
+	data.appendTo( 'body' );
+
+	// Alignment
+	if( cmt.utils.data.hasAttribute( data, 'ldata-alignment' ) ) {
+
+		align = data.attr( 'ldata-alignment' );
+	}
+
+	element.find( '.actions-list-title' ).click( function() {
+
+		if( data.is( ':hidden' ) ) {
+
+			var offset	= element.offset();
+			var show	= align;
+
+			var dataTop		= offset.top + element.height();
+			var dataLeft	= offset.left;
+			var dataRight	= screenWidth - offset.left - element.width();
+
+			var dataWidth = data.width();
+
+			// Swap Alignment - Left to Right
+			if( align == 'left' && ( offset.left + dataWidth + 5 ) > screenWidth ) {
+
+				show = 'right';
+			}
+			// Swap Alignment - Right to Left
+			else if( align == 'right' && ( offset.left + dataWidth + 5 ) > element.width() ) {
+
+				show = 'left';
+			}
+
+			if( show == 'left' ) {
+
+				data.css( { top: dataTop, left: dataLeft } );
+			}
+			else if( show == 'right' ) {
+
+				data.css( { top: dataTop, right: dataRight } );
+			}
+
+			data.slideDown( 'slow' );
+		}
+		else {
+
+			data.slideUp( 'slow' );
+		}
+	});
+};
+
+
+// == Collage =============================
+
+cmt.components.base.Collage = function() {
+
+	// Max Images
+	this.limit = 5;
+	
+	// Image Counter
+	this.counter = 0;
+
+	// Images Arrangement - 1 to 5 images
+	this.config = [
+		// 1 image - One row having 1 image
+		[
+			{ cr: { w: "f", h: "xl" } }
+		],
+		// 2 images - One row having 2 images
+		[
+			{ cl: { w: "h", h: "l" } },
+			{ cb: { w: "0", h: "l" } },
+			{ cl: { w: "h", h: "l" } }
+		],
+		// 3 images - One row having 1 image in first column and 2 images in 2nd column
+		[
+			{ cl: { w: "h", h: "xl" } },
+			{ cb: { w: "0", h: "xl" } },
+			{ cle: { w: "h", h: "xl", c: [
+				{ cr: { w: "f", h: "m" } },
+				{ cr: { w: "f", h: "m" } }
+			] } }
+		],
+		// 4 images - First row having 1 image, Second row having 3 images
+		[
+			{ cr: { w: "f", h: "xl" } },
+			{ cre: { w: "f", h: "l", c: [
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "1", h: "l" } },
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "1", h: "l" } },
+				{ cl: { w: "ot", h: "l" } }
+			] } }
+		],
+		// 5 images - First row having 2 images, Second row having 3 images
+		[
+			{ cre: { w: "f", h: "xl", c: [
+				{ cl: { w: "h", h: "xl" } },
+				{ cb: { w: "0", h: "xl" } },
+				{ cl: { w: "h", h: "xl" } }
+			] } },
+			{ cre: { w: "f", h: "l", c: [
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "0", h: "l" } },
+				{ cl: { w: "ot", h: "l" } },
+				{ cb: { w: "0", h: "l" } },
+				{ cl: { w: "ot", h: "l" } }
+			] } }
+		]
+	];
+};
+
+cmt.components.base.Collage.prototype.generateView = function( element ) {
+
+	var slides	= element.children();
+	var config	= this.config[ slides.length - 1 ];
+
+	var html = this.generateConfigView( config, slides );
+
+	return html;
+};
+
+cmt.components.base.Collage.prototype.generateConfigView = function( config, slides, wrapper ) {
+
+	var html = null != wrapper ? "<div class=\"" + wrapper + "\">" : "<div class=\"crl-wrap\">";
+
+	for( var i = 0; i < config.length; i++ ) {
+
+		var con		= config[ i ];
+		var slide	= jQuery( slides[ this.counter ] );
+
+		if( cmt.utils.object.hasProperty( con, "cr" ) ) {
+			
+			slide.addClass( "cr-wrap" );
+
+			html += "<div class=\"cr cr-w-" + con.cr.w + " cr-h-" + con.cr.h + "\">" + slides[ this.counter ].outerHTML + "</div>";
+
+			this.counter++;
+		}
+		else if( cmt.utils.object.hasProperty( con, "cl" ) ) {
+			
+			slide.addClass( "cl-wrap" );
+
+			html += "<div class=\"cl cl-w-" + con.cl.w + " cl-h-" + con.cl.h + "\">" + slides[ this.counter ].outerHTML + "</div>";
+
+			this.counter++;
+		}
+		else if( cmt.utils.object.hasProperty( con, "cb" ) ) {
+
+			html += "<div class=\"cb cb-w-" + con.cb.w + " cb-h-" + con.cb.h + "\"></div>";
+		}
+		else if( cmt.utils.object.hasProperty( con, "cle" ) ) {
+
+			html += "<div class=\"cl cl-w-" + con.cle.w + " cl-h-" + con.cle.h + "\">";
+
+			if( cmt.utils.object.hasProperty( con.cle, "c" ) ) {
+
+				html += this.generateConfigView( con.cle.c, slides, "cle-wrap" );
+			}
+
+			html += "</div>";
+		}
+		else if( cmt.utils.object.hasProperty( con, "cre" ) ) {
+
+			html += "<div class=\"cr cr-w-" + con.cre.w + " cr-h-" + con.cre.h + "\">";
+
+			if( cmt.utils.object.hasProperty( con.cre, "c" ) ) {
+
+				html += this.generateConfigView( con.cre.c, slides, "cre-wrap" );
+			}
+
+			html += "</div>";
+		}
+	}
+
+	return html + "</div>";	
+};
+
+
+cmt.components.base.GalleryComponent = function() {
+
+	// Id Tracker
+	this.counter = 1;
+
+	// Id & Index Prefix
+	this.idKey		= 'cmt-gallery-';
+	this.indexKey	= 'gl-';
+
+	// All Galleries
+	this.galleries = {};
+
+	// Component Options
+	this.options = null;
+};
+
+cmt.components.base.GalleryComponent.inherits( cmt.components.base.BaseComponent );
+
+cmt.components.base.GalleryComponent.prototype.defaults = {
+	// Listener Callback for item click
+	onItemClick: null,
+	// Collage
+	collage: false,
+	collageLimit: 5,
+	collageConfig: null,
+	// Lightbox
+	lightbox: false,
+	lightboxBkg: true, // Image as Background or Wrap the Image
+	lightboxId: 'lightbox-slider'
+};
+
+// == Gallery Component ====================
+
+cmt.components.base.GalleryComponent.prototype.init = function( options ) {
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.GalleryComponent.prototype.resetOptions = function( options ) {
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.GalleryComponent.prototype.initGalleries = function( elements ) {
+
+	var self = this;
+
+	// Iterate and initialise the jQuery elements
+	elements.each( function() {
+
+		var element = jQuery( this );
+
+		var gallery = new cmt.components.base.Gallery( self, element );
+
+		gallery.init();
+
+		element.attr( 'id', self.idKey + self.counter );
+		element.attr( 'ldata-id', self.counter );
+
+		self.galleries[ self.indexKey + self.counter ] = gallery;
+
+		self.counter++;
+	});
+};
+
+cmt.components.base.GalleryComponent.prototype.normaliseGalleries = function() {
+
+	var galleries = this.galleries;
+
+	// Iterate and normalise all the galleries
+    for( var key in galleries ) {
+
+		galleries[ key ].normalise();
+    }
+};
+
+cmt.components.base.GalleryComponent.prototype.addItem = function( galleryKey, itemHtml ) {
+
+	this.galleries[ this.indexKey + galleryKey ].addItem( itemHtml );
+};
+
+cmt.components.base.GalleryComponent.prototype.removeItem = function( galleryKey, itemKey ) {
+
+	this.galleries[ this.indexKey + galleryKey ].removeItem( itemKey );
+};
+
+// == Gallery ==============================
+
+cmt.components.base.Gallery = function( component, element ) {
+
+	// Component & Options
+	this.component	= component;
+	this.options	= component.options;
+
+	// The Element
+	this.element = element;
+
+	// Dimensions
+	this.width	= 0;
+	this.height	= 0;
+	this.itemWidth	= 0;
+	this.itemsCount = 0;
+
+	// Items
+	this.itemsWrapper = null;
+
+	this.items = null;
+};
+
+cmt.components.base.Gallery.prototype.init = function() {
+
+	// Gallery View
+	this.initView();
+
+	// Init Items based on configuration params
+	this.normalise();
+
+	// Indexify the Items
+	this.indexItems();
+};
+
+// Update View
+cmt.components.base.Gallery.prototype.initView = function() {
+
+	var self = this;
+
+	var options = this.options;
+	var items	= this.element.children();
+
+	// Generate Collage
+	if( options.collage && items.length > 0 && items.length <= options.collageLimit ) {
+
+		this.element.css( 'height', 'auto' );
+
+		var collage = new cmt.components.base.Collage();
+
+		collage.limit	= options.collageLimit;
+		collage.config	= null != options.collageConfig ? options.collageConfig : collage.config;
+
+		var html = collage.generateView( this.element );
+
+		this.element.html( html );
+
+		this.items = this.element.find( '.cl-wrap, .cr-wrap' );
+
+		// Set items position
+		this.items.each( function() {
+
+			var currentItem = jQuery( this );
+
+			self.resetItem( currentItem );
+		});
+	
+		// Index
+		this.indexItems();
+
+		return;
+	}
+
+	// Add item class to all the items
+	items.each( function() {
+
+		var item = jQuery( this );
+
+		item.addClass( 'gallery-item' );
+	});
+
+	items = this.element.find( '.gallery-item' ).detach();
+
+	// Items
+	var view = '<div class="gallery-items-wrap"><div class="gallery-items"></div></div>';
+
+	this.element.html( view );
+
+	this.itemsWrapper = this.element.find( '.gallery-items' );
+
+	this.element.find( '.gallery-items' ).append( items );
+};
+
+// Normalise the items
+cmt.components.base.Gallery.prototype.normalise = function() {
+
+	var self	= this;
+	var element	= this.element;
+
+	// Dimensions
+	this.width	= element.width();
+	this.height	= element.height();
+
+	// Items
+	this.items = element.find( '.gallery-item' );
+
+	this.itemWidth	= this.items.outerWidth();
+	this.itemsCount	= this.items.length;
+
+	// Set items position
+	this.items.each( function() {
+
+		var currentItem = jQuery( this );
+
+		currentItem.css( { 'width': self.itemWidth } );
+
+		self.resetItem( currentItem );
+	});
+};
+
+// Index the items
+cmt.components.base.Gallery.prototype.indexItems = function() {
+
+	// Set items position
+	this.items.each( function( index ) {
+
+		var currentItem = jQuery( this );
+
+		currentItem.attr( 'ldata-id', index );
+	});
+}
+
+// Add Item
+cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
+
+	// Set items position
+	this.items.each( function() {
+
+		var currentItem = jQuery( this );
+
+		var newIndex = parseInt( currentItem.attr( 'ldata-id' ) ) + 1;
+
+		currentItem.attr( 'ldata-id', newIndex );
+	});
+
+	var item = this.itemsWrapper.find( '.gallery-item[ldata-id=1]' );
+
+	if( item.length == 0 ) {
+
+		this.itemsWrapper.append( itemHtml );
+
+		item = this.itemsWrapper.find( ':first-child' )[ 0 ];
+		item = jQuery( item );
+	}
+	else {
+
+		this.itemsWrapper.find( '.gallery-item[ldata-id=1]' ).before( itemHtml );
+
+		item = item.prev();
+	}
+
+	item.attr( 'ldata-id', 0 );
+	item.addClass( 'gallery-item' );
+
+	// Normalise items
+	this.normalise();
+};
+
+// Remove Item
+cmt.components.base.Gallery.prototype.removeItem = function( itemKey ) {
+
+	// Remove
+	this.itemsWrapper.find( '.gallery-item[ldata-id=' + itemKey + ']' ).remove();
+
+	// Set items position
+	this.items.each( function() {
+
+		var currentItem = jQuery( this );
+
+		var index = parseInt( currentItem.attr( 'ldata-id' ) );
+
+		if( index > itemKey ) {
+
+			currentItem.attr( 'ldata-id', ( index - 1 ) );
+		}
+	});
+
+	// Normalise items
+	this.normalise();
+};
+
+cmt.components.base.Gallery.prototype.resetItem = function( item ) {
+
+	var self = this;
+
+	var options = this.options;
+	var element	= this.element;
+
+	if( null !== options.onItemClick ) {
+
+		// remove existing click event
+		item.unbind( 'click' );
+
+		// reset click event
+		item.click( function() {
+
+			options.onItemClick( element, item, item.attr( 'ldata-id' ) );
+		});
+	}
+
+	if( options.lightbox ) {
+
+		item.click( function() {
+
+			self.showLightbox( item, item.attr( 'ldata-id' ) );
+		});
+	}
+};
+
+// Move to left on clicking next button
+cmt.components.base.Gallery.prototype.showLightbox = function( item, itemId ) {
+
+	var self		= this;
+	var element		= this.element;
+	var lightboxId	= this.options.lightboxId;
+	var lightbox	= jQuery( '#' + lightboxId );
+
+	// Configure
+	var screenWidth		= jQuery( window ).width();
+	var screenHeight	= jQuery( window ).height();
+
+	var lightboxData = lightbox.find( '.lightbox-data' );
+
+	var widthRatio	= screenWidth/12;
+	var heightRatio	= screenHeight/12;
+
+	lightboxData.css( { top: heightRatio/2, left: widthRatio/2, width: ( widthRatio * 11 ), height: ( heightRatio * 11 ) } );
+
+	if( self.options.lightboxBkg ) {
+		
+		lightbox.find( '.lightbox-data-bkg' ).addClass( 'lightbox-bkg-wrap' );
+	}
+
+	var sliderHtml = '<div class="slider slider-basic slider-lightbox">';
+
+	// Prepare Slider
+	element.find( '.gallery-item, .item, .cl-wrap, .cr-wrap' ).each( function() {
+
+		var item	= jQuery( this );
+		var slId	= item.attr( 'ldata-id' );
+
+		var thumbUrl = item.attr( 'thumb-url' );
+		var imageUrl = item.attr( 'image-url' );
+
+		if( itemId == slId ) {
+
+			sliderHtml += '<div class="active"><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+
+			if( self.options.lightboxBkg ) {
+
+				lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+			}
+			else {
+				
+				lightbox.find( '.lightbox-data-bkg' ).html( '<img src="' + imageUrl + '"/>' );
+			}
+		}
+		else {
+
+			sliderHtml += '<div><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+		}
+	});
+
+	sliderHtml += '</div>';
+
+	lightboxData.find( '.wrap-gallery' ).html( sliderHtml );
+
+	if( lightbox.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
+	}
+
+	lightbox.fadeIn( 'slow' );
+
+	lightboxData.find( '.slider-lightbox' ).cmtSlider({
+		lControlContent: '<i class="fa fa-2x fa-angle-left valign-center"></i>',
+		rControlContent: '<i class="fa fa-2x fa-angle-right valign-center"></i>',
+		circular: false,
+		onSlideClick: self.setLightboxBkg
+	});
+}
+
+cmt.components.base.Gallery.prototype.setLightboxBkg = function( slider, slide, slideId ) {
+
+	var imageUrl = slide.find( '.bkg-image' ).attr( 'image-url' );
+
+	var bkg = slider.closest( '.lightbox-slider-wrap' ).find( '.lightbox-data-bkg' );
+
+	slider.find( '.slide' ).removeClass( 'active' );
+	slide.addClass( 'active' );
+
+	bkg.hide();
+
+	if( bkg.hasClass( 'lightbox-bkg-wrap' ) ) {
+
+		bkg.css( 'background-image', 'url(' + imageUrl + ')');
+	}
+	else {
+		
+		bkg.html( '<img src="' + imageUrl + '"/>' );
+	}
+
+	bkg.fadeIn( 'slow' );
+}
+
+
+cmt.components.base.SliderComponent = function() {
+
+	// Id Tracker
+	this.counter = 1;
+
+	// Id & Index Prefix
+	this.idKey		= 'cmt-slider-';
+	this.indexKey	= 'sl-';
+
+	// All Sliders
+	this.sliders = {};
+
+	// Component Options
+	this.options = null;
+};
+
+cmt.components.base.SliderComponent.inherits( cmt.components.base.BaseComponent );
+
+cmt.components.base.SliderComponent.prototype.defaults = {
+	// Controls
+	lControlContent: null,
+	rControlContent: null,
+	// Callback - Content is less than slider
+	smallerContent: null,
+	// Listener Callback for slide click
+	onSlideClick: null,
+	// Listener Callback for pre processing
+	preSlideChange: null,
+	// Listener Callback for post processing
+	postSlideChange: null,
+	circular: true,
+	// Collage
+	collage: false,
+	collageLimit: 5,
+	collageConfig: null,
+	// Lightbox
+	lightbox: false,
+	lightboxBkg: true, // Image as Background or Wrap the Image
+	lightboxId: 'lightbox-slider'
+};
+
+// == Slider Component ====================
+
+cmt.components.base.SliderComponent.prototype.init = function( options ) {
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.SliderComponent.prototype.resetOptions = function( options ) {
+
+	// Merge Options
+	this.options = jQuery.extend( {}, this.defaults, options );
+};
+
+cmt.components.base.SliderComponent.prototype.initSliders = function( elements ) {
+
+	var self = this;
+
+	// Iterate and initialise the jQuery elements
+	elements.each( function() {
+
+		var element = jQuery( this );
+
+		var slider = new cmt.components.base.Slider( self, element );
+
+		slider.init();
+
+		element.attr( 'id', self.idKey + self.counter );
+		element.attr( 'ldata-id', self.counter );
+
+		self.sliders[ self.indexKey + self.counter ] = slider;
+
+		self.counter++;
+	});
+};
+
+cmt.components.base.SliderComponent.prototype.normaliseSliders = function() {
+
+	var sliders = this.sliders;
+
+	// Iterate and normalise all the sliders
+    for( var key in sliders ) {
+
+		sliders[ key ].normalise();
+    }
+};
+
+cmt.components.base.SliderComponent.prototype.addSlide = function( sliderKey, slideHtml ) {
+
+	this.sliders[ this.indexKey + sliderKey ].addSlide( slideHtml );
+};
+
+cmt.components.base.SliderComponent.prototype.removeSlide = function( sliderKey, slideKey ) {
+
+	this.sliders[ this.indexKey + sliderKey ].removeSlide( slideKey );
+};
+
+// == Slider ==============================
+
+cmt.components.base.Slider = function( component, element ) {
+
+	// Component & Options
+	this.component	= component;
+	this.options	= component.options;
+
+	// The Element
+	this.element = element;
+
+	// Controls
+	this.leftControl	= null;
+	this.rightControl	= null;
+
+	// Dimensions
+	this.width	= 0;
+	this.height	= 0;
+	this.slideWidth	= 0;
+	this.slidesCount = 0;
+
+	// Slides
+	this.filmstrip = null;
+
+	this.slides = null;
+};
+
+cmt.components.base.Slider.prototype.init = function() {
+
+	// Slider View
+	this.initView();
+
+	// Init Slides based on configuration params
+	this.normalise();
+
+	// Indexify the Slides
+	this.indexSlides();
+};
+
+// Update View
+cmt.components.base.Slider.prototype.initView = function() {
+	
+	var self = this;
+
+	var options = this.options;
+	var slides	= this.element.children();
+
+	// Generate Collage
+	if( options.collage && slides.length > 0 && slides.length <= options.collageLimit ) {
+
+		this.element.css( 'height', 'auto' );
+
+		var collage = new cmt.components.base.Collage();
+
+		collage.limit	= options.collageLimit;
+		collage.config	= null != options.collageConfig ? options.collageConfig : collage.config;
+
+		var html = collage.generateView( this.element );
+
+		this.element.html( html );
+
+		this.slides = this.element.find( '.cl-wrap, .cr-wrap' );
+
+		// Set slides position on filmstrip
+		this.slides.each( function() {
+
+			var currentSlide = jQuery( this );
+
+			self.resetSlide( currentSlide );
+		});
+		
+		// Index
+		this.indexSlides();
+
+		return;
+	}
+
+	// Add slide class to all the slides
+	slides.each( function() {
+
+		var slide = jQuery( this );
+
+		slide.addClass( 'slider-slide' );
+	});
+
+	slides = this.element.find( '.slider-slide' ).detach();
+
+	// Slides
+	var view = '<div class="slider-slides-wrap"><div class="slider-slides"></div></div>';
+
+	// Controls
+	view += '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
+
+	this.element.html( view );
+
+	this.element.find( '.slider-slides' ).append( slides );
+};
+
+// Make filmstrip of all slides
+cmt.components.base.Slider.prototype.normalise = function() {
+
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
+
+	// Controls
+	this.leftControl	= element.find( '.slider-control-left' );
+	this.rightControl	= element.find( '.slider-control-right' );
+
+	// Dimensions
+	this.width	= element.width();
+	this.height	= element.height();
+
+	// Slides
+	this.filmstrip = element.find( '.slider-slides' );
+
+	this.slides = element.find( '.slider-slide' );
+
+	this.slideWidth		= this.slides.outerWidth();
+	this.slidesCount	= this.slides.length;
+
+	// Filmstrip Width
+	this.filmstrip.width( this.slideWidth * this.slidesCount );
+
+	// Initialise Slide position
+	var currentPosition	= 0;
+
+	// Set slides position on filmstrip
+	this.slides.each( function() {
+
+		var currentSlide = jQuery( this );
+
+		currentSlide.css( { 'width': self.slideWidth, 'left': currentPosition } );
+
+		currentPosition += self.slideWidth;
+
+		self.resetSlide( currentSlide );
+	});
+
+	if( this.filmstrip.width() < element.width() ) {
+
+		// Notify the Callback for lower width
+		if( null !== options.smallerContent ) {
+
+			options.smallerContent( element, this.filmstrip );
+		}
+	}
+	
+	// Initialise controls
+	this.initControls();
+};
+
+// Index the slides
+cmt.components.base.Slider.prototype.indexSlides = function() {
+
+	// Set slides position on filmstrip
+	this.slides.each( function( index ) {
+
+		var currentSlide = jQuery( this );
+
+		currentSlide.attr( 'ldata-id', index );
+	});
+}
+
+// Initialise the Slider controls
+cmt.components.base.Slider.prototype.initControls = function() {
+	
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
+
+	if( this.filmstrip.width() < element.width() ) {
+
+		this.leftControl.hide();
+		this.rightControl.hide();
+
+		return;
+	}
+	else {
+
+		this.leftControl.show();
+		this.rightControl.show();
+	}
+
+	// Show Controls
+	var lControlContent	= options.lControlContent;
+	var rControlContent	= options.rControlContent;
+
+	// Init Listeners
+	this.leftControl.html( lControlContent );
+	this.rightControl.html( rControlContent );
+
+	if( !options.circular ) {
+
+		this.leftControl.hide();
+		this.rightControl.show();
+	}
+	
+	this.leftControl.unbind( 'click' );
+
+	this.leftControl.click( function() {
+
+		if( options.circular ) {
+
+			self.showPrevSlide();
+		}
+		else {
+
+			self.moveToRight();
+		}
+	});
+	
+	this.rightControl.unbind( 'click' );
+
+	this.rightControl.click( function() {
+
+		if( options.circular ) {
+
+			self.showNextSlide();
+		}
+		else {
+
+			self.moveToLeft();
+		}
+	});
+};
+
+// Add Slide
+cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
+
+	// Set slides position on filmstrip
+	this.slides.each( function() {
+
+		var currentSlide = jQuery( this );
+
+		var newIndex = parseInt( currentSlide.attr( 'ldata-id' ) ) + 1;
+
+		currentSlide.attr( 'ldata-id', newIndex );
+	});
+
+	var slide = this.filmstrip.find( '.slider-slide[ldata-id=1]' );
+
+	if( slide.length == 0 ) {
+
+		this.filmstrip.append( slideHtml );
+
+		slide = this.filmstrip.find( ':first-child' )[ 0 ];
+		slide = jQuery( slide );
+	}
+	else {
+
+		this.filmstrip.find( '.slider-slide[ldata-id=1]' ).before( slideHtml );
+
+		slide = slide.prev();
+	}
+
+	slide.attr( 'ldata-id', 0 );
+	slide.addClass( 'slider-slide' );
+
+	// Normalise slides
+	this.normalise();
+};
+
+// Remove Slide
+cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
+
+	// Remove
+	this.filmstrip.find( '.slider-slide[ldata-id=' + slideKey + ']' ).remove();
+
+	// Set slides position on filmstrip
+	this.slides.each( function() {
+
+		var currentSlide = jQuery( this );
+
+		var index = parseInt( currentSlide.attr( 'ldata-id' ) );
+
+		if( index > slideKey ) {
+
+			currentSlide.attr( 'ldata-id', ( index - 1 ) );
+		}
+	});
+
+	// Normalise slides
+	this.normalise();
+};
+
+cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
+
+	var self = this;
+
+	var options = this.options;
+	var element	= this.element;
+
+	if( null !== options.onSlideClick ) {
+
+		// remove existing click event
+		slide.unbind( 'click' );
+
+		// reset click event
+		slide.click( function() {
+
+			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+		});
+	}
+
+	if( options.lightbox ) {
+
+		slide.click( function() {
+
+			self.showLightbox( slide, slide.attr( 'ldata-id' ) );
+		});
+	}
+};
+
+// == Slides Movement ==
+
+// Calculate and re-position slides to form filmstrip
+cmt.components.base.Slider.prototype.resetSlides = function() {
+
+	var self = this;
+
+	var currentPosition	= 0;
+
+	this.slides = this.filmstrip.find( '.slider-slide' );
+
+	// reset filmstrip
+	this.filmstrip.css( { left: 0 + 'px', 'right' : '' } );
+
+	this.slides.each( function() {
+
+		jQuery( this ).css( { 'left': currentPosition + 'px', 'right' : '' } );
+
+		currentPosition += self.slideWidth;
+	});
+};
+
+// Show Previous Slide on clicking next button
+cmt.components.base.Slider.prototype.showNextSlide = function() {
+
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
+
+	var firstSlide = this.slides.first();
+
+	// do pre processing
+	if( null !== options.preSlideChange ) {
+
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+	}
+
+	// do animation - animate slider
+	this.filmstrip.animate(
+		{ left: -this.slideWidth },
+		{
+			duration: 500,
+			complete: function() {
+
+				// Remove first and append to last
+				var firstSlide = self.slides.first();
+
+				firstSlide.insertAfter( self.slides.eq( self.slides.length - 1 ) );
+				firstSlide.css( 'right', -self.slideWidth );
+
+				self.resetSlides();
+			}
+		}
+	);
+
+	firstSlide = this.slides.first();
+
+	// do post processing
+	if( null !== options.postSlideChange ) {
+
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+	}
+}
+
+// Show Next Slide on clicking previous button
+cmt.components.base.Slider.prototype.showPrevSlide = function() {
+
+	var self	= this;
+	var options = this.options;
+	var element	= this.element;
+
+	var firstSlide = this.slides.first();
+
+	// do pre processing
+	if( null !== options.preSlideChange ) {
+
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+	}
+
+	// Remove last and append to first
+	var lastSlide = this.slides.last();
+
+	lastSlide.insertBefore( this.slides.eq( 0 ) );
+	lastSlide.css( 'left', -this.slideWidth );
+
+	// do animation - animate slider
+	this.filmstrip.animate(
+		{ left: this.slideWidth },
+		{
+			duration: 500,
+			complete: function() {
+
+				var slider = jQuery( this ).parent();
+
+				self.resetSlides( slider );
+			}
+		}
+	);
+
+	firstSlide = this.slides.first();
+
+	// do post processing
+	if( null !== options.postSlideChange ) {
+
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+	}
+}
+
+// Move to left on clicking next button
+cmt.components.base.Slider.prototype.moveToLeft = function() {
+	
+	var self	= this;
+	var element = this.element;
+
+	var firstSlide		= this.slides.first();
+	var slideWidth		= firstSlide.outerWidth();
+
+	var sliderWidth		= element.outerWidth();
+	var filmWidth		= this.filmstrip.outerWidth();
+	var filmLeft		= this.filmstrip.position().left;
+
+	var moveBy			= slideWidth;
+	var leftPosition	= filmLeft - moveBy;
+	var remaining		= filmWidth + leftPosition;
+
+	if( remaining > ( sliderWidth - moveBy ) ) {
+
+		// do animation - animate slider
+		this.filmstrip.animate(
+			{ left: leftPosition },
+			{
+				duration: 500,
+				complete: function() {
+
+					var filmWidth	= self.filmstrip.outerWidth();
+					var filmLeft	= self.filmstrip.position().left;
+
+					var leftPosition	= filmLeft - moveBy;
+					var remaining		= filmWidth + leftPosition;
+
+					if( remaining < ( sliderWidth - moveBy ) ) {
+
+						self.rightControl.hide();
+					}
+
+					if( self.leftControl.is( ':hidden' ) ) {
+
+						self.leftControl.fadeIn( 'fast' );
+					}
+				}
+			}
+		);
+	}
+}
+
+// Move to right on clicking prev button
+cmt.components.base.Slider.prototype.moveToRight = function() {
+	
+	var self = this;
+
+	var filmLeft = this.filmstrip.position().left;
+
+	var moveBy			= this.slideWidth;
+	var leftPosition	= filmLeft;
+
+	if( leftPosition < -( this.slideWidth/2 ) ) {
+
+		leftPosition = filmLeft + moveBy;
+
+		// do animation - animate slider
+		this.filmstrip.animate(
+			{ left: leftPosition },
+			{
+				duration: 500,
+				complete: function() {
+
+					var filmLeft = self.filmstrip.position().left;
+
+					if( filmLeft > -( self.slideWidth/2 ) ) {
+
+						self.leftControl.hide();
+						self.filmstrip.position( { at: "left top" } );
+					}
+
+					if( self.rightControl.is( ':hidden' ) ) {
+
+						self.rightControl.fadeIn( 'fast' );
+					}
+				}
+			}
+		);
+	}
+	else {
+
+		this.leftControl.hide();
+		this.filmstrip.position( { at: "left top" } );
+	}
+};
+
+// Move to left on clicking next button
+cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
+
+	var self		= this;
+	var element		= this.element;
+	var lightboxId	= this.options.lightboxId;
+	var lightbox	= jQuery( '#' + lightboxId );
+
+	// Configure
+	var screenWidth		= jQuery( window ).width();
+	var screenHeight	= jQuery( window ).height();
+
+	var lightboxData = lightbox.find( '.lightbox-data' );
+
+	var widthRatio	= screenWidth/12;
+	var heightRatio	= screenHeight/12;
+
+	lightboxData.css( { top: heightRatio/2, left: widthRatio/2, width: ( widthRatio * 11 ), height: ( heightRatio * 11 ) } );
+
+	if( self.options.lightboxBkg ) {
+		
+		lightbox.find( '.lightbox-data-bkg' ).addClass( 'lightbox-bkg-wrap' );
+	}
+
+	var sliderHtml = '<div class="slider slider-basic slider-lightbox">';
+
+	// Prepare Gallery
+	element.find( '.slider-slide, .slide, .cl-wrap, .cr-wrap' ).each( function() {
+
+		var slide	= jQuery( this );
+		var slId	= slide.attr( 'ldata-id' );
+
+		var thumbUrl = slide.attr( 'thumb-url' );
+		var imageUrl = slide.attr( 'image-url' );
+
+		if( slideId == slId ) {
+
+			sliderHtml += '<div class="active"><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+
+			if( self.options.lightboxBkg ) {
+
+				lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+			}
+			else {
+				
+				lightbox.find( '.lightbox-data-bkg' ).html( '<img src="' + imageUrl + '"/>' );
+			}
+		}
+		else {
+
+			sliderHtml += '<div><div class="bkg-image" style="background-image: url(' + thumbUrl + ');" image-url="' + imageUrl + '"></div></div>';
+		}
+	});
+
+	sliderHtml += '</div>';
+
+	lightboxData.find( '.wrap-gallery' ).html( sliderHtml );
+
+	if( lightbox.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
+	}
+
+	lightbox.fadeIn( 'slow' );
+
+	// Sliders
+	lightboxData.find( '.slider-lightbox' ).cmtSlider({
+		lControlContent: '<i class="fa fa-2x fa-angle-left valign-center"></i>',
+		rControlContent: '<i class="fa fa-2x fa-angle-right valign-center"></i>',
+		circular: false,
+		onSlideClick: self.setLightboxBkg
+	});
+}
+
+cmt.components.base.Slider.prototype.setLightboxBkg = function( slider, slide, slideId ) {
+
+	var imageUrl = slide.find( '.bkg-image' ).attr( 'image-url' );
+
+	var bkg = slider.closest( '.lightbox-slider-wrap' ).find( '.lightbox-data-bkg' );
+
+	slider.find( '.slide' ).removeClass( 'active' );
+	slide.addClass( 'active' );
+
+	bkg.hide();
+
+	if( bkg.hasClass( 'lightbox-bkg-wrap' ) ) {
+
+		bkg.css( 'background-image', 'url(' + imageUrl + ')');
+	}
+	else {
+		
+		bkg.html( '<img src="' + imageUrl + '"/>' );
+	}
+
+	bkg.fadeIn( 'slow' );
+}
+
+
+/**
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to jQuery implementation of components library.
+ */
+
+// == Global Namespace ====================
+
+cmt.components.jquery = cmt.components.jquery || {};
 
 
 /**
@@ -743,6 +2368,38 @@ cmt.utils.ui = {
 
 
 /**
+ * Actions list having hidden action list displayed when user click on list title.
+ */
+
+( function( cmtjq ) {
+
+	cmtjq.fn.cmtActions = function( options ) {
+
+		var component = null;
+
+		// Init Elements
+		try {
+
+			component = cmt.components.root.getComponent( 'actions' );
+
+			component.initElements( this );
+		}
+		// Init Component and Elements
+		catch( err ) {
+
+			component = cmt.components.root.registerComponent( 'actions', 'cmt.components.base.ActionsComponent', options );
+
+			component.initElements( this );
+		}
+
+		// return control
+		return;
+	};
+
+})( jQuery );
+
+
+/**
  * Auto Suggest is jQuery plugin which change the default behaviour of input field. It shows
  * auto suggestions as user type and provide options to select single or multiple values.
  */
@@ -796,6 +2453,57 @@ cmt.utils.ui = {
 
 
 /**
+ * Actions list having hidden list displayed when user click on list title.
+ */
+
+( function( cmtjq ) {
+
+	cmtjq.fn.cmtAutoHide = function( options ) {
+
+		// == Init == //
+
+		// Configure Plugin
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtFormInfo.defaults, options );
+		var triggers	= this;
+
+		// Iterate and initialise all the menus
+		triggers.each( function() {
+
+			var trigger = cmtjq( this );
+
+			init( trigger );
+		});
+
+		// return control
+		return;
+
+		// == Private Functions == //
+
+		function init( trigger ) {
+
+			var hide = jQuery( trigger.attr( 'ldata-target' ) );
+
+			jQuery( window ).click( function( e ) {
+
+				if ( !trigger.is( e.target ) && trigger.has( e.target ).length === 0 ) {
+
+					jQuery( hide ).slideUp();
+
+					trigger.removeClass( 'active' );
+				}
+			});
+		}
+	};
+
+	// Default Settings
+	cmtjq.fn.cmtAutoHide.defaults = {
+		animation: 'slide'
+	};
+
+})( jQuery );
+
+
+/**
  * Block component used to configure page blocks. It can be used to configure blocks height, css and parallax nature.
  */
 
@@ -842,6 +2550,7 @@ cmt.utils.ui = {
 
 				var blockConfig				= blocksConfig[ block.attr( blockAttr ) ];
 				var height					= blockConfig[ 'height' ];
+				var autoHeight				= blockConfig[ 'autoHeight' ];
 				var fullHeight				= blockConfig[ 'fullHeight' ];
 				var halfHeight				= blockConfig[ 'halfHeight' ];
 				var qtfHeight				= blockConfig[ 'qtfHeight' ];
@@ -859,7 +2568,11 @@ cmt.utils.ui = {
 				// Apply auto height
 				if( null != heightAuto && heightAuto ) {
 
-					if( null != height && height ) {
+					if( null != autoHeight && autoHeight ) {
+
+						block.css( { 'height': 'auto' } );
+					}
+					else if( null != height && height ) {
 
 						block.css( { 'height': 'auto', 'min-height': height + 'px' } );
 					}
@@ -903,14 +2616,21 @@ cmt.utils.ui = {
 				if( null != heightAutoMobile && heightAutoMobile ) {
 
 					if( window.innerWidth <= heightAutoMobileWidth ) {
+						
+						if( fullHeight ) {
 
-						block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
+							block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
 
-						var contentWrap = block.children( '.block-content-wrap' );
+							var contentWrap = block.children( '.block-content-wrap' );
 
-						if( contentWrap.hasClass( 'valign-center' ) ) {
+							if( contentWrap.hasClass( 'valign-center' ) ) {
 
-							contentWrap.removeClass( 'valign-center' );
+								contentWrap.removeClass( 'valign-center' );
+							}
+						}
+						else {
+							
+							block.css( { 'height': 'auto' } );
 						}
 					}
 				}
@@ -939,6 +2659,15 @@ cmt.utils.ui = {
 			}
 			// -- Apply Common Settings for all the Blocks
 			else {
+
+				// Apply Auto Height
+				if( settings.autoHeight ) {
+
+					if( settings.autoHeight ) {
+
+						block.css( { 'height': 'auto' } );
+					}
+				}
 
 				// Apply Full Height
 				if( settings.fullHeight ) {
@@ -1018,7 +2747,8 @@ cmt.utils.ui = {
 	cmtjq.fn.cmtBlock.defaults = {
 		blockAttr: 'cmt-block',
 		// Controls
-		fullHeight: true,
+		autoHeight: true,
+		fullHeight: false,
 		halfHeight: false,
 		qtfHeight: false,
 		heightAuto: false,
@@ -1027,6 +2757,7 @@ cmt.utils.ui = {
 			/* An array of blocks which need extra configuration. Ex:
 			<Block Selector>: {
 				height: 250,
+				autoHeight: false,
 				fullHeight: false,
 				halfHeight: false,
 				qtfHeight: false,
@@ -1142,44 +2873,94 @@ cmt.utils.ui = {
 
 		function init( fieldGroup ) {
 
-			var checkbox = fieldGroup.find( "input[type='checkbox']" );
+			var checkbox	= fieldGroup.find( "input[type='checkbox']" );
+			var radio		= fieldGroup.find( "input[type='radio']" );
+			var reverse		= cmt.utils.data.hasAttribute( fieldGroup, 'data-reverse' );
 
-			if( checkbox.prop( 'checked' ) ) {
+			if( checkbox.length > 0 ) {
 
-				var target	= fieldGroup.attr( 'group-target' );
-				var alt		= fieldGroup.attr( 'group-alt' );
+				if( checkbox.prop( 'checked' ) ) {
+
+					checkPositive( fieldGroup, reverse );
+				}
+				else {
+
+					checkNegative( fieldGroup, reverse );
+				}
+
+				fieldGroup.click( function() {
+
+					if( checkbox.prop( 'checked' ) ) {
+
+						checkPositive( fieldGroup, reverse );
+					}
+					else {
+
+						checkNegative( fieldGroup, reverse );
+					}
+				});
+			}
+			else if( radio.length > 0 ) {
+
+				var status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
+			
+				if( status == 1 ) {
+
+					checkPositive( fieldGroup, reverse );
+				}
+				else if( status == 0 ) {
+
+					checkNegative( fieldGroup, reverse );
+				}
+
+				fieldGroup.find( "input[type='radio']" ).change( function() {
+
+					status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
+
+					if( status == 1 ) {
+
+						checkPositive( fieldGroup, reverse );
+					}
+					else if( status == 0 ) {
+
+						checkNegative( fieldGroup, reverse );
+					}
+				});
+			}
+		}
+		
+		function checkPositive( fieldGroup, reverse ) {
+
+			var target	= fieldGroup.attr( 'group-target' );
+			var alt		= fieldGroup.attr( 'group-alt' );
+
+			if( reverse ) {
+
+				jQuery( '.' + target ).hide();
+				jQuery( '.' + alt ).show();
+			}
+			else {
+
+				jQuery( '.' + target ).show();
+				jQuery( '.' + alt ).hide();
+			}
+		}
+		
+		function checkNegative( fieldGroup, reverse ) {
+
+			var target	= fieldGroup.attr( 'group-target' );
+			var alt		= fieldGroup.attr( 'group-alt' );
+
+			if( reverse ) {
 
 				jQuery( '.' + target ).show();
 				jQuery( '.' + alt ).hide();
 			}
 			else {
 
-				var target	= fieldGroup.attr( 'group-target' );
-				var alt		= fieldGroup.attr( 'group-alt' );
-
 				jQuery( '.' + target ).hide();
 				jQuery( '.' + alt ).show();
 			}
-
-			fieldGroup.click( function() {
-
-				if( checkbox.prop( 'checked' ) ) {
-
-					var target	= fieldGroup.attr( 'group-target' );
-					var alt		= fieldGroup.attr( 'group-alt' );
-
-					jQuery( '.' + target ).fadeIn( 'slow' );
-					jQuery( '.' + alt ).fadeOut( 'fast' );
-				}
-				else {
-
-					var target	= fieldGroup.attr( 'group-target' );
-					var alt		= fieldGroup.attr( 'group-alt' );
-
-					jQuery( '.' + alt ).fadeIn( 'slow' );
-					jQuery( '.' + target ).fadeOut( 'fast' );
-				}
-			});
 		}
 	};
 
@@ -1189,6 +2970,7 @@ cmt.utils.ui = {
 	};
 
 })( jQuery );
+
 
 /**
  * File Uploader plugin can be used to upload files. The appropriate backend code should be able to handle the file sent by this plugin.
@@ -1240,7 +3022,7 @@ cmt.utils.ui = {
 					fileUploader.addClass( 'file-uploader-direct' );
 
 					btnChooser.hide();
-					
+
 					if( settings.toggle ) {
 
 						fileUploader.find( '.chooser-wrap' ).show();
@@ -1251,7 +3033,7 @@ cmt.utils.ui = {
 				btnChooser.click( function() {
 
 					if( settings.toggle ) {
-						
+
 						// Swap Chooser and Dragger
 						fileUploader.find( '.chooser-wrap' ).fadeToggle( 'slow' );
 						fileUploader.find( '.file-wrap' ).fadeToggle( 'fast' );
@@ -1267,7 +3049,7 @@ cmt.utils.ui = {
 					resetUploader( fileUploader );
 				});
 			}
-			
+
 			// Always Show File Wrap and Chooser and keep Dragger hidden
 			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
 
@@ -1324,7 +3106,7 @@ cmt.utils.ui = {
 			// Clear Old Values
 			if( cmt.utils.browser.isCanvas() && fileUploader.attr( 'type' ) == 'image' ) {
 
-				var canvasArr	= fileUploader.find( '.file-dragger canvas' );
+				var canvasArr = fileUploader.find( '.file-dragger canvas' );
 
 				if( canvasArr.length > 0 ) {
 
@@ -1338,7 +3120,7 @@ cmt.utils.ui = {
 			var progressContainer = fileUploader.find( '.file-preloader .file-preloader-bar' );
 
 			// Modern Uploader
-			if ( cmt.utils.browser.isFileApi() ) {
+			if( cmt.utils.browser.isFileApi() ) {
 
 				progressContainer.css( "width", "0%" );
 			}
@@ -1354,8 +3136,7 @@ cmt.utils.ui = {
 			event.stopPropagation();
 			event.preventDefault();
 
-			// TODO: add class hover to drag
-			// event.target.className = ( event.type == "dragover" ? "hover" : "" );
+			event.target.className = ( event.type == "dragover" ? "dragger-hover" : "" );
 		}
 
 		function handleFile( event, fileUploader ) {
@@ -1372,11 +3153,14 @@ cmt.utils.ui = {
 			// Draw if image
 			if( settings.preview && cmt.utils.browser.isCanvas() && type == 'image' ) {
 
-				var canvas	= fileUploader.find( '.file-dragger canvas' );
+				var canvas = fileUploader.find( '.file-dragger canvas' );
 
-				canvas.show();
+				if( canvas.length > 0 ) {
 
-				cmt.utils.image.drawAtCanvasCenter( canvas[0], files[0] );
+					canvas.show();
+
+					cmt.utils.image.drawAtCanvasCenter( canvas[0], files[0] );
+				}
 			}
 
 			// Upload File
@@ -1422,7 +3206,7 @@ cmt.utils.ui = {
 
 							if( jsonResponse[ 'result' ] == 1 ) {
 
-								var responseData	= jsonResponse[ 'data' ];
+								var responseData = jsonResponse[ 'data' ];
 
 								if( settings.uploadListener ) {
 
@@ -1446,7 +3230,7 @@ cmt.utils.ui = {
 					}
 				};
 
-				var urlParams	= fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
+				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
 
 				// start upload
 				xhr.open("POST", urlParams, true );
@@ -1499,7 +3283,7 @@ cmt.utils.ui = {
 				}
 				else {
 
-					var errors	= response[ 'errors' ];
+					var errors = response[ 'errors' ];
 
 					alert( errors.error );
 				}
@@ -1523,7 +3307,7 @@ cmt.utils.ui = {
 
 				case "image": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<img src='" + result['tempUrl'] + "' class='fluid' />" );
+					fileUploader.find( '.file-data' ).html( "<img src='" + result['tempUrl'] + "' class='fluid' />" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -1531,17 +3315,18 @@ cmt.utils.ui = {
 				}
 				case "video": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<video src='" + result['tempUrl'] + "' controls class='fluid'>Video not supported.</video>" );
+					fileUploader.find( '.file-data' ).html( "<video src='" + result['tempUrl'] + "' controls class='fluid'>Video not supported.</video>" );
 
 					updateFileData( fileUploader, type, result );
 
 					break;
 				}
 				case "document":
+				case "mixed":
 				case "compressed":
 				case "shared": {
 
-					fileUploader.find( '.file-wrap .file-data' ).html( "<i class='cmti cmti-3x cmti-check'></i>" );
+					fileUploader.find( '.file-data' ).html( "<i class='" + settings.docSuccessIcon + "'></i>" );
 
 					updateFileData( fileUploader, type, result );
 
@@ -1560,7 +3345,8 @@ cmt.utils.ui = {
 				}
 			}
 
-			// Show Postaction
+			// Show Clear and Postaction
+			fileUploader.find( '.file-clear' ).fadeIn();
 			fileUploader.find( '.post-action' ).fadeIn();
 		}
 
@@ -1589,7 +3375,8 @@ cmt.utils.ui = {
 		direct: false,
 		uploadListener: null,
 		preview: true,
-		toggle: true
+		toggle: true,
+		docSuccessIcon: 'cmti cmti-3x cmti-check'
 	};
 
 })( jQuery );
@@ -1656,6 +3443,80 @@ cmt.utils.ui = {
 
 
 /**
+ * The Gallery Plugin shows images as Gallery.
+ */
+
+( function( cmtjq ) {
+
+	var component = null;
+
+	var methods = {
+		init: function( options ) {
+
+			// Init Elements
+			try {
+
+				component.resetOptions( options );
+
+				component.initGalleries( this );
+			}
+			// Init Component and Elements
+			catch( err ) {
+
+				component = cmt.components.root.registerComponent( 'gallery', 'cmt.components.base.GalleryComponent', options );
+
+				component.initGalleries( this );
+			}
+
+			if( null != component ) {
+
+				// Window resize
+				cmtjq( window ).resize( function() {
+
+					component.normaliseGalleries();
+				});
+			}
+		},
+		addItem: function( itemHtml ) {
+
+			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+
+			component.addItem( galleryKey, itemHtml );
+		},
+		removeItem: function( itemKey ) {
+			
+			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+
+			component.removeItem( galleryKey, itemKey );
+		}
+	};
+
+	cmtjq.fn.cmtGallery = function( param ) {
+
+		// Call exclusive method
+        if( methods[ param ] ) {
+
+            return methods[ param ].apply( this, Array.prototype.slice.call( arguments, 1 ) );
+        }
+		// Call init
+		else if( typeof param === 'object' || ! param ) {
+
+            return methods.init.apply( this, arguments );
+        }
+		// Log error
+		else {
+
+            cmtjq.error( 'CMT Gallery - method ' +  param + ' does not exist.' );
+        }
+
+		// return control
+		return;
+	};
+
+})( jQuery );
+
+
+/**
  * Grid
  */
 
@@ -1709,11 +3570,12 @@ cmt.utils.ui = {
 			grid.find( '.grid-filters select' ).change( function() {
 
 				var pageUrl		= window.location.href;
-				var selected 	= jQuery( this ).val();
-				var option		= jQuery( this ).find( ':selected' );
-				var column		= option.attr( 'data-col' );
-				var cols		= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
-				cols			= cols.split( ',' );
+				var selected	= jQuery( this ).val();
+				
+				var option	= jQuery( this ).find( ':selected' );
+				var column	= option.attr( 'data-col' );
+				var cols	= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
+				cols		= cols.split( ',' );
 
 				// Clear Filter
 				for( i = 0; i < cols.length; i++ ) {
@@ -1747,9 +3609,9 @@ cmt.utils.ui = {
 
 				fields.each( function( index, element ) {
 
-					var field	= jQuery( this );
+					var field = jQuery( this );
 
-					pageUrl 	= cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
+					pageUrl = cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
 
 					if( field.val().length > 0 ) {
 
@@ -1771,11 +3633,11 @@ cmt.utils.ui = {
 
 				fields.each( function( index, element ) {
 
-					var field	= jQuery( this );
+					var field = jQuery( this );
 
 		    		field.val( '' );
 
-		    		pageUrl 	= cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
+		    		pageUrl = cmt.utils.data.removeParam( pageUrl, field.attr( 'name' ) );
 				});
 
 				pageUrl = cmt.utils.data.removeParam( pageUrl, 'report' );
@@ -1784,7 +3646,7 @@ cmt.utils.ui = {
 			});
 
 			// Searching
-			grid.find( '.search-field .trigger-search' ).click( function() {
+			grid.find( '.grid-search-trigger' ).click( function() {
 
 				var pageUrl		= window.location.href;
 				var grid		= jQuery( this ).closest( '.grid-data' );
@@ -1805,7 +3667,7 @@ cmt.utils.ui = {
 				window.location	= pageUrl;
 			});
 
-			grid.find( '.search-field .trigger-search-single' ).bind( 'blur keyup',function( e ) {
+			grid.find( '.grid-search-input' ).bind( 'blur keyup', function( e ) {
 
 				if( e.type == 'blur' || e.keyCode == '13' ) {
 
@@ -1898,8 +3760,8 @@ cmt.utils.ui = {
 			// Limit
 			grid.find( '.wrap-limits select' ).change( function() {
 
-				var pageUrl		= window.location.href;
-				var value		= jQuery( this ).val();
+				var pageUrl	= window.location.href;
+				var value	= jQuery( this ).val();
 
 				if( value === 'select' ) {
 
@@ -1919,40 +3781,45 @@ cmt.utils.ui = {
 			grid.find( '.trigger-layout-switch' ).click( function() {
 
 				var trigger = jQuery( this );
+				var layout	= trigger.attr( 'layout' );
+				var pageUrl	= window.location.href;
 
-				if( trigger.hasClass( 'grid-view-data' ) ) {
+				switch( layout ) {
 
-					trigger.removeClass( 'grid-view-data ' + settings.cardIcon );
-					trigger.addClass( 'grid-view-card ' + settings.listIcon );
+					case 'data': {
+						
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'data' );
 
-					grid.find( '.grid-rows-wrap' ).fadeOut( 'fast' );
-					grid.find( '.grid-cards-wrap' ).fadeIn( 'fast' );
+						break;
+					}
+					case 'table': {
+						
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'table' );
 
-					if( updateUserMeta ) {
+						break;
+					}
+					case 'list': {
 
-						updateUserMeta( 'gridLayout', 'card' );
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'list' );
+
+						break;
+					}
+					case 'card': {
+
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'card' );
+
+						break;
 					}
 				}
-				else if( trigger.hasClass( 'grid-view-card' ) ) {
 
-					trigger.removeClass( 'grid-view-card ' + settings.listIcon );
-					trigger.addClass( 'grid-view-data ' + settings.cardIcon );
-
-					grid.find( '.grid-cards-wrap' ).fadeOut( 'fast' );
-					grid.find( '.grid-rows-wrap' ).fadeIn( 'fast' );
-
-					if( updateUserMeta ) {
-
-						updateUserMeta( 'gridLayout', 'data' );
-					}
-				}
+				window.location	= pageUrl;
 			});
 
 			// Popup - Generic Action
 			grid.find( '.actions .action-generic' ).click( function() {
 
-				var target		= parseInt( jQuery( this ).attr( 'target' ) );
-				var popup		= jQuery( this ).attr( 'popup' );
+				var target	= parseInt( jQuery( this ).attr( 'target' ) );
+				var popup	= jQuery( this ).attr( 'popup' );
 
 				if( target > 0 ) {
 
@@ -1979,7 +3846,7 @@ cmt.utils.ui = {
 			// Popup - Specific Add Action
 			grid.find( '.grid-title .action-add' ).click( function() {
 
-				var popup	= jQuery( this ).attr( 'popup' );
+				var popup = jQuery( this ).attr( 'popup' );
 
 				showPopup( '#' + popup );
 			});
@@ -1987,8 +3854,8 @@ cmt.utils.ui = {
 			// Popup - Specific Action
 			grid.find( '.actions .action-pop' ).click( function() {
 
-				var target		= parseInt( jQuery( this ).attr( 'target' ) );
-				var popup		= jQuery( this ).attr( 'popup' );
+				var target	= parseInt( jQuery( this ).attr( 'target' ) );
+				var popup	= jQuery( this ).attr( 'popup' );
 
 				if( target > 0 ) {
 
@@ -2013,7 +3880,8 @@ cmt.utils.ui = {
 		cardIcon: 'cmti cmti-grid',
 		listIcon: 'cmti cmti-list',
 		pageParam: 'page',
-		pageLimitParam: 'per-page'
+		pageLimitParam: 'per-page',
+		layoutParam: 'layout'
 	};
 
 })( jQuery );
@@ -2657,8 +4525,8 @@ cmt.utils.ui = {
 		// == Init == //
 
 		// Configure Popups
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtPopoutGroup.defaults, options );
-		var elements		= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtPopoutGroup.defaults, options );
+		var elements	= this;
 
 		// Iterate and initialise all the popups
 		elements.each( function() {
@@ -2684,8 +4552,9 @@ cmt.utils.ui = {
 
 				jQuery( this ).addClass( 'active' );
 
-				var popoutId		= "#" + jQuery( this ).attr( 'popout' );
-				var targetPopout 	= jQuery( popoutId );
+				var popoutId = "#" + jQuery( this ).attr( 'popout' );
+				
+				var targetPopout = jQuery( popoutId );
 
 				if( targetPopout.is( ':visible' ) ) {
 
@@ -2715,6 +4584,23 @@ cmt.utils.ui = {
 						}
 					}
 				}
+
+				targetPopout.find( '.popout-close' ).click( function() {
+					
+					var popId = targetPopout.attr( 'popout' );
+
+					popoutGroup.find( '.popout-trigger[popout=' + popId + ']' ).removeClass( 'active' );
+
+					switch( settings.animation ) {
+
+						case "down": {
+
+							targetPopout.slideUp();
+
+							break;
+						}
+					}
+				});
 			});
 		}
 	};
@@ -2765,7 +4651,7 @@ cmt.utils.ui = {
 			// Close Listener
 			popupData.children( '.popup-close' ).click( function() {
 
-				popup.fadeOut( 'slow' );
+				closePopup( popup );
 			});
 
 			// Modal Window
@@ -2773,40 +4659,72 @@ cmt.utils.ui = {
 
 				// Move modal popups to body element
 				popup.appendTo( 'body' );
-
-				// Parent to cover document
-				popup.css( { 'top': '0px', 'left': '0px', 'height': documentHeight, 'width': screenWidth } );
-
+				
 				// Background
-				var bkg			= popup.find( '.popup-screen' );
-
-				if( bkg.length > 0 ) {
-
-					bkg.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
-				}
+				var bkg = popup.find( '.popup-screen' );
 
 				// Filler Layer to listen for close
-				var bkgFiller	= popup.find( '.popup-screen-listener' );
+				var bkgFiller = popup.find( '.popup-screen-listener' );
+
+				if( !popup.hasClass( 'popup-modal' ) ) {
+
+					// Parent to cover document
+					popup.css( { 'top': '0px', 'left': '0px', 'height': documentHeight, 'width': screenWidth } );
+
+					if( bkg.length > 0 ) {
+
+						bkg.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
+					}
+
+					if( bkgFiller.length > 0 ) {
+
+						bkgFiller.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
+					}
+				}
 
 				if( bkgFiller.length > 0 ) {
 
-					bkgFiller.css( { 'top': '0px', 'left': '0px', 'height': screenHeight, 'width': screenWidth } );
-
 					bkgFiller.click( function() {
 
-						popup.fadeOut( 'fast' );
+						closePopup( popup );
 					});
 				}
 
 				// Child at center of parent
 				popup.show(); // Need some better solution if it shows flicker effect
 
-				var popupDataHeight	=  popupData.height();
-				var popupDataWidth	=  popupData.width();
+				var popupDataHeight	=  popupData.outerHeight();
+				var popupDataWidth	=  popupData.outerWidth();
 
 				popup.hide();
 
-				popupData.css( { 'top': screenHeight/2 - popupDataHeight/2, 'left': screenWidth/2 - popupDataWidth/2 } );
+				if( popupDataHeight <= screenHeight ) {
+
+					popupData.css( { 'top': ( screenHeight/2 - popupDataHeight/2 ) } );
+				}
+				else {
+					
+					popupData.css( { 'top': 10 } );
+				}
+
+				if( popupDataWidth <= screenWidth ) {
+
+					popupData.css( { 'left': ( screenWidth/2 - popupDataWidth/2 ) } );
+				}
+				else {
+
+					popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
+				}
+			}
+		}
+
+		function closePopup( popup ) {
+
+			popup.fadeOut( 'slow' );
+
+			if( settings.modal ) {
+
+				jQuery( 'body' ).css( { 'overflow': '', 'height': '', 'margin-right': '' } );
 			}
 		}
 	};
@@ -2822,10 +4740,24 @@ cmt.utils.ui = {
 
 function showPopup( popupSelector ) {
 
-	jQuery( popupSelector ).fadeIn( 'slow' );
+	var popup = jQuery( popupSelector );
+
+	if( popup.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
+	}
+
+	popup.fadeIn( 'slow' );
 }
 
 function closePopup( popupSelector ) {
+
+	var popup = jQuery( popupSelector );
+
+	if( popup.hasClass( 'popup-modal' ) ) {
+
+		jQuery( 'body' ).css( { 'overflow': '', 'height': '', 'margin-right': '' } );
+	}
 
 	jQuery( popupSelector ).fadeOut( 'fast' );
 }
@@ -2912,7 +4844,7 @@ function hideMessagePopup() {
 		var stars		= [];
 		var icons		= [];
 		var messages	= [];
-		var selected 	= ( rating.find( '.selected' ).length == 1 ) ? parseInt( rating.find( '.selected' ).attr( 'star' ) ) : 0;
+		var selected 	= ( rating.find( '.star.selected' ).length == 1 ) ? parseInt( rating.find( '.star.selected' ).attr( 'star' ) ) : 0;
 		var disabled	= rating.hasClass( 'disabled' );
 		var readOnly	= rating.hasClass( 'read-only' );
 		var settings	= rating.data( 'cmtRateSettings' );
@@ -2941,11 +4873,18 @@ function hideMessagePopup() {
 			// Disabled - Change color
 			if( disabled ) {
 
-				star.css( 'color', settings.disabledColor );
+				if( selected > 0 && selected >= index ) {
+
+					star.css( 'color', settings.disabledColor );
+				}
 			}
+			// Read Only - Change color
 			else if( readOnly ) {
 
-				star.css( 'color', settings.readonlyColor );
+				if( selected > 0 && selected >= index ) {
+
+					star.css( 'color', settings.readonlyColor );
+				}
 			}
 			// Enabled - Prepare cache
 			else {
@@ -3509,407 +5448,75 @@ function hideMessagePopup() {
 
 
 /**
- * A simple slider(simplified version of FoxSlider arranged in filmstrip fashion) to slide UI elements in circular fashion. We can use FoxSlider for more complex scenarios.
+ * A simple slider(simplified version of FoxSlider arranged in filmstrip fashion) to slide 
+ * UI elements in circular fashion. We can use FoxSlider for more complex scenarios.
  */
 
 ( function( cmtjq ) {
 
-	cmtjq.fn.cmtSlider = function( options ) {
+	var component = null;
 
-		// == Init =================================================================== //
+	var methods = {
+		init: function( options ) {
 
-		// Configure Sliders
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtSlider.defaults, options );
-		var sliders			= this;
+			// Init Elements
+			try {
 
-		// Iterate and initialise all the fox sliders
-		sliders.each( function() {
+				component.resetOptions( options );
 
-			var slider	= cmtjq( this );
-
-			init( slider );
-		});
-
-		// Windows resize
-		cmtjq( window ).resize(function() {
-
-			// Iterate and resize all the fox sliders
-			sliders.each( function() {
-
-				var slider	= cmtjq( this );
-
-				normaliseSlides( slider );
-			});
-		});
-
-		// return control
-		return;
-
-		// == Private Functions ===================================================== //
-
-		// == Bootstrap ==================================== //
-
-		// Initialise Slider
-		function init( slider ) {
-
-			// Update Slider html
-			initSliderHtml( slider );
-
-			// Set Slider and Slides based on configuration params
-			normaliseSlides( slider );
-
-			// Initialise controls
-			initControls( slider );
-		}
-
-		// Update Slider html
-		function initSliderHtml( slider ) {
-
-			// Add slide class to all the slides
-			slider.children().each( function() {
-
-				var slide = cmtjq( this );
-
-				slide.addClass( 'cmt-slider-slide' );
-			});
-
-			// wrap the slides
-			var sliderHtml		= '<div class="cmt-slider-slides-wrap"><div class="cmt-slider-slides">' + slider.html() + '</div></div>';
-			sliderHtml		   += '<div class="cmt-slider-control cmt-slider-control-left"></div><div class="cmt-slider-control cmt-slider-control-right"></div>';
-
-			slider.html( sliderHtml );
-		}
-
-		// Make filmstrip of all slides
-		function normaliseSlides( slider ) {
-
-			// Calculate and set Slider Width
-			//var sliderWidth		= slider.width();
-			//var sliderHeight	= slider.height();
-			var slidesWrapper	= slider.find( '.cmt-slider-slides' );
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
-
-			var slideWidth		= slidesSelector.outerWidth();
-			var slidesCount		= slidesSelector.length;
-
-			// Initialise Slide position
-			var currentPosition	= 0;
-
-			slidesWrapper.width( slideWidth * slidesCount );
-
-			// Set slides position on filmstrip
-			slidesSelector.each( function( count ) {
-
-				var currentSlide	= cmtjq( this );
-
-				currentSlide.css( 'left', currentPosition );
-
-				currentSlide.attr( 'slide', count );
-
-				currentPosition += slideWidth;
-
-				resetSlide( slider, currentSlide );
-			});
-
-			if( slidesWrapper.width() < slider.width() ) {
-
-				if( null !== settings.smallerContent ) {
-
-					settings.smallerContent( slider, slidesWrapper );
-				}
+				component.initSliders( this );
 			}
-		}
+			// Init Component and Elements
+			catch( err ) {
 
-		// Initialise the Slider controls
-		function initControls( slider ) {
+				component = cmt.components.root.registerComponent( 'slider', 'cmt.components.base.SliderComponent', options );
 
-			var slidesWrapper	= slider.find( '.cmt-slider-slides' );
-			var leftControl		= slider.find( '.cmt-slider-control-left' );
-			var rightControl	= slider.find( '.cmt-slider-control-right' );
-
-			if( slidesWrapper.width() < slider.width() ) {
-
-				leftControl.hide();
-				rightControl.hide();
-
-				return;
+				component.initSliders( this );
 			}
 
-			// Show Controls
-			var lControlContent	= settings.lControlContent;
-			var rControlContent	= settings.rControlContent;
+			if( null != component ) {
 
-			// Init Listeners
-			leftControl.html( lControlContent );
-			rightControl.html( rControlContent );
+				// Window resize
+				cmtjq( window ).resize( function() {
 
-			if( !settings.circular ) {
-
-				leftControl.hide();
-				rightControl.show();
-			}
-
-			leftControl.click( function() {
-
-				if( settings.circular ) {
-
-					showPrevSlide( slider );
-				}
-				else {
-
-					moveToRight( slider );
-				}
-			});
-
-			rightControl.click( function() {
-
-				if( settings.circular ) {
-
-					showNextSlide( slider );
-				}
-				else {
-
-					moveToLeft( slider );
-				}
-			});
-		}
-
-		function resetSlide( slider, slide ) {
-
-			if( null !== settings.onSlideClick ) {
-
-				// remove existing click event
-				slide.unbind( 'click' );
-
-				// reset click event
-				slide.click( function() {
-
-					settings.onSlideClick( slider, slide, slide.attr( 'slide' ) );
+					component.normaliseSliders();
 				});
 			}
-		}
+		},
+		addSlide: function( slideHtml ) {
 
-		// == Slides Movements ============================= //
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
 
-		// Calculate and re-position slides to form filmstrip
-		function resetSlides( slider ) {
+			component.addSlide( sliderKey, slideHtml );
+		},
+		removeSlide: function( slideKey ) {
+			
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
 
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
-			var slideWidth		= slidesSelector.width();
-			var currentPosition	= 0;
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
-
-			// reset filmstrip
-			filmstrip.css( { left: 0 + 'px', 'right' : '' } );
-
-			slidesSelector.each( function() {
-
-				cmtjq( this ).css( { 'left': currentPosition + 'px', 'right' : '' } );
-
-				currentPosition += slideWidth;
-			});
-		}
-
-		// Show Previous Slide on clicking next button
-		function showNextSlide( slider ) {
-
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
-			var firstSlide		= slidesSelector.first();
-			var slideWidth		= firstSlide.width();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
-
-			// do pre processing
-			if( null !== settings.preSlideChange ) {
-
-				settings.preSlideChange( slider, firstSlide, firstSlide.attr( 'slide' ) );
-			}
-
-			// do animation - animate slider
-			filmstrip.animate(
-				{ left: -slideWidth },
-				{
-					duration: 500,
-					complete: function() {
-
-						// Remove first and append to last
-						var slidesSelector	= slider.find( '.cmt-slider-slide' );
-						var firstSlide		= slidesSelector.first();
-						firstSlide.insertAfter( slidesSelector.eq( slidesSelector.length - 1 ) );
-						firstSlide.css( 'right', -slideWidth );
-
-						resetSlides( slider );
-					}
-				}
-			);
-
-			firstSlide	= slidesSelector.first();
-
-			// do post processing
-			if( null !== settings.postSlideChange ) {
-
-				settings.postSlideChange( slider, firstSlide, firstSlide.attr( 'slide' ) );
-			}
-		}
-
-		// Show Next Slide on clicking previous button
-		function showPrevSlide( slider ) {
-
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
-			var firstSlide		= slidesSelector.first();
-			var slideWidth		= firstSlide.width();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
-
-			// do pre processing
-			if( null !== settings.preSlideChange ) {
-
-				settings.preSlideChange( slider, firstSlide, firstSlide.attr( 'slide' ) );
-			}
-
-			// Remove last and append to first
-			var lastSlide		= slidesSelector.last();
-			lastSlide.insertBefore( slidesSelector.eq(0) );
-			lastSlide.css( 'left', -slideWidth );
-			//var activeSlide		= lastSlide.attr( 'slide' );
-
-			// do animation - animate slider
-			filmstrip.animate(
-				{ left: slideWidth },
-				{
-					duration: 500,
-					complete: function() {
-
-						var slider = cmtjq( this ).parent();
-
-						resetSlides( slider );
-					}
-				}
-			);
-
-			firstSlide	= slidesSelector.first();
-
-			// do post processing
-			if( null !== settings.postSlideChange ) {
-
-				settings.postSlideChange( slider, firstSlide, firstSlide.attr( 'slide' ) );
-			}
-		}
-
-		// Move to left on clicking next button
-		function moveToLeft( slider ) {
-
-			var leftControl		= slider.find( '.cmt-slider-control-left' );
-			var rightControl	= slider.find( '.cmt-slider-control-right' );
-
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
-			var firstSlide		= slidesSelector.first();
-			var slideWidth		= firstSlide.outerWidth();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
-
-			var sliderWidth		= slider.outerWidth();
-			var filmWidth		= filmstrip.outerWidth();
-			var filmLeft		= filmstrip.position().left;
-
-			var moveBy			= slideWidth;
-			var leftPosition	= filmLeft - moveBy;
-			var remaining		= filmWidth + leftPosition;
-
-			if( remaining > ( sliderWidth - moveBy ) ) {
-
-				// do animation - animate slider
-				filmstrip.animate(
-					{ left: leftPosition },
-					{
-						duration: 500,
-						complete: function() {
-
-							var filmWidth		= filmstrip.outerWidth();
-							var filmLeft		= filmstrip.position().left;
-
-							var leftPosition	= filmLeft - moveBy;
-							var remaining		= filmWidth + leftPosition;
-
-							if( remaining < ( sliderWidth - moveBy ) ) {
-
-								rightControl.hide();
-							}
-
-							if( leftControl.is( ':hidden' ) ) {
-
-								leftControl.fadeIn( 'fast' );
-							}
-						}
-					}
-				);
-			}
-		}
-
-		// Move to right on clicking prev button
-		function moveToRight( slider ) {
-
-			var leftControl		= slider.find( '.cmt-slider-control-left' );
-			var rightControl	= slider.find( '.cmt-slider-control-right' );
-
-			var slidesSelector	= slider.find( '.cmt-slider-slide' );
-			var firstSlide		= slidesSelector.first();
-			var slideWidth		= firstSlide.outerWidth();
-			var filmstrip		= slider.find( '.cmt-slider-slides' );
-
-			//var sliderWidth		= slider.outerWidth();
-			//var filmWidth		= filmstrip.outerWidth();
-			var filmLeft		= filmstrip.position().left;
-
-			var moveBy			= slideWidth;
-			var leftPosition	= filmLeft;
-
-			if( leftPosition < -( slideWidth/2 ) ) {
-
-				leftPosition = filmLeft + moveBy;
-
-				// do animation - animate slider
-				filmstrip.animate(
-					{ left: leftPosition },
-					{
-						duration: 500,
-						complete: function() {
-
-							var filmLeft	= filmstrip.position().left;
-
-							if( filmLeft > -( slideWidth/2 ) ) {
-
-								leftControl.hide();
-								filmstrip.position( { at: "left top" } );
-							}
-
-							if( rightControl.is( ':hidden' ) ) {
-
-								rightControl.fadeIn( 'fast' );
-							}
-						}
-					}
-				);
-			}
-			else {
-
-				leftControl.hide();
-				filmstrip.position( { at: "left top" } );
-			}
+			component.removeSlide( sliderKey, slideKey );
 		}
 	};
 
-	// Default Settings
-	cmtjq.fn.cmtSlider.defaults = {
-		// Controls
-		lControlContent: null,
-		rControlContent: null,
-		// Callback - Content is less than slider
-		smallerContent: null,
-		// Listener Callback for slide click
-		onSlideClick: null,
-		// Listener Callback for pre processing
-		preSlideChange: null,
-		// Listener Callback for post processing
-		postSlideChange: null,
-		circular: true
+	cmtjq.fn.cmtSlider = function( param ) {
+
+		// Call exclusive method
+        if( methods[ param ] ) {
+
+            return methods[ param ].apply( this, Array.prototype.slice.call( arguments, 1 ) );
+        }
+		// Call init
+		else if( typeof param === 'object' || ! param ) {
+
+            return methods.init.apply( this, arguments );
+        }
+		// Log error
+		else {
+
+            cmtjq.error( 'CMT Slider - method ' +  param + ' does not exist.' );
+        }
+
+		// return control
+		return;
 	};
 
 })( jQuery );
@@ -4010,8 +5617,13 @@ function hideMessagePopup() {
 
 		function init( tabPanel ) {
 
-			var links	= tabPanel.find( '.tab-link' );
-			var tabs	= tabPanel.find( '.tab-content' );
+			var links	= tabPanel.find( '.tab-links-wrap' ).first().find( '.tab-link' );
+			var tabs	= tabPanel.find( '.tab-content-wrap' ).first();
+			var nested	= tabs.find('.tab-content-wrap .tab-content' );
+
+			tabs = tabs.find( '.tab-content' ).not( nested );
+
+			tabs.hide();
 
 			// Activate first
 			jQuery( links[ 0 ] ).addClass( 'active' );
@@ -4254,17 +5866,20 @@ function hideMessagePopup() {
 })( jQuery );
 
 
-// TODO: Add Data Binding Support to bind data sent by server to respective ui component
-// TODO: Add Data Binding with Pagination for Data Grid
-// TODO: Add Page History and Caching Support
-
 /**
- * CMGTools API library provide methods to process AJAX request. These requests can be either form or regular
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to communicate with server and process the request and response using MVC patterns.
  */
+
+// == Global Namespace ====================
 
 cmt.api = {};
 
-// Manage Applications -----------------------------------
+// TODO: Add Data Binding Support using Model to bind data sent by server to respective ui component
+// TODO: Add Data Binding with Pagination for Data Grid
+// TODO: Add Page History and Caching Support
+
+// == Applications ========================
 
 cmt.api.Root = function( options ) {
 
@@ -4298,7 +5913,10 @@ cmt.api.Root.prototype.getApplication = function( alias, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	if( this.apps[ alias ] == undefined ) throw 'Application with alias ' + alias + ' is not registered.';
+	if( this.apps[ alias ] == undefined ) {
+		
+		throw 'Application with alias ' + alias + ' is not registered.';
+	}
 
 	// Create singleton instance if not exist
 	if( this.activeApps[ alias ] == undefined ) {
@@ -4337,6 +5955,11 @@ cmt.api.Root.prototype.setApplication = function( alias, application ) {
  * @param {cmt.api.Application} application
  */
 cmt.api.Root.prototype.registerApplication = function( alias, path, options ) {
+	
+	if( this.apps[ alias ] != null ) {
+		
+		throw 'Application with alias ' + alias + ' is already registered. Cannot register the same alias.';
+	}
 
 	this.mapApplication( alias, path );
 
@@ -4349,15 +5972,16 @@ cmt.api.root = new cmt.api.Root();
 /**
  * Key Concepts
  * -------------------------
- * 1. Application
- * 2. Controller
- * 3. Action
- * 4. User
- * 5. Route
- * 6. Request Element
- * 7. Trigger Element
- * 8. Get, Post, Put and Delete
- * 9. View
+ *  1. Application
+ *  2. Controller
+ *  3. Service
+ *  4. Action
+ *  5. User
+ *  6. Route
+ *  7. Request Element
+ *  8. Trigger Element
+ *  9. Get, Post, Put and Delete
+ * 10. View
  *
  * An application is a collection of app config and controllers. Each controller can define several actions that can be executed by app user.
  * A project can create multiple applications based on it's needs. The request triggers present within request elements use the Request Processing Engine
@@ -4371,7 +5995,7 @@ cmt.api.root = new cmt.api.Root();
  * sent back by server.
  */
 
-// Application -------------------------------------------
+// == Application =========================
 
 cmt.api.Application = function( options ) {
 
@@ -4392,7 +6016,7 @@ cmt.api.Application = function( options ) {
 	jQuery.extend( this.config, options );
 
 	// Default controller to be used as fallback in case no controller is mentioned
-	var defaultController	= cmt.api.Application.CONTROLLER_DEFAULT;
+	var defaultController = cmt.api.Application.CONTROLLER_DEFAULT;
 
 	// TODO: Add Apix and REST based default controllers to handle CRUD operations.
 
@@ -4413,16 +6037,27 @@ cmt.api.Application = function( options ) {
 	/**
 	 * An exhaustive map of all the controllers (alias, classpath) available for the application. Each application can use this map to maintain it's controllers list.
 	 */
-	this.controllers 						= []; // Alias, Path map
-	this.controllers[ defaultController ] 	= 'cmt.api.controllers.RequestController';
+	this.controllers = []; // Alias, Path map
+
+	this.controllers[ defaultController ] = 'cmt.api.controllers.RequestController';
 
 	/**
 	 * Map of all the active controllers (alias, object) which are already initialised. It will save us from re-initialising controllers.
 	 */
-	this.activeControllers 	= []; // Alias, Controller map
+	this.activeControllers = []; // Alias, Controller map
+	
+	/**
+	 * Map of all the services (alias, classpath) available for the application.
+	 */
+	this.services = [];
+	
+	/**
+	 * Map to query active services (alias, object) which are already initialised.
+	 */
+	this.activeServices	= [];
 };
 
-// Application Globals -----------------------------------
+// == Application Globals =================
 
 //Defaults
 cmt.api.Application.CONTROLLER_DEFAULT	= 'default';			// Default Controller Alias
@@ -4460,7 +6095,7 @@ cmt.api.Application.STATIC_BLUR			=  '.cmt-blur';			// The class to be set for t
  * for an action. The post processor method can define logic to handle response and use appropriate templating engine to update view.
  */
 
-// Application Initialisation ----------------------------
+// == Application Initialisation ==========
 
 cmt.api.Application.prototype.init = function( options ) {
 
@@ -4468,7 +6103,7 @@ cmt.api.Application.prototype.init = function( options ) {
 	jQuery.extend( this.config, options );
 }
 
-// Manage Application Controllers ------------------------
+// == Applications Controllers ============
 
 /**
  * It maps the controller to registry by accepting alias and path.
@@ -4488,10 +6123,11 @@ cmt.api.Application.prototype.mapController = function( alias, path ) {
  * It returns the controller from active controllers.
  *
  * @param {string} alias
+ * @param {object} options
  * @param {boolean} factory
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.getController = function( alias, factory, options ) {
+cmt.api.Application.prototype.getController = function( alias, options, factory ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 	factory = typeof factory !== 'undefined' ? factory : false; // Use singleton from registry if not passed
@@ -4542,29 +6178,32 @@ cmt.api.Application.prototype.setController = function( alias, controller ) {
  * It maps the controller to registry and add it to active controllers.
  *
  * @param {string} alias
- * @param {boolean} factory
+ * @param {string} classpath
+ * @param {object} options
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.registerController = function( alias, path, options ) {
+cmt.api.Application.prototype.registerController = function( alias, classpath, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	this.addController( alias, path );
+	this.mapController( alias, classpath );
 
-	return this.getController( alias, false, options );
+	return this.getController( alias, options, false );
 };
 
 /**
  * It find the controller and return default controller in case not found.
  *
  * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
  * @returns {cmt.api.controllers.BaseController}
  */
-cmt.api.Application.prototype.findController = function( alias, factory ) {
+cmt.api.Application.prototype.findController = function( alias, options, factory ) {
 
 	try {
 
-		return this.getController( alias, factory );
+		return this.getController( alias, options, factory );
 	}
 	catch( err ) {
 
@@ -4579,12 +6218,104 @@ cmt.api.Application.prototype.findController = function( alias, factory ) {
 	}
 };
 
+// == Application Services ================
+
+/**
+ * It maps the service to registry by accepting alias and path.
+ *
+ * @param {string} alias
+ * @param {string} path
+ */
+cmt.api.Application.prototype.mapService = function( alias, path ) {
+
+	if( this.services[ alias ] == undefined ) {
+
+		this.services[ alias ] = path;
+	}
+}
+
+/**
+ * It returns the service from active services.
+ *
+ * @param {string} alias
+ * @param {object} options
+ * @param {boolean} factory
+ * @returns {cmt.api.services.BaseService}
+ */
+cmt.api.Application.prototype.getService = function( alias, options, factory ) {
+
+	options = typeof options !== 'undefined' ? options : { };
+
+	if( this.services[ alias ] == undefined ) throw 'Service with alias ' + alias + ' is not registered.';
+
+	// Create and return the instance
+	if( factory ) {
+
+		var service = cmt.utils.object.strToObject( this.services[ alias ] );
+
+		// Initialise Service
+		service.init( options );
+
+		return service;
+	}
+
+	// Create singleton instance if not exist
+	if( this.activeServices[ alias ] == undefined ) {
+
+		var service = cmt.utils.object.strToObject( this.services[ alias ] );
+
+		// Initialise Service
+		service.init( options );
+
+		// Add singleton to active registry
+		this.activeServices[ alias ] = service;
+	}
+
+	return this.activeServices[ alias ];
+}
+
+/**
+ * It set and update the active services.
+ *
+ * @param {string} alias
+ * @param {cmt.api.services.BaseService} service
+ */
+cmt.api.Application.prototype.setService = function( alias, service ) {
+
+	if( this.activeServices[ alias ] == undefined ) {
+
+		this.activeServices[ alias ] = service;
+	}
+}
+
+/**
+ * It maps the service to registry and add it to active services.
+ *
+ * @param {string} alias
+ * @param {string} classpath
+ * @param {object} options
+ * @returns {cmt.api.services.BaseService}
+ */
+cmt.api.Application.prototype.registerService = function( alias, classpath, options ) {
+
+	this.mapService( alias, classpath );
+
+	return this.getService( alias, options );
+};
+
 
 /**
  * Controller namespace providing base class for all the Controllers.
  */
 
 cmt.api.controllers = cmt.api.controllers || {};
+
+
+/**
+ * Service namespace providing base class for all the services.
+ */
+
+cmt.api.services = cmt.api.services || {};
 
 
 /**
@@ -4617,7 +6348,7 @@ cmt.api.controllers.BaseController.prototype.init = function( options ) {
  */
 cmt.api.controllers.ActionController = function( options ) {
 
-	this.requestData	= null;	// Request data for post requests
+	this.requestData = null;	// Request data for post requests
 };
 
 // Initialise --------------------
@@ -4929,6 +6660,18 @@ cmt.api.controllers.RestController.prototype.deleteActionFailure = function( res
 };
 
 
+cmt.api.services.BaseService = function( options ) {
+
+};
+
+// Initialise --------------------
+
+cmt.api.services.BaseService.prototype.init = function( options ) {
+
+	// Initialise service
+};
+
+
 /**
  * Register the request elements
  */
@@ -4958,7 +6701,9 @@ cmt.api.utils.request = {
 			}
 
 			// Button Clicks
-			var clickTrigger = requestElement.find( cmt.api.Application.STATIC_CLICK ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CLICK ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CLICK + ', .cmt-request ' + cmt.api.Application.STATIC_CLICK );
+
+			var clickTrigger = requestElement.find( cmt.api.Application.STATIC_CLICK ).not( filters );
 
 			if( clickTrigger.length > 0 ) {
 
@@ -4974,7 +6719,9 @@ cmt.api.utils.request = {
 			}
 
 			// Select Change
-			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE + ', .cmt-request ' + cmt.api.Application.STATIC_CHANGE );
+			
+			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( filters );
 
 			if( selectTrigger.length > 0 ) {
 
@@ -4987,7 +6734,9 @@ cmt.api.utils.request = {
 			}
 
 			// Key Up
-			var keyupTrigger = requestElement.find( cmt.api.Application.STATIC_KEY_UP ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_KEY_UP ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_KEY_UP + ', .cmt-request ' + cmt.api.Application.STATIC_KEY_UP );
+
+			var keyupTrigger = requestElement.find( cmt.api.Application.STATIC_KEY_UP ).not( filters );
 
 			if( keyupTrigger.length > 0 ) {
 
@@ -4999,7 +6748,9 @@ cmt.api.utils.request = {
 			}
 
 			// Blur
-			var blurTrigger = requestElement.find( cmt.api.Application.STATIC_BLUR ).not( requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_BLUR ) );
+			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_BLUR + ', .cmt-request ' + cmt.api.Application.STATIC_BLUR );
+
+			var blurTrigger = requestElement.find( cmt.api.Application.STATIC_BLUR ).not( filters );
 
 			if( blurTrigger.length > 0 ) {
 
@@ -5013,9 +6764,16 @@ cmt.api.utils.request = {
 	},
 
 	// Locate app and register the target request triggers
-	registerTargetApp: function( appName, target ) {
+	registerTargetApp: function( appName, target, discover ) {
 
-		cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target.find( '[cmt-app=' + appName + ']' ) );
+		if( typeof discover === "undefined" || discover ) {
+
+			cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target.find( '[cmt-app=' + appName + ']' ) );
+		}
+		else {
+
+			cmt.api.utils.request.register( cmt.api.root.getApplication( appName ), target );
+		}
 	},
 
 	trigger: function( application, requestElement, isForm, requestTrigger ) {
@@ -5265,9 +7023,9 @@ cmt.api.utils.request = {
 			if( !requestElement.is( '[' + cmt.api.Application.STATIC_KEEP + ']' ) ) {
 
 				// Clear all form fields
-				formElement.find( ' input[type="text"]' ).val( '' );
-				formElement.find( ' input[type="password"]' ).val( '' );
-				formElement.find( ' textarea' ).val( '' );
+				formElement.find( 'input[type=text]' ).not( formElement.find( 'input[' + cmt.api.Application.STATIC_KEEP + '=1]' ) ).val( '' );
+				formElement.find( 'input[type=password]' ).val( '' );
+				formElement.find( 'textarea' ).not( formElement.find( 'textarea[' + cmt.api.Application.STATIC_KEEP + '=1]' ) ).val( '' );
 			}
 
 			// Hide all errors
@@ -5457,4 +7215,86 @@ cmt.api.utils.request = {
 			controller[ failureAction ]( response );
 		}
 	},
+
+	// Register the service triggers
+	registerServiceTriggers: function( requestTriggers ) {
+
+		// Iterate and initialise all the requests
+		requestTriggers.each( function() {
+
+			// Active element
+			var requestTrigger	= jQuery( this );
+			
+			var app		= requestTriggers.attr( 'data-app' );
+			var service	= requestTriggers.attr( 'data-service' );
+			var handler	= requestTrigger.attr( 'data-handler' );
+
+			// Form Submits
+			if( requestTrigger.is( 'form' ) ) {
+
+				// Trigger request on form submit
+				requestTrigger.submit( function( event ) {
+
+					// Stop default form submit execution
+					event.preventDefault();
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Button Clicks
+			var clickTrigger = requestTrigger.find( cmt.api.Application.STATIC_CLICK );
+
+			if( clickTrigger.length > 0 ) {
+
+				// Trigger request on click action
+				clickTrigger.click( function( event ) {
+
+					// Stop default click action
+					event.preventDefault();
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Select Change
+			var selectTrigger = requestTrigger.find( cmt.api.Application.STATIC_CHANGE );
+
+			if( selectTrigger.length > 0 ) {
+
+				// Trigger request on select
+				selectTrigger.change( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Key Up
+			var keyupTrigger = requestTrigger.find( cmt.api.Application.STATIC_KEY_UP );
+
+			if( keyupTrigger.length > 0 ) {
+
+				keyupTrigger.keyup( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+
+			// Blur
+			var blurTrigger = requestTrigger.find( cmt.api.Application.STATIC_BLUR );
+
+			if( blurTrigger.length > 0 ) {
+
+				blurTrigger.blur( function() {
+
+					// Trigger the request
+					cmt.api.root.getApplication( app ).getService( service )[handler]( requestTrigger );
+				});
+			}
+		});
+	}
 }

@@ -8,7 +8,7 @@
  */
 cmt.api.controllers.ActionController = function( options ) {
 
-	this.requestData	= null;	// Request data for post requests
+	this.requestData = null;	// Request data for post requests
 };
 
 // Initialise --------------------

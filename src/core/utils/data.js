@@ -1,6 +1,11 @@
 /**
- * Data utility provides methods to convert form elements to json format and to manipulate url parameters. The json data can be used to send request to server side apis.
+ * Data utility provides methods to convert form elements to json format and to manipulate 
+ * url parameters. The json data can be used to send request to server side apis.
+ * 
+ * It also provide other methods to manipulate data.
  */
+
+// == Data Utility ========================
 
 cmt.utils.data = {
 
@@ -9,18 +14,19 @@ cmt.utils.data = {
 	 */
 	serialiseElement: function( elementId, csrf ) {
 
-		var dataArr		= [];
-		var elements 	= null;
+		var dataArr = [];
+
+		var elements = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof elementId == 'string' ) {
 
-			elements 	= jQuery( '#' + elementId ).find( ':input' ).get();
+			elements = jQuery( '#' + elementId ).find( ':input' ).get();
 		}
 		else {
 
-			elements	= elementId.find( ':input' ).get();
+			elements = elementId.find( ':input' ).get();
 		}
 
 		jQuery.each( elements, function() {
@@ -42,7 +48,7 @@ cmt.utils.data = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			dataUrl 	   += "&" + csrfParam + "=" + csrfToken;
+			dataUrl += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		return dataUrl;
@@ -53,18 +59,19 @@ cmt.utils.data = {
 	 */
 	elementToJson: function( elementId, csrf ) {
 
-		var dataArr		= [];
-		var elements 	= null;
+		var dataArr = [];
+
+		var elements = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof elementId == 'string' ) {
 
-			elements 	= jQuery( '#' + elementId ).find( ':input' ).get();
+			elements = jQuery( '#' + elementId ).find( ':input' ).get();
 		}
 		else {
 
-			elements	= elementId.find( ':input' ).get();
+			elements = elementId.find( ':input' ).get();
 		}
 
 		jQuery.each( elements, function() {
@@ -105,7 +112,7 @@ cmt.utils.data = {
 			var csrfParam 	= jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			dataUrl 	   += "&" + csrfParam + "=" + csrfToken;
+			dataUrl += "&" + csrfParam + "=" + csrfToken;
 		}
 
 		return dataUrl;
@@ -117,17 +124,17 @@ cmt.utils.data = {
 	formToJson: function( formId, csrf ) {
 
 		// Generate form data for submission
-		var formData	= null;
+		var formData = null;
 
 		if( typeof( csrf ) === 'undefined' ) csrf = true;
 
 		if( typeof formId == 'string' ) {
 
-			formData	= jQuery( '#' + formId ).serializeArray();
+			formData = jQuery( '#' + formId ).serializeArray();
 		}
 		else {
 
-			formData	= formId.serializeArray();
+			formData = formId.serializeArray();
 		}
 
 		return cmt.utils.data.generateJsonMap( formData, csrf );
@@ -138,7 +145,7 @@ cmt.utils.data = {
 	 */
 	generateJsonMap: function( dataArray, csrf ) {
 
-		var json 		= {};
+		var json = {};
 
 		// Append csrf token if required
 		if( csrf && null != jQuery( 'meta[name=csrf-token]' ) ) {
@@ -210,7 +217,7 @@ cmt.utils.data = {
 			var csrfParam   = jQuery( 'meta[name=csrf-param]' ).attr( 'content' );
 			var csrfToken 	= jQuery( 'meta[name=csrf-token]' ).attr( 'content' );
 
-			requestData 	= requestData + '&' + csrfParam + '=' + csrfToken;
+			requestData = requestData + '&' + csrfParam + '=' + csrfToken;
 		}
 
 		return requestData;
@@ -226,7 +233,7 @@ cmt.utils.data = {
 	    	url = window.location.href;
 	    }
 
-	    param 		= param.replace(/[\[\]]/g, "\\$&");
+	    param = param.replace(/[\[\]]/g, "\\$&");
 
 	    var regex 	= new RegExp("[?&]" + param + "(=([^&#]*)|&|#|$)");
 		var results = regex.exec( url );
@@ -326,14 +333,33 @@ cmt.utils.data = {
 	},
 
 	/**
+	 * Add or Update url param
+	 */
+	updateUriParam: function( uri, key, value ) {
+
+		var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+
+		var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+
+		if( uri.match( re ) ) {
+
+			return uri.replace( re, '$1' + key + "=" + value + '$2' );
+		}
+		else {
+
+			return uri + separator + key + "=" + value;
+		}
+	},
+
+	/**
 	 * Refresh current grid.
 	 */
 	refreshGrid: function() {
 
 		var pageUrl	= window.location.href;
 
-		pageUrl 	= cmt.utils.data.removeParam( pageUrl, 'page' );
-		pageUrl 	= cmt.utils.data.removeParam( pageUrl, 'per-page' );
+		pageUrl = cmt.utils.data.removeParam( pageUrl, 'page' );
+		pageUrl = cmt.utils.data.removeParam( pageUrl, 'per-page' );
 
 		window.location	= pageUrl;
 	},
@@ -351,5 +377,32 @@ cmt.utils.data = {
 		}
 		
 		return false;
+	},
+	
+	/**
+	 * Late binder to bind CL Editor for elements hidden at start.
+	 */
+	bindEditor: function( selector ) {
+
+		var lateBinder = jQuery( selector );
+
+		if( jQuery.cleditor && !lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			var controls = 'bold italic underline strikethrough subscript superscript | font size style | color highlight removeformat | bullets numbering | outdent indent | alignleft center alignright justify | undo redo | rule link unlink | source';
+
+			lateBinder.cleditor( { docType: '<!DOCTYPE html>', controls: controls, height: 165 } );
+		}
+		else if( lateBinder.parent().hasClass( 'cleditorMain' ) ) {
+
+			if( lateBinder.hasClass( 'add' ) ) {
+
+				lateBinder.val( '' ).blur();
+			}
+			else {
+
+				lateBinder.val( lateBinder.val() ).blur();
+			}
+		}
 	}
+
 };

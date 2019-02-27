@@ -1,14 +1,17 @@
-// TODO: Add Data Binding Support to bind data sent by server to respective ui component
-// TODO: Add Data Binding with Pagination for Data Grid
-// TODO: Add Page History and Caching Support
-
 /**
- * CMGTools API library provide methods to process AJAX request. These requests can be either form or regular
+ * The base file of Velocity Framework to bootstrap the required namespace and components 
+ * specific to communicate with server and process the request and response using MVC patterns.
  */
+
+// == Global Namespace ====================
 
 cmt.api = {};
 
-// Manage Applications -----------------------------------
+// TODO: Add Data Binding Support using Model to bind data sent by server to respective ui component
+// TODO: Add Data Binding with Pagination for Data Grid
+// TODO: Add Page History and Caching Support
+
+// == Applications ========================
 
 cmt.api.Root = function( options ) {
 
@@ -42,7 +45,10 @@ cmt.api.Root.prototype.getApplication = function( alias, options ) {
 
 	options = typeof options !== 'undefined' ? options : { };
 
-	if( this.apps[ alias ] == undefined ) throw 'Application with alias ' + alias + ' is not registered.';
+	if( this.apps[ alias ] == undefined ) {
+		
+		throw 'Application with alias ' + alias + ' is not registered.';
+	}
 
 	// Create singleton instance if not exist
 	if( this.activeApps[ alias ] == undefined ) {
@@ -81,6 +87,11 @@ cmt.api.Root.prototype.setApplication = function( alias, application ) {
  * @param {cmt.api.Application} application
  */
 cmt.api.Root.prototype.registerApplication = function( alias, path, options ) {
+	
+	if( this.apps[ alias ] != null ) {
+		
+		throw 'Application with alias ' + alias + ' is already registered. Cannot register the same alias.';
+	}
 
 	this.mapApplication( alias, path );
 
