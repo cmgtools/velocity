@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-02-07
+ * Velocity - v1.0.0-alpha1 - 2019-03-19
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -3092,11 +3092,12 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 				var directory	= fileUploader.attr( 'directory' );
 				var type		= fileUploader.attr( 'type' );
+				var gen			= fileUploader.attr( 'gen' );
 				var inputField 	= fileUploader.find( '.file-chooser .input' );
 
 				inputField.change( function( event ) {
 
-					uploadTraditionalFile( fileUploader, directory, type );
+					uploadTraditionalFile( fileUploader, directory, type, gen );
 				});
 			}
 		}
@@ -3143,6 +3144,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 			var directory	= fileUploader.attr( 'directory' );
 			var type		= fileUploader.attr( 'type' );
+			var gen			= fileUploader.attr( 'gen' );
 
 			// cancel event and add hover styling
 			handleDragging( event );
@@ -3164,10 +3166,10 @@ cmt.components.jquery = cmt.components.jquery || {};
 			}
 
 			// Upload File
-			uploadFile( fileUploader, directory, type, files[0] );
+			uploadFile( fileUploader, directory, type, gen, files[0] );
 		}
 
-		function uploadFile( fileUploader, directory, type, file ) {
+		function uploadFile( fileUploader, directory, type, gen, file ) {
 
 			var xhr 				= new XMLHttpRequest();
 			var fileType			= file.type.toLowerCase();
@@ -3210,11 +3212,11 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 								if( settings.uploadListener ) {
 
-									settings.uploadListener( fileUploader, directory, type, responseData );
+									settings.uploadListener( fileUploader, directory, type, gen, responseData );
 								}
 								else {
 
-									fileUploaded( fileUploader, directory, type, responseData );
+									fileUploaded( fileUploader, directory, type, gen, responseData );
 								}
 							}
 							else {
@@ -3230,7 +3232,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 					}
 				};
 
-				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
+				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 				// start upload
 				xhr.open("POST", urlParams, true );
@@ -3243,7 +3245,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 		}
 
 		// TODO; Test it well
-		function uploadTraditionalFile( fileUploader, directory, type ) {
+		function uploadTraditionalFile( fileUploader, directory, type, gen ) {
 
 			var progressContainer	= fileUploader.find( '.file-preloader .file-preloader-bar' );
 			var fileList			= fileUploader.find( '.file-chooser .input' );
@@ -3256,7 +3258,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 			formData.append( 'file', file );
 
-			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type );
+			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 			jQuery.ajax({
 			  type:			"POST",
@@ -3274,11 +3276,11 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 					if( settings.uploadListener ) {
 
-						settings.uploadListener( fileUploader, directory, type, response[ 'data' ] );
+						settings.uploadListener( fileUploader, directory, type, gen, response[ 'data' ] );
 					}
 					else {
 
-						fileUploaded( fileUploader, directory, type, response[ 'data' ] );
+						fileUploaded( fileUploader, directory, type, gen, response[ 'data' ] );
 					}
 				}
 				else {
@@ -3294,7 +3296,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 		}
 
 		// default post processor for uploaded files.
-		function fileUploaded( fileUploader, directory, type, result ) {
+		function fileUploaded( fileUploader, directory, type, gen, result ) {
 
 			var fileName = result[ 'name' ] + "." + result[ 'extension' ];
 
