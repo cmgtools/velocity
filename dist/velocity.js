@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-03-19
+ * Velocity - v1.0.0-alpha1 - 2019-03-23
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1598,6 +1598,11 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	// Listener Callback for post processing
 	postSlideChange: null,
 	circular: true,
+	// Scrolling
+	autoScroll: false,
+	autoScrollType: 'left',
+	autoScrollDuration: 5000,
+	stopOnHover: true,
 	// Collage
 	collage: false,
 	collageLimit: 5,
@@ -1694,6 +1699,8 @@ cmt.components.base.Slider = function( component, element ) {
 
 cmt.components.base.Slider.prototype.init = function() {
 
+	var settings	= this.options;
+
 	// Slider View
 	this.initView();
 
@@ -1702,6 +1709,11 @@ cmt.components.base.Slider.prototype.init = function() {
 
 	// Indexify the Slides
 	this.indexSlides();
+
+	if( settings.autoScroll ) {
+
+		this.startAutoScroll();
+	}
 };
 
 // Update View
@@ -2085,6 +2097,42 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 
 		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
 	}
+}
+
+// Slider Auto scroll
+cmt.components.base.Slider.prototype.startAutoScroll = function() {
+	
+	var self = this;
+
+	var slider	= this.element;
+	var settings	= this.options;
+
+	setInterval( function() {
+
+		if( settings.autoScrollType == 'left' ) {
+
+			var mouseIn	= slider.attr( 'mouse-over' );
+
+			if( settings.stopOnHover && null != mouseIn && mouseIn ) {
+
+				return;
+			}
+
+			self.showNextSlide();
+		}
+		else if( settings.autoScrollType == 'right' ) {
+
+			var mouseIn	= slider.attr( 'mouse-over' );
+
+			if( settings.stopOnHover && null != mouseIn && mouseIn ) {
+
+				return;
+			}
+
+			self.showPrevSlide( slider );
+		}
+
+	}, settings.autoScrollDuration );
 }
 
 // Move to left on clicking next button
