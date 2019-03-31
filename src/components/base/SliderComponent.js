@@ -542,7 +542,7 @@ cmt.components.base.Slider.prototype.startAutoScroll = function() {
 
 		if( settings.autoScrollType == 'left' ) {
 
-			var mouseIn	= slider.attr( 'mouse-over' );
+			var mouseIn = slider.attr( 'mouse-over' );
 
 			if( settings.stopOnHover && null != mouseIn && mouseIn ) {
 
@@ -553,7 +553,7 @@ cmt.components.base.Slider.prototype.startAutoScroll = function() {
 		}
 		else if( settings.autoScrollType == 'right' ) {
 
-			var mouseIn	= slider.attr( 'mouse-over' );
+			var mouseIn = slider.attr( 'mouse-over' );
 
 			if( settings.stopOnHover && null != mouseIn && mouseIn ) {
 

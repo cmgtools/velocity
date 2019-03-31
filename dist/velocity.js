@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-03-23
+ * Velocity - v1.0.0-alpha1 - 2019-03-31
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -1599,7 +1599,7 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	postSlideChange: null,
 	circular: true,
 	// Scrolling
-	autoScroll: false,
+	autoScroll: true,
 	autoScrollType: 'left',
 	autoScrollDuration: 5000,
 	stopOnHover: true,
@@ -2104,14 +2104,14 @@ cmt.components.base.Slider.prototype.startAutoScroll = function() {
 	
 	var self = this;
 
-	var slider	= this.element;
+	var slider		= this.element;
 	var settings	= this.options;
 
 	setInterval( function() {
 
 		if( settings.autoScrollType == 'left' ) {
 
-			var mouseIn	= slider.attr( 'mouse-over' );
+			var mouseIn = slider.attr( 'mouse-over' );
 
 			if( settings.stopOnHover && null != mouseIn && mouseIn ) {
 
@@ -2122,7 +2122,7 @@ cmt.components.base.Slider.prototype.startAutoScroll = function() {
 		}
 		else if( settings.autoScrollType == 'right' ) {
 
-			var mouseIn	= slider.attr( 'mouse-over' );
+			var mouseIn = slider.attr( 'mouse-over' );
 
 			if( settings.stopOnHover && null != mouseIn && mouseIn ) {
 
