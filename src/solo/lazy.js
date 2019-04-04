@@ -1,7 +1,7 @@
 // JavaScript implementation without jQuery
-document.addEventListener( "DOMContentLoaded", initLazyObserver );
+document.addEventListener( "DOMContentLoaded", initLazyImageObserver );
 
-function initLazyObserver() {
+function initLazyImageObserver() {
 
 	var images	= [].slice.call( document.querySelectorAll( 'img.cmt-lazy-img' ) );
 	var bkgs	= [].slice.call( document.querySelectorAll( '.cmt-lazy-bkg' ) );
@@ -16,34 +16,8 @@ function initLazyObserver() {
 				if( entry.intersectionRatio > 0 || entry.isIntersecting ) {
 
 					target = entry.target;
-					
-					if( target.classList.contains( 'cmt-lazy-img' ) ) {
 
-						target.src		= target.dataset.src;
-						target.srcset	= target.dataset.srcset;
-						target.sizes	= target.dataset.sizes;
-
-						target.classList.remove( '.cmt-lazy-img' );
-					}
-					else {
-						
-						var width	= window.innerWidth;
-						var srcset	= target.dataset.srcset.split( ',' );
-						var sizes	= target.dataset.sizes.split( ',' );
-
-						if( width > parseInt( sizes[ 0 ] ) ) {
-
-							target.style.backgroundImage = "url('" + srcset[ 0 ] + "')"; 
-						}
-						else if( width > parseInt( sizes[ 1 ] ) ) {
-
-							target.style.backgroundImage = "url('" + srcset[ 1 ] + "')"; 
-						}
-						else {
-							
-							target.style.backgroundImage = "url('" + srcset[ 2 ] + "')"; 
-						}
-					}
+					processLazyImage( target );
 
 					observer.unobserve( target );
 				}
@@ -63,11 +37,12 @@ function initLazyObserver() {
 	else {
 
 		// Use fallback using scroll listener
-		initLazyListener( images );
+		initLazyImageListener( images );
+		initLazyImageListener( bkgs );
 	}
 }
 
-function initLazyListener( images ) {
+function initLazyImageListener( elements ) {
 
 	// Flag to relax the listener from continuous checking
 	var active = false;
@@ -81,26 +56,22 @@ function initLazyListener( images ) {
 
 			setTimeout( function() {
 
-				// Iterate over the images collection for lazy loading
-				images.forEach( function( image ) {
+				// Iterate over the elements collection for lazy loading
+				elements.forEach( function( element ) {
 
 					// Window intersection test
-					if( ( image.getBoundingClientRect().top <= window.innerHeight && image.getBoundingClientRect().bottom >= 0 ) && getComputedStyle( image ).display !== "none" ) {
+					if( ( element.getBoundingClientRect().top <= window.innerHeight && element.getBoundingClientRect().bottom >= 0 ) && getComputedStyle( element ).display !== "none" ) {
 
-						image.src = image.dataset.src;
-						image.srcset = image.dataset.srcset;
-
-						// Done lazy loading
-						image.classList.remove( '.cmt-lazy-img' );
+						processLazyImage( element );
 
 						// Remove from collection
-						images = images.filter( function( img ) {
+						elements = elements.filter( function( target ) {
 
-							return image !== img;
+							return element !== target;
 						});
 
 						// Stop lazy loading
-						if( images.length === 0 ) {
+						if( elements.length === 0 ) {
 
 							document.removeEventListener( 'scroll', lazyLoadListener );
 							window.removeEventListener( 'resize', lazyLoadListener );
@@ -117,4 +88,37 @@ function initLazyListener( images ) {
 	document.addEventListener( 'scroll', lazyLoadListener );
 	window.addEventListener( 'resize', lazyLoadListener );
 	window.addEventListener( 'orientationchange', lazyLoadListener );
+}
+
+function processLazyImage( element ) {
+
+	if( element.classList.contains( 'cmt-lazy-img' ) ) {
+
+		element.src		= element.dataset.src;
+		element.srcset	= element.dataset.srcset;
+		element.sizes	= element.dataset.sizes;
+
+		element.classList.remove( '.cmt-lazy-img' );
+	}
+	else if( element.classList.contains( 'cmt-lazy-bkg' ) ) {
+
+		var width	= window.innerWidth;
+		var srcset	= element.dataset.srcset.split( ',' );
+		var sizes	= element.dataset.sizes.split( ',' );
+
+		if( width > parseInt( sizes[ 0 ] ) ) {
+
+			element.style.backgroundImage = "url('" + srcset[ 0 ] + "')"; 
+		}
+		else if( width > parseInt( sizes[ 1 ] ) ) {
+
+			element.style.backgroundImage = "url('" + srcset[ 1 ] + "')"; 
+		}
+		else {
+
+			element.style.backgroundImage = "url('" + srcset[ 2 ] + "')"; 
+		}
+
+		element.classList.remove( '.cmt-lazy-bkg' );
+	}
 }
