@@ -30,7 +30,7 @@ cmt.components.base.SliderComponent.prototype.defaults = {
 	postSlideChange: null,
 	circular: true,
 	// Scrolling
-	autoScroll: true,
+	autoScroll: false,
 	autoScrollType: 'left',
 	autoScrollDuration: 5000,
 	stopOnHover: true,
