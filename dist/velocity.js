@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-04-05
+ * Velocity - v1.0.0-alpha1 - 2019-04-06
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -6034,9 +6034,9 @@ cmt.api.root = new cmt.api.Root();
  * 10. View
  *
  * An application is a collection of app config and controllers. Each controller can define several actions that can be executed by app user.
- * A project can create multiple applications based on it's needs. The request triggers present within request elements use the Request Processing Engine
- * to fire submitted requests to controllers for pre and post processing. The request elements can also specify the controller, action, route, method and
- * consist of at least one trigger to fire the request.
+ * A project can create multiple applications based on it's needs. The request triggers present within request elements use the Request Processing 
+ * Engine to fire submitted requests to controllers for pre and post processing. The request elements can also specify the controller, action, route, 
+ * method and consist of at least one trigger to fire the request.
  *
  * Apart from request elements and request triggers, we can also call the application methods to process request directly via get, post, put or delete.
  *
