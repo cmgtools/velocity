@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-04-15
+ * Velocity - v1.0.0-alpha1 - 2019-04-17
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -4088,13 +4088,13 @@ cmt.components.jquery = cmt.components.jquery || {};
 		// == Init == //
 
 		// Configure Plugin
-		var settings 	= cmtjq.extend( {}, cmtjq.fn.latLongPicker.defaults, options );
+		var settings	= cmtjq.extend( {}, cmtjq.fn.latLongPicker.defaults, options );
 		var maps		= this;
 
 		// Iterate and initialise all the page blocks
 		maps.each( function() {
 
-			var mapPicker	= cmtjq( this );
+			var mapPicker = cmtjq( this );
 
 			init( mapPicker );
 		});
@@ -4109,7 +4109,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 			// Initialise Google Map
 			if( window.google ) {
 
-				var gMap	= initMapPicker( mapPicker );
+				var gMap = initMapPicker( mapPicker );
 			}
 		}
 
@@ -4150,14 +4150,15 @@ cmt.components.jquery = cmt.components.jquery || {};
 				mapOptions.mapTypeId = google.maps.MapTypeId.ROADMAP;
 			}
 
-			mapOptions.center	= new google.maps.LatLng( latitude, longitude );
-			var gMap 			= new google.maps.Map( element, mapOptions );
-			var marker			= initMarker( mapPicker, gMap, mapOptions );
+			mapOptions.center = new google.maps.LatLng( latitude, longitude );
+
+			var gMap	= new google.maps.Map( element, mapOptions );
+			var marker	= initMarker( mapPicker, gMap, mapOptions );
 
 			// search locations using geocoder
 			if( settings.geocoder ) {
 
-				var geocoder 		= new google.maps.Geocoder();
+				var geocoder = new google.maps.Geocoder();
 
 				mapPicker.find( '.search-box' ).change( function() {
 
@@ -4178,7 +4179,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 			// search locations using places for text
 			if( settings.places ) {
 
-				var placeService	= new google.maps.places.PlacesService( gMap );
+				var placeService = new google.maps.places.PlacesService( gMap );
 
 				mapPicker.find( '.search-box' ).change( function() {
 
@@ -4189,7 +4190,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 						if( status == google.maps.places.PlacesServiceStatus.OK ) {
 
-							var location	= results[ 0 ].geometry.location;
+							var location = results[ 0 ].geometry.location;
 
 							updateCenter( mapPicker, gMap, location, marker );
 						}
@@ -4214,11 +4215,11 @@ cmt.components.jquery = cmt.components.jquery || {};
 		function initMarker( mapPicker, gMap, mapOptions ) {
 
 			var marker = new google.maps.Marker({
-								position: mapOptions.center,
-								map: gMap,
-								title: settings.markerTitle,
-								draggable: true
-							});
+				position: mapOptions.center,
+				map: gMap,
+				title: settings.markerTitle,
+				draggable: true
+			});
 
 			google.maps.event.addListener( marker, 'dragend', function( evt ) {
 
@@ -4784,6 +4785,36 @@ cmt.components.jquery = cmt.components.jquery || {};
 		modal: true
 	};
 
+	// Utility method to set value
+	cmtjq.fn.cmtPopup.reposition = function( popup ) {
+
+		var screenHeight	= cmtjq( window ).height();
+		var screenWidth		= cmtjq( window ).width();
+
+		var popupData = popup.children( '.popup-data' );
+		
+		var popupDataHeight	=  popupData.outerHeight();
+		var popupDataWidth	=  popupData.outerWidth();
+
+		if( popupDataHeight <= screenHeight ) {
+
+			popupData.css( { 'top': ( screenHeight/2 - popupDataHeight/2 ) } );
+		}
+		else {
+
+			popupData.css( { 'top': 10 } );
+		}
+
+		if( popupDataWidth <= screenWidth ) {
+
+			popupData.css( { 'left': ( screenWidth/2 - popupDataWidth/2 ) } );
+		}
+		else {
+
+			popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
+		}
+	};
+
 })( jQuery );
 
 // Pre-defined methods to show/hide popups
@@ -4798,6 +4829,11 @@ function showPopup( popupSelector ) {
 	}
 
 	popup.fadeIn( 'slow' );
+
+	if( popup.hasClass( 'popup-modal' ) ) {
+
+		jQuery.fn.cmtPopup.reposition( popup );
+	}
 }
 
 function closePopup( popupSelector ) {
@@ -5332,7 +5368,7 @@ function hideMessagePopup() {
 	// Utility method to reset the select after getting new values
 	cmtjq.fn.cmtSelect.resetSelect = function( selectWrap, optionsHtml ) {
 
-		var dropDown	= selectWrap.find( 'select' );
+		var dropDown = selectWrap.find( 'select' );
 
 		dropDown.html( optionsHtml );
 
@@ -5365,7 +5401,7 @@ function hideMessagePopup() {
 	// Utility method to set value
 	cmtjq.fn.cmtSelect.setValue = function( selectWrap, value ) {
 
-		var dropDown	= selectWrap.find( 'select' );
+		var dropDown = selectWrap.find( 'select' );
 
 		dropDown.val( value );
 
@@ -5389,8 +5425,8 @@ function hideMessagePopup() {
 		// == Init == //
 
 		// Configure Plugin
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtSelect.defaults, options );
-		var dropDowns		= this;
+		var settings 	= cmtjq.extend( {}, cmtjq.fn.cmtSelect.defaults, options );
+		var dropDowns	= this;
 
 		// Iterate and initialise all the fox sliders
 		dropDowns.each( function() {
@@ -5406,29 +5442,29 @@ function hideMessagePopup() {
 		function init( dropDown ) {
 
 			// Generate Icon Html
-			var iconHtml	= '<span class="s-icon">';
+			var iconHtml = '<span class="s-icon">';
 
 			if( null != settings.iconClass ) {
 
-				iconHtml	= '<span class="s-icon ' + settings.iconClass + '">';
+				iconHtml = '<span class="s-icon ' + settings.iconClass + '">';
 			}
 
 			if( null != settings.iconHtml ) {
 
-				iconHtml	+= settings.iconHtml + "</span>";
+				iconHtml += settings.iconHtml + "</span>";
 			}
 			else {
 
-				iconHtml	+= "</span>";
+				iconHtml += "</span>";
 			}
 
 			// Generate Select Html
-			var customHtml	= '<div class="cmt-selected"><span class="s-text">' + dropDown.attr( 'title' ) + '</span>' + iconHtml + '</div>';
+			var customHtml = '<div class="cmt-selected"><span class="s-text">' + dropDown.attr( 'title' ) + '</span>' + iconHtml + '</div>';
 
 			// Prepend
 			dropDown.prepend( customHtml );
 
-			var selectList	= dropDown.find( '.cmt-select-list' );
+			var selectList = dropDown.find( '.cmt-select-list' );
 
 			// Hide List by default
 			selectList.hide();

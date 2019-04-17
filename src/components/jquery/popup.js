@@ -119,6 +119,36 @@
 		modal: true
 	};
 
+	// Utility method to set value
+	cmtjq.fn.cmtPopup.reposition = function( popup ) {
+
+		var screenHeight	= cmtjq( window ).height();
+		var screenWidth		= cmtjq( window ).width();
+
+		var popupData = popup.children( '.popup-data' );
+		
+		var popupDataHeight	=  popupData.outerHeight();
+		var popupDataWidth	=  popupData.outerWidth();
+
+		if( popupDataHeight <= screenHeight ) {
+
+			popupData.css( { 'top': ( screenHeight/2 - popupDataHeight/2 ) } );
+		}
+		else {
+
+			popupData.css( { 'top': 10 } );
+		}
+
+		if( popupDataWidth <= screenWidth ) {
+
+			popupData.css( { 'left': ( screenWidth/2 - popupDataWidth/2 ) } );
+		}
+		else {
+
+			popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
+		}
+	};
+
 })( jQuery );
 
 // Pre-defined methods to show/hide popups
@@ -133,6 +163,11 @@ function showPopup( popupSelector ) {
 	}
 
 	popup.fadeIn( 'slow' );
+
+	if( popup.hasClass( 'popup-modal' ) ) {
+
+		jQuery.fn.cmtPopup.reposition( popup );
+	}
 }
 
 function closePopup( popupSelector ) {
