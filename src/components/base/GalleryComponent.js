@@ -57,7 +57,7 @@ cmt.components.base.GalleryComponent.prototype.initGalleries = function( element
 		gallery.init();
 
 		element.attr( 'id', self.idKey + self.counter );
-		element.attr( 'ldata-id', self.counter );
+		element.attr( 'data-idx', self.counter );
 
 		self.galleries[ self.indexKey + self.counter ] = gallery;
 
@@ -214,7 +214,7 @@ cmt.components.base.Gallery.prototype.indexItems = function() {
 
 		var currentItem = jQuery( this );
 
-		currentItem.attr( 'ldata-id', index );
+		currentItem.attr( 'data-idx', index );
 	});
 }
 
@@ -226,12 +226,12 @@ cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
 
 		var currentItem = jQuery( this );
 
-		var newIndex = parseInt( currentItem.attr( 'ldata-id' ) ) + 1;
+		var newIndex = parseInt( currentItem.attr( 'data-idx' ) ) + 1;
 
-		currentItem.attr( 'ldata-id', newIndex );
+		currentItem.attr( 'data-idx', newIndex );
 	});
 
-	var item = this.itemsWrapper.find( '.gallery-item[ldata-id=1]' );
+	var item = this.itemsWrapper.find( '.gallery-item[data-idx=1]' );
 
 	if( item.length == 0 ) {
 
@@ -242,12 +242,12 @@ cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
 	}
 	else {
 
-		this.itemsWrapper.find( '.gallery-item[ldata-id=1]' ).before( itemHtml );
+		this.itemsWrapper.find( '.gallery-item[data-idx=1]' ).before( itemHtml );
 
 		item = item.prev();
 	}
 
-	item.attr( 'ldata-id', 0 );
+	item.attr( 'data-idx', 0 );
 	item.addClass( 'gallery-item' );
 
 	// Normalise items
@@ -258,18 +258,18 @@ cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
 cmt.components.base.Gallery.prototype.removeItem = function( itemKey ) {
 
 	// Remove
-	this.itemsWrapper.find( '.gallery-item[ldata-id=' + itemKey + ']' ).remove();
+	this.itemsWrapper.find( '.gallery-item[data-idx=' + itemKey + ']' ).remove();
 
 	// Set items position
 	this.items.each( function() {
 
 		var currentItem = jQuery( this );
 
-		var index = parseInt( currentItem.attr( 'ldata-id' ) );
+		var index = parseInt( currentItem.attr( 'data-idx' ) );
 
 		if( index > itemKey ) {
 
-			currentItem.attr( 'ldata-id', ( index - 1 ) );
+			currentItem.attr( 'data-idx', ( index - 1 ) );
 		}
 	});
 
@@ -292,7 +292,7 @@ cmt.components.base.Gallery.prototype.resetItem = function( item ) {
 		// reset click event
 		item.click( function() {
 
-			options.onItemClick( element, item, item.attr( 'ldata-id' ) );
+			options.onItemClick( element, item, item.attr( 'data-idx' ) );
 		});
 	}
 
@@ -300,7 +300,7 @@ cmt.components.base.Gallery.prototype.resetItem = function( item ) {
 
 		item.click( function() {
 
-			self.showLightbox( item, item.attr( 'ldata-id' ) );
+			self.showLightbox( item, item.attr( 'data-idx' ) );
 		});
 	}
 };
@@ -335,7 +335,7 @@ cmt.components.base.Gallery.prototype.showLightbox = function( item, itemId ) {
 	element.find( '.gallery-item, .item, .cl-wrap, .cr-wrap' ).each( function() {
 
 		var item	= jQuery( this );
-		var slId	= item.attr( 'ldata-id' );
+		var slId	= item.attr( 'data-idx' );
 
 		var thumbUrl = item.attr( 'thumb-url' );
 		var imageUrl = item.attr( 'image-url' );

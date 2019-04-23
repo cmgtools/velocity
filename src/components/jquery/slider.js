@@ -36,13 +36,13 @@
 		},
 		addSlide: function( slideHtml ) {
 
-			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.addSlide( sliderKey, slideHtml );
 		},
 		removeSlide: function( slideKey ) {
 			
-			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.removeSlide( sliderKey, slideKey );
 		}

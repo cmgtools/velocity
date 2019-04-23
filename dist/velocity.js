@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-04-17
+ * Velocity - v1.0.0-alpha1 - 2019-04-23
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -971,11 +971,11 @@ cmt.components.base.ActionsComponent.prototype.initElement = function( element )
 	var align	= self.options.listAlignment;
 
 	// Target
-	element.find( '.actions-list-title' ).attr( 'ldata-target', '#actions-list-data-' + index );
+	element.find( '.actions-list-title' ).attr( 'data-target', '#actions-list-data-' + index );
 
 	// Identifier
-	element.attr( 'ldata-id', index );
-	data.attr( 'ldata-id', index );
+	element.attr( 'data-idx', index );
+	data.attr( 'data-idx', index );
 
 	// Configure Ids
 	element.attr( 'id', 'actions-list-' + index );
@@ -988,9 +988,9 @@ cmt.components.base.ActionsComponent.prototype.initElement = function( element )
 	data.appendTo( 'body' );
 
 	// Alignment
-	if( cmt.utils.data.hasAttribute( data, 'ldata-alignment' ) ) {
+	if( cmt.utils.data.hasAttribute( data, 'data-alignment' ) ) {
 
-		align = data.attr( 'ldata-alignment' );
+		align = data.attr( 'data-alignment' );
 	}
 
 	element.find( '.actions-list-title' ).click( function() {
@@ -1222,7 +1222,7 @@ cmt.components.base.GalleryComponent.prototype.initGalleries = function( element
 		gallery.init();
 
 		element.attr( 'id', self.idKey + self.counter );
-		element.attr( 'ldata-id', self.counter );
+		element.attr( 'data-idx', self.counter );
 
 		self.galleries[ self.indexKey + self.counter ] = gallery;
 
@@ -1379,7 +1379,7 @@ cmt.components.base.Gallery.prototype.indexItems = function() {
 
 		var currentItem = jQuery( this );
 
-		currentItem.attr( 'ldata-id', index );
+		currentItem.attr( 'data-idx', index );
 	});
 }
 
@@ -1391,12 +1391,12 @@ cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
 
 		var currentItem = jQuery( this );
 
-		var newIndex = parseInt( currentItem.attr( 'ldata-id' ) ) + 1;
+		var newIndex = parseInt( currentItem.attr( 'data-idx' ) ) + 1;
 
-		currentItem.attr( 'ldata-id', newIndex );
+		currentItem.attr( 'data-idx', newIndex );
 	});
 
-	var item = this.itemsWrapper.find( '.gallery-item[ldata-id=1]' );
+	var item = this.itemsWrapper.find( '.gallery-item[data-idx=1]' );
 
 	if( item.length == 0 ) {
 
@@ -1407,12 +1407,12 @@ cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
 	}
 	else {
 
-		this.itemsWrapper.find( '.gallery-item[ldata-id=1]' ).before( itemHtml );
+		this.itemsWrapper.find( '.gallery-item[data-idx=1]' ).before( itemHtml );
 
 		item = item.prev();
 	}
 
-	item.attr( 'ldata-id', 0 );
+	item.attr( 'data-idx', 0 );
 	item.addClass( 'gallery-item' );
 
 	// Normalise items
@@ -1423,18 +1423,18 @@ cmt.components.base.Gallery.prototype.addItem = function( itemHtml ) {
 cmt.components.base.Gallery.prototype.removeItem = function( itemKey ) {
 
 	// Remove
-	this.itemsWrapper.find( '.gallery-item[ldata-id=' + itemKey + ']' ).remove();
+	this.itemsWrapper.find( '.gallery-item[data-idx=' + itemKey + ']' ).remove();
 
 	// Set items position
 	this.items.each( function() {
 
 		var currentItem = jQuery( this );
 
-		var index = parseInt( currentItem.attr( 'ldata-id' ) );
+		var index = parseInt( currentItem.attr( 'data-idx' ) );
 
 		if( index > itemKey ) {
 
-			currentItem.attr( 'ldata-id', ( index - 1 ) );
+			currentItem.attr( 'data-idx', ( index - 1 ) );
 		}
 	});
 
@@ -1457,7 +1457,7 @@ cmt.components.base.Gallery.prototype.resetItem = function( item ) {
 		// reset click event
 		item.click( function() {
 
-			options.onItemClick( element, item, item.attr( 'ldata-id' ) );
+			options.onItemClick( element, item, item.attr( 'data-idx' ) );
 		});
 	}
 
@@ -1465,7 +1465,7 @@ cmt.components.base.Gallery.prototype.resetItem = function( item ) {
 
 		item.click( function() {
 
-			self.showLightbox( item, item.attr( 'ldata-id' ) );
+			self.showLightbox( item, item.attr( 'data-idx' ) );
 		});
 	}
 };
@@ -1500,7 +1500,7 @@ cmt.components.base.Gallery.prototype.showLightbox = function( item, itemId ) {
 	element.find( '.gallery-item, .item, .cl-wrap, .cr-wrap' ).each( function() {
 
 		var item	= jQuery( this );
-		var slId	= item.attr( 'ldata-id' );
+		var slId	= item.attr( 'data-idx' );
 
 		var thumbUrl = item.attr( 'thumb-url' );
 		var imageUrl = item.attr( 'image-url' );
@@ -1641,7 +1641,7 @@ cmt.components.base.SliderComponent.prototype.initSliders = function( elements )
 		slider.init();
 
 		element.attr( 'id', self.idKey + self.counter );
-		element.attr( 'ldata-id', self.counter );
+		element.attr( 'data-idx', self.counter );
 
 		self.sliders[ self.indexKey + self.counter ] = slider;
 
@@ -1837,7 +1837,7 @@ cmt.components.base.Slider.prototype.indexSlides = function() {
 
 		var currentSlide = jQuery( this );
 
-		currentSlide.attr( 'ldata-id', index );
+		currentSlide.attr( 'data-idx', index );
 	});
 }
 
@@ -1912,12 +1912,12 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 
 		var currentSlide = jQuery( this );
 
-		var newIndex = parseInt( currentSlide.attr( 'ldata-id' ) ) + 1;
+		var newIndex = parseInt( currentSlide.attr( 'data-idx' ) ) + 1;
 
-		currentSlide.attr( 'ldata-id', newIndex );
+		currentSlide.attr( 'data-idx', newIndex );
 	});
 
-	var slide = this.filmstrip.find( '.slider-slide[ldata-id=1]' );
+	var slide = this.filmstrip.find( '.slider-slide[data-idx=1]' );
 
 	if( slide.length == 0 ) {
 
@@ -1928,12 +1928,12 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 	}
 	else {
 
-		this.filmstrip.find( '.slider-slide[ldata-id=1]' ).before( slideHtml );
+		this.filmstrip.find( '.slider-slide[data-idx=1]' ).before( slideHtml );
 
 		slide = slide.prev();
 	}
 
-	slide.attr( 'ldata-id', 0 );
+	slide.attr( 'data-idx', 0 );
 	slide.addClass( 'slider-slide' );
 
 	// Normalise slides
@@ -1944,18 +1944,18 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 	// Remove
-	this.filmstrip.find( '.slider-slide[ldata-id=' + slideKey + ']' ).remove();
+	this.filmstrip.find( '.slider-slide[data-idx=' + slideKey + ']' ).remove();
 
 	// Set slides position on filmstrip
 	this.slides.each( function() {
 
 		var currentSlide = jQuery( this );
 
-		var index = parseInt( currentSlide.attr( 'ldata-id' ) );
+		var index = parseInt( currentSlide.attr( 'data-idx' ) );
 
 		if( index > slideKey ) {
 
-			currentSlide.attr( 'ldata-id', ( index - 1 ) );
+			currentSlide.attr( 'data-idx', ( index - 1 ) );
 		}
 	});
 
@@ -1978,7 +1978,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		// reset click event
 		slide.click( function() {
 
-			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+			options.onSlideClick( element, slide, slide.attr( 'data-idx' ) );
 		});
 	}
 
@@ -1986,7 +1986,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
 		slide.click( function() {
 
-			self.showLightbox( slide, slide.attr( 'ldata-id' ) );
+			self.showLightbox( slide, slide.attr( 'data-idx' ) );
 		});
 	}
 };
@@ -2025,7 +2025,7 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	// do pre processing
 	if( null !== options.preSlideChange ) {
 
-		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 
 	// do animation - animate slider
@@ -2051,7 +2051,7 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	// do post processing
 	if( null !== options.postSlideChange ) {
 
-		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 }
 
@@ -2067,7 +2067,7 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	// do pre processing
 	if( null !== options.preSlideChange ) {
 
-		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 
 	// Remove last and append to first
@@ -2095,7 +2095,7 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	// do post processing
 	if( null !== options.postSlideChange ) {
 
-		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 }
 
@@ -2256,7 +2256,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 	element.find( '.slider-slide, .slide, .cl-wrap, .cr-wrap' ).each( function() {
 
 		var slide	= jQuery( this );
-		var slId	= slide.attr( 'ldata-id' );
+		var slId	= slide.attr( 'data-idx' );
 
 		var thumbUrl = slide.attr( 'thumb-url' );
 		var imageUrl = slide.attr( 'image-url' );
@@ -2529,7 +2529,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 		function init( trigger ) {
 
-			var hide = jQuery( trigger.attr( 'ldata-target' ) );
+			var hide = jQuery( trigger.attr( 'data-target' ) );
 
 			jQuery( window ).click( function( e ) {
 
@@ -3529,13 +3529,13 @@ cmt.components.jquery = cmt.components.jquery || {};
 		},
 		addItem: function( itemHtml ) {
 
-			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.addItem( galleryKey, itemHtml );
 		},
 		removeItem: function( itemKey ) {
 			
-			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.removeItem( galleryKey, itemKey );
 		}
@@ -5571,13 +5571,13 @@ function hideMessagePopup() {
 		},
 		addSlide: function( slideHtml ) {
 
-			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.addSlide( sliderKey, slideHtml );
 		},
 		removeSlide: function( slideKey ) {
 			
-			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.removeSlide( sliderKey, slideKey );
 		}

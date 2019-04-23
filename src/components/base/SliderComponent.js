@@ -72,7 +72,7 @@ cmt.components.base.SliderComponent.prototype.initSliders = function( elements )
 		slider.init();
 
 		element.attr( 'id', self.idKey + self.counter );
-		element.attr( 'ldata-id', self.counter );
+		element.attr( 'data-idx', self.counter );
 
 		self.sliders[ self.indexKey + self.counter ] = slider;
 
@@ -268,7 +268,7 @@ cmt.components.base.Slider.prototype.indexSlides = function() {
 
 		var currentSlide = jQuery( this );
 
-		currentSlide.attr( 'ldata-id', index );
+		currentSlide.attr( 'data-idx', index );
 	});
 }
 
@@ -343,12 +343,12 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 
 		var currentSlide = jQuery( this );
 
-		var newIndex = parseInt( currentSlide.attr( 'ldata-id' ) ) + 1;
+		var newIndex = parseInt( currentSlide.attr( 'data-idx' ) ) + 1;
 
-		currentSlide.attr( 'ldata-id', newIndex );
+		currentSlide.attr( 'data-idx', newIndex );
 	});
 
-	var slide = this.filmstrip.find( '.slider-slide[ldata-id=1]' );
+	var slide = this.filmstrip.find( '.slider-slide[data-idx=1]' );
 
 	if( slide.length == 0 ) {
 
@@ -359,12 +359,12 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 	}
 	else {
 
-		this.filmstrip.find( '.slider-slide[ldata-id=1]' ).before( slideHtml );
+		this.filmstrip.find( '.slider-slide[data-idx=1]' ).before( slideHtml );
 
 		slide = slide.prev();
 	}
 
-	slide.attr( 'ldata-id', 0 );
+	slide.attr( 'data-idx', 0 );
 	slide.addClass( 'slider-slide' );
 
 	// Normalise slides
@@ -375,18 +375,18 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 	// Remove
-	this.filmstrip.find( '.slider-slide[ldata-id=' + slideKey + ']' ).remove();
+	this.filmstrip.find( '.slider-slide[data-idx=' + slideKey + ']' ).remove();
 
 	// Set slides position on filmstrip
 	this.slides.each( function() {
 
 		var currentSlide = jQuery( this );
 
-		var index = parseInt( currentSlide.attr( 'ldata-id' ) );
+		var index = parseInt( currentSlide.attr( 'data-idx' ) );
 
 		if( index > slideKey ) {
 
-			currentSlide.attr( 'ldata-id', ( index - 1 ) );
+			currentSlide.attr( 'data-idx', ( index - 1 ) );
 		}
 	});
 
@@ -409,7 +409,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		// reset click event
 		slide.click( function() {
 
-			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+			options.onSlideClick( element, slide, slide.attr( 'data-idx' ) );
 		});
 	}
 
@@ -417,7 +417,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
 		slide.click( function() {
 
-			self.showLightbox( slide, slide.attr( 'ldata-id' ) );
+			self.showLightbox( slide, slide.attr( 'data-idx' ) );
 		});
 	}
 };
@@ -456,7 +456,7 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	// do pre processing
 	if( null !== options.preSlideChange ) {
 
-		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 
 	// do animation - animate slider
@@ -482,7 +482,7 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	// do post processing
 	if( null !== options.postSlideChange ) {
 
-		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 }
 
@@ -498,7 +498,7 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	// do pre processing
 	if( null !== options.preSlideChange ) {
 
-		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 
 	// Remove last and append to first
@@ -526,7 +526,7 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	// do post processing
 	if( null !== options.postSlideChange ) {
 
-		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 }
 
@@ -687,7 +687,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 	element.find( '.slider-slide, .slide, .cl-wrap, .cr-wrap' ).each( function() {
 
 		var slide	= jQuery( this );
-		var slId	= slide.attr( 'ldata-id' );
+		var slId	= slide.attr( 'data-idx' );
 
 		var thumbUrl = slide.attr( 'thumb-url' );
 		var imageUrl = slide.attr( 'image-url' );
