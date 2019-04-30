@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-04-23
+ * Velocity - v1.0.0-alpha1 - 2019-04-30
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -5619,8 +5619,8 @@ function hideMessagePopup() {
 		// == Init == //
 
 		// Configure Modules
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtSmoothScroll.defaults, options );
-		var elements		= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtSmoothScroll.defaults, options );
+		var elements	= this;
 
 		// Iterate and initialise all the page modules
 		elements.each( function() {
@@ -5640,7 +5640,7 @@ function hideMessagePopup() {
 
 			element.on( 'click', function ( e ) {
 
-				var targetId	= this.hash;
+				var targetId = this.hash;
 
 				// Process only if hash is set
 				if ( null != targetId && targetId.length > 0 ) {
@@ -5648,17 +5648,32 @@ function hideMessagePopup() {
 					// Prevent default anchor behavior
 			    	e.preventDefault();
 
+					var target		= jQuery( targetId );
+					var topOffset	= 0;
+
+					if( cmt.utils.data.hasAttribute( target, 'data-height-target' ) ) {
+						
+						topOffset = jQuery( target.attr( 'data-height-target' ) ).height();
+					}
+					else if( null != settings.heightElement ) {
+
+						topOffset = settings.heightElement.height();
+					}
+
 					// Find target element
-			    	var target 	= cmtjq( targetId );
+			    	var target = cmtjq( targetId );
 
 			    	cmtjq( 'html, body' ).stop().animate(
-			    		{ 'scrollTop': ( target.offset().top ) },
+			    		{ 'scrollTop': ( target.offset().top - topOffset ) },
 			    		900,
 			    		'swing',
 			    		function () {
 
-							// Add hash to url
-				        	window.location.hash = targetId;
+							// Add hash to url - It will ignore the topOffset and sets top position to 0
+							if( settings.changeHash ) {
+
+								window.location.hash = targetId;
+							}
 			    		}
 			    	);
 				}
@@ -5668,7 +5683,8 @@ function hideMessagePopup() {
 
 	// Default Settings
 	cmtjq.fn.cmtSmoothScroll.defaults = {
-
+		changeHash: false,
+		heightElement: null
 	};
 
 })( jQuery );
