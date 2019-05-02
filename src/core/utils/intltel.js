@@ -152,7 +152,7 @@ cmt.utils.intltel = {
 
 		var parent	= field.closest( '.form-group' );
 		var val		= field.val();
-		var ccode	= field.intlTelInput( 'getSelectedCountryData' );
+		var ccode	= "+" + field.intlTelInput( 'getSelectedCountryData' ).dialCode;
 
 		if( val == '' && field.hasClass( 'intl-tel-required' ) ) {
 
@@ -173,8 +173,18 @@ cmt.utils.intltel = {
 
 		// Format Standard - ITU-T E.164
 		// field.intlTelInput( 'getNumber', intlTelInputUtils.numberFormat.E164 )
-		parent.find( '.intl-tel-number' ).val( field.intlTelInput( 'getNumber' ) );
+		
+		var number = field.intlTelInput( 'getNumber' );
 
+		if( number !== ccode ) {
+
+			parent.find( '.intl-tel-number' ).val( field.intlTelInput( 'getNumber' ) );
+		}
+		else {
+
+			parent.find( '.intl-tel-number' ).val( '' );
+		}
+	
 		return true;
 	},
 
@@ -187,5 +197,6 @@ cmt.utils.intltel = {
 
 			field.intlTelInput( 'setNumber', val );
 		}
+
 	}
 };
