@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-05-02
+ * Velocity - v1.0.0-alpha1 - 2019-05-12
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -693,7 +693,9 @@ cmt.utils.image = {
 
 cmt.utils.intltel = {
 
-	initIntlTelInput: function() {
+	initIntlTelInput: function( ccode ) {
+
+		var cc = null != ccode ? ccode : 'us';
 
 		if( !jQuery().intlTelInput ) {
 
@@ -703,7 +705,7 @@ cmt.utils.intltel = {
 		jQuery( '.intl-tel-field-mb' ).intlTelInput({
 			formatOnDisplay: false,
 			separateDialCode: true,
-			initialCountry: "ng",
+			initialCountry: cc,
 			numberType: "MOBILE",
 			preventInvalidNumbers: true
 		});
@@ -711,7 +713,7 @@ cmt.utils.intltel = {
 		jQuery( '.intl-tel-field-ph' ).intlTelInput({
 			formatOnDisplay: false,
 			separateDialCode: true,
-			initialCountry: "ng",
+			initialCountry: cc,
 			numberType: "FIXED_LINE",
 			preventInvalidNumbers: true
 		});
@@ -777,10 +779,12 @@ cmt.utils.intltel = {
 
 	initMobileField: function( field ) {
 
+		var cc = cmt.utils.data.hasAttribute( field, 'data-ccode' ) ? field.attr( 'data-ccode' ) : 'us';
+
 		field.intlTelInput({
 			formatOnDisplay: false,
 			separateDialCode: true,
-			initialCountry: "ng",
+			initialCountry: cc,
 			numberType: "MOBILE",
 			preventInvalidNumbers: true
 		});
@@ -807,10 +811,12 @@ cmt.utils.intltel = {
 
 	initPhoneField: function( field ) {
 
+		var cc = cmt.utils.data.hasAttribute( field, 'data-ccode' ) ? field.attr( 'data-ccode' ) : 'us';
+
 		jQuery( '.intl-tel-field-ph' ).intlTelInput({
 			formatOnDisplay: false,
 			separateDialCode: true,
-			initialCountry: "ng",
+			initialCountry: cc,
 			numberType: "FIXED_LINE",
 			preventInvalidNumbers: true
 		});
@@ -860,7 +866,7 @@ cmt.utils.intltel = {
 
 		// Format Standard - ITU-T E.164
 		// field.intlTelInput( 'getNumber', intlTelInputUtils.numberFormat.E164 )
-		
+
 		var number = field.intlTelInput( 'getNumber' );
 
 		if( number !== ccode ) {
@@ -871,7 +877,7 @@ cmt.utils.intltel = {
 
 			parent.find( '.intl-tel-number' ).val( '' );
 		}
-	
+
 		return true;
 	},
 
