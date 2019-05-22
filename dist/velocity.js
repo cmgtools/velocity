@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-05-12
+ * Velocity - v1.0.0-alpha1 - 2019-05-22
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -3158,10 +3158,37 @@ cmt.components.jquery = cmt.components.jquery || {};
 					}
 				});
 			}
-			else if( radio.length > 0 ) {
+			else if( radio.length == 1 ) {
+
+				var status = fieldGroup.find( "input[type='radio']:checked" ).length;
+
+				if( status == 1 ) {
+
+					checkPositive( fieldGroup, reverse );
+				}
+				else if( status == 0 ) {
+
+					checkNegative( fieldGroup, reverse );
+				}
+
+				fieldGroup.find( "input[type='radio']" ).change( function() {
+
+					status = fieldGroup.find( "input[type='radio']:checked" ).length;
+
+					if( status == 1 ) {
+
+						checkPositive( fieldGroup, reverse );
+					}
+					else if( status == 0 ) {
+
+						checkNegative( fieldGroup, reverse );
+					}
+				});
+			}
+			else if( radio.length > 1 ) {
 
 				var status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
-			
+
 				if( status == 1 ) {
 
 					checkPositive( fieldGroup, reverse );
@@ -3186,7 +3213,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 				});
 			}
 		}
-		
+
 		function checkPositive( fieldGroup, reverse ) {
 
 			var target	= fieldGroup.attr( 'group-target' );
@@ -3203,7 +3230,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 				jQuery( '.' + alt ).hide();
 			}
 		}
-		
+
 		function checkNegative( fieldGroup, reverse ) {
 
 			var target	= fieldGroup.attr( 'group-target' );
