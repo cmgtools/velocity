@@ -92,16 +92,30 @@ cmt.utils.intltel = {
 
 	initMobileField: function( field ) {
 
-		var cc = cmt.utils.data.hasAttribute( field, 'data-ccode' ) ? field.attr( 'data-ccode' ) : 'us';
+		var cc		= cmt.utils.data.hasAttribute( field, 'data-ccode' ) ? field.attr( 'data-ccode' ) : 'us';
+		var ccOnly	= cmt.utils.data.hasAttribute( field, 'data-ccode-only' ) ? field.attr( 'data-ccode-only' ) : null;
 
-		field.intlTelInput({
-			formatOnDisplay: false,
-			separateDialCode: true,
-			initialCountry: cc,
-			numberType: "MOBILE",
-			preventInvalidNumbers: true
-		});
+		if( null != ccOnly ) {
 
+			field.intlTelInput({
+				formatOnDisplay: false,
+				separateDialCode: true,
+				initialCountry: cc,
+				numberType: "MOBILE",
+				preventInvalidNumbers: true,
+				onlyCountries: [ ccOnly ]
+			});
+		}
+		else {
+
+			field.intlTelInput({
+				formatOnDisplay: false,
+				separateDialCode: true,
+				initialCountry: cc,
+				numberType: "MOBILE",
+				preventInvalidNumbers: true
+			});
+		}
 		cmt.utils.intltel.populateIntlField( field );
 
 		field.on( 'blur', function() {
