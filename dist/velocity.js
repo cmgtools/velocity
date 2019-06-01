@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-05-24
+ * Velocity - v1.0.0-alpha1 - 2019-06-01
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -6681,6 +6681,7 @@ cmt.api.utils = cmt.api.utils || {};
 
 cmt.api.controllers.BaseController = function( options ) {
 
+	this.caching = false; // Cache response
 };
 
 // Initialise --------------------
@@ -7073,7 +7074,7 @@ cmt.api.utils.request = {
 
 			// Select Change
 			var filters = requestElement.find( '[cmt-app] ' + cmt.api.Application.STATIC_CHANGE + ', .cmt-request ' + cmt.api.Application.STATIC_CHANGE );
-			
+
 			var selectTrigger = requestElement.find( cmt.api.Application.STATIC_CHANGE ).not( filters );
 
 			if( selectTrigger.length > 0 ) {
@@ -7303,6 +7304,7 @@ cmt.api.utils.request = {
 
 	processRequest: function( application, requestElement, controller, actionName, requestData ) {
 
+		var caching		= controller.caching;
 		var httpMethod	= 'post';
 		var actionUrl	= requestElement.attr( 'action' );
 
@@ -7330,6 +7332,7 @@ cmt.api.utils.request = {
 				url: actionUrl,
 				data: requestData,
 				dataType: 'JSON',
+				cache: caching,
 				contentType: 'application/json;charset=UTF-8',
 				success: function( response, textStatus, XMLHttpRequest ) {
 
@@ -7350,6 +7353,7 @@ cmt.api.utils.request = {
 				url: actionUrl,
 				data: requestData,
 				dataType: 'JSON',
+				cache: caching,
 				success: function( response, textStatus, XMLHttpRequest ) {
 
 					// Process response
@@ -7453,7 +7457,7 @@ cmt.api.utils.request = {
 
 		// Use post method
 		if( null == httpMethod ) {
-			
+
 			httpMethod = 'post';
 		}
 
@@ -7462,7 +7466,7 @@ cmt.api.utils.request = {
 
 		cmt.api.utils.request.handleDirectRequest( application, controller, actionName, actionUrl, httpMethod );
 	},
-	
+
 	handleDirectRequest: function( application, controller, actionName, actionUrl, httpMethod ) {
 
 		// Pre process
@@ -7486,7 +7490,7 @@ cmt.api.utils.request = {
 
 	preProcessDirectRequest: function( controller, actionName ) {
 
-		var preAction	= actionName + 'ActionPre';
+		var preAction = actionName + 'ActionPre';
 
 		// Pre Process Request
 		if( typeof controller[ preAction ] !== 'undefined' && !( controller[ preAction ]() ) ) {
@@ -7499,9 +7503,11 @@ cmt.api.utils.request = {
 
 	processDirectRequest: function( application, controller, actionName, actionUrl, httpMethod, requestData ) {
 
+		var caching = controller.caching;
+
 		if( null != application.config.basePath ) {
 
-			actionUrl	= application.config.basePath + actionUrl;
+			actionUrl = application.config.basePath + actionUrl;
 		}
 
 		if( controller.singleRequest && null != controller.currentRequest ) {
@@ -7517,6 +7523,7 @@ cmt.api.utils.request = {
 				url: actionUrl,
 				data: requestData,
 				dataType: 'JSON',
+				cache: caching,
 				contentType: 'application/json;charset=UTF-8',
 				success: function( response, textStatus, XMLHttpRequest ) {
 
@@ -7537,6 +7544,7 @@ cmt.api.utils.request = {
 				url: actionUrl,
 				data: requestData,
 				dataType: 'JSON',
+				cache: caching,
 				success: function( response, textStatus, XMLHttpRequest ) {
 
 					// Process response
@@ -7577,7 +7585,7 @@ cmt.api.utils.request = {
 
 			// Active element
 			var requestTrigger	= jQuery( this );
-			
+
 			var app		= requestTriggers.attr( 'data-app' );
 			var service	= requestTriggers.attr( 'data-service' );
 			var handler	= requestTrigger.attr( 'data-handler' );
