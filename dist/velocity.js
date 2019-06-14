@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-06-01
+ * Velocity - v1.0.0-alpha1 - 2019-06-14
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -3872,7 +3872,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 				var pageUrl		= window.location.href;
 				var selected	= jQuery( this ).val();
-				
+
 				var option	= jQuery( this ).find( ':selected' );
 				var column	= option.attr( 'data-col' );
 				var cols	= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
@@ -4088,13 +4088,13 @@ cmt.components.jquery = cmt.components.jquery || {};
 				switch( layout ) {
 
 					case 'data': {
-						
+
 						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'data' );
 
 						break;
 					}
 					case 'table': {
-						
+
 						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'table' );
 
 						break;
@@ -4129,7 +4129,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 					var gen		= jQuery( this ).is( '[generic]' );
 					var act		= jQuery( this ).attr( 'action' );
 					var req		= act.replace( /\s+/g, '-' ).toLowerCase();
-					var action 	= gen ? form.attr( 'action' ) + target : form.attr( 'action' ) + '/' + req + '?id=' + target;
+					var action 	= gen ? form.attr( 'data-action' ) + target : form.attr( 'data-action' ) + '/' + req + '?id=' + target;
 
 					form.attr( 'action', action );
 					form.find( '.action-generic' ).html( act );
