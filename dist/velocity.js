@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2019-06-14
+ * Velocity - v1.0.0-alpha1 - 2019-06-26
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -4950,6 +4950,13 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 			var popupData = popup.children( '.popup-data' );
 
+			var popupTop = 0;
+			
+			if( cmt.utils.data.hasAttribute( popup, 'data-top' )) {
+				
+				popupTop = popup.attr( 'data-top' );
+			}
+
 			// Close Listener
 			popupData.children( '.popup-close' ).click( function() {
 
@@ -5017,6 +5024,11 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 					popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
 				}
+
+				if( parseInt( popupTop ) > 0 ) {
+
+					popupData.css( { 'top': popupTop } );
+				}
 			}
 		}
 
@@ -5047,6 +5059,13 @@ cmt.components.jquery = cmt.components.jquery || {};
 		var popupDataHeight	=  popupData.outerHeight();
 		var popupDataWidth	=  popupData.outerWidth();
 
+		var popupTop = 0;
+			
+		if( cmt.utils.data.hasAttribute( popup, 'data-top' )) {
+
+			popupTop = popup.attr( 'data-top' );
+		}
+
 		if( popupDataHeight <= screenHeight ) {
 
 			popupData.css( { 'top': ( screenHeight/2 - popupDataHeight/2 ) } );
@@ -5063,6 +5082,11 @@ cmt.components.jquery = cmt.components.jquery || {};
 		else {
 
 			popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
+		}
+
+		if( parseInt( popupTop ) > 0 ) {
+
+			popupData.css( { 'top': popupTop + 'px' } );
 		}
 	};
 

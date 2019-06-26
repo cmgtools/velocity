@@ -33,6 +33,13 @@
 
 			var popupData = popup.children( '.popup-data' );
 
+			var popupTop = 0;
+			
+			if( cmt.utils.data.hasAttribute( popup, 'data-top' )) {
+				
+				popupTop = popup.attr( 'data-top' );
+			}
+
 			// Close Listener
 			popupData.children( '.popup-close' ).click( function() {
 
@@ -100,6 +107,11 @@
 
 					popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
 				}
+
+				if( parseInt( popupTop ) > 0 ) {
+
+					popupData.css( { 'top': popupTop } );
+				}
 			}
 		}
 
@@ -130,6 +142,13 @@
 		var popupDataHeight	=  popupData.outerHeight();
 		var popupDataWidth	=  popupData.outerWidth();
 
+		var popupTop = 0;
+			
+		if( cmt.utils.data.hasAttribute( popup, 'data-top' )) {
+
+			popupTop = popup.attr( 'data-top' );
+		}
+
 		if( popupDataHeight <= screenHeight ) {
 
 			popupData.css( { 'top': ( screenHeight/2 - popupDataHeight/2 ) } );
@@ -146,6 +165,11 @@
 		else {
 
 			popupData.css( { 'left': 10, 'width': screenWidth - 20 } );
+		}
+
+		if( parseInt( popupTop ) > 0 ) {
+
+			popupData.css( { 'top': popupTop + 'px' } );
 		}
 	};
 
