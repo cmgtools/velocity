@@ -1,7 +1,7 @@
 /**
- * Data utility provides methods to convert form elements to json format and to manipulate 
+ * Data utility provides methods to convert form elements to json format and to manipulate
  * url parameters. The json data can be used to send request to server side apis.
- * 
+ *
  * It also provide other methods to manipulate data.
  */
 
@@ -363,7 +363,7 @@ cmt.utils.data = {
 
 		window.location	= pageUrl;
 	},
-	
+
 	/**
 	 * Check whether given element has attribute
 	 */
@@ -375,10 +375,10 @@ cmt.utils.data = {
 
 			return true;
 		}
-		
+
 		return false;
 	},
-	
+
 	/**
 	 * Late binder to bind CL Editor for elements hidden at start.
 	 */
@@ -403,6 +403,25 @@ cmt.utils.data = {
 				lateBinder.val( lateBinder.val() ).blur();
 			}
 		}
+	},
+
+	/**
+	 * Convert the data URI to Blog
+	 */
+	dataURItoBlob: function( dataURI ) {
+
+		var byteString = atob( dataURI.split( ',' )[ 1 ] );
+		var mimeString = dataURI.split( ',' )[ 0 ].split( ':' )[ 1 ].split( ';' )[ 0 ];
+
+		var buffer	= new ArrayBuffer( byteString.length );
+		var data	= new DataView( buffer );
+
+		for( var i = 0; i < byteString.length; i++ ) {
+
+			data.setUint8( i, byteString.charCodeAt( i ) );
+		}
+
+		return new Blob( [ buffer ], { type: mimeString } );
 	}
 
 };
