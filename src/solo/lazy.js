@@ -109,7 +109,7 @@ function processLazyImage( element ) {
 			element.sizes = element.dataset.sizes;
 		}
 
-		element.classList.remove( '.cmt-lazy-img' );
+		element.classList.remove( 'cmt-lazy-img' );
 	}
 	else if( element.classList.contains( 'cmt-lazy-bkg' ) ) {
 
@@ -130,6 +130,6 @@ function processLazyImage( element ) {
 			element.style.backgroundImage = "url('" + srcset[ 2 ] + "')"; 
 		}
 
-		element.classList.remove( '.cmt-lazy-bkg' );
+		element.classList.remove( 'cmt-lazy-bkg' );
 	}
 }
