@@ -38,11 +38,17 @@
 					// Prevent default anchor behavior
 			    	e.preventDefault();
 
+					// Update active
+					element.closest( '.nav' ).find( '.smooth-scroll' ).removeClass( 'active' );
+					element.addClass( 'active' );
+					element.closest( '.nav' ).find( '.smooth-scroll' ).closest( '.smooth-scroll-wrap' ).removeClass( 'active' );
+					element.closest( '.smooth-scroll-wrap' ).addClass( 'active' );
+
 					var target		= jQuery( targetId );
 					var topOffset	= 0;
 
 					if( cmt.utils.data.hasAttribute( target, 'data-height-target' ) ) {
-						
+
 						topOffset = jQuery( target.attr( 'data-height-target' ) ).height();
 					}
 					else if( null != settings.heightElement ) {
