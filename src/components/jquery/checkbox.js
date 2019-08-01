@@ -49,11 +49,15 @@
 
  					input.val( 1 );
 					field.val( 1 );
+
+					input.trigger( 'change' );
  				}
  				else {
 
  					input.val( 0 );
 					field.val( 0 );
+
+					input.trigger( 'change' );
  				}
 			});
 		}

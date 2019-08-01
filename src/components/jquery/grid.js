@@ -342,7 +342,9 @@
 				if( target > 0 ) {
 
 					var pop		= jQuery( '#' + popup );
-					var action 	= pop.find( 'form' ).attr( 'action' ) + target;
+					var action 	= pop.find( 'form' ).attr( 'action' );
+
+					action = cmt.utils.data.updateUriParam( action, 'id', target );
 
 					pop.find( 'form' ).attr( 'action', action );
 
