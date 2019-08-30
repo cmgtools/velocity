@@ -22,6 +22,7 @@ module.exports = function( grunt ) {
 					'src/components/main.js',
 					'src/components/base/main.js', 'src/components/base/BaseComponent.js', 'src/components/base/**/*.js',
 					'src/components/jquery/main.js', 'src/components/jquery/**/*.js',
+					'src/widgets/jquery/**/*.js',
 					'src/mvc/main.js', 'src/mvc/application.js',
 					'src/mvc/controllers/main.js', 'src/mvc/services/main.js',
 					'src/mvc/utils/main.js',
