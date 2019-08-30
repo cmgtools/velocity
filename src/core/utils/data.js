@@ -9,6 +9,9 @@
 
 cmt.utils.data = {
 
+	// The week days
+	weekDays: [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
+
 	/**
 	 * It reads elementId and convert the input fields present within the element to parameters url.
 	 */
