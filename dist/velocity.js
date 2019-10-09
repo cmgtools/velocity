@@ -1948,6 +1948,11 @@ cmt.components.base.SliderComponent.prototype.scrollToPosition = function( slide
 	this.sliders[ this.indexKey + sliderKey ].scrollToPosition( position, animate );
 };
 
+cmt.components.base.SliderComponent.prototype.scrollToSlide = function( sliderKey, slideKey, animate ) {
+
+	this.sliders[ this.indexKey + sliderKey ].scrollToSlide( slideKey, animate );
+};
+
 // == Slider ==============================
 
 cmt.components.base.Slider = function( component, element ) {
@@ -2561,6 +2566,34 @@ cmt.components.base.Slider.prototype.scrollToPosition = function( position, anim
 		else {
 
 			this.filmstrip.css( 'left', -( sliderWidth + scrollTo ) );
+		}
+	}
+};
+
+// Scroll the filmstrip to given slide
+// Works only if - controls - false, autoScroll - false, slides count is at least 3
+cmt.components.base.Slider.prototype.scrollToSlide = function( skideKey, animate ) {
+
+	var self		= this;
+	var settings	= this.options;
+	var element		= this.element;
+
+	var filmWidth	= this.filmstrip.outerWidth();
+	var filmLeft	= this.filmstrip.position().left;
+
+	var moveTo = this.slideWidth * skideKey;
+
+	if( !animate ) {
+
+		// Extreme Left
+		if( skideKey == 0 ) {
+
+			this.filmstrip.position( { at: "left top" } );
+		}
+		// Move
+		else {
+
+			this.filmstrip.css( 'left', -moveTo );
 		}
 	}
 };
@@ -6265,6 +6298,13 @@ function hideMessagePopup() {
 			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.scrollToPosition( sliderKey, position, animate );
+		},
+		// Scroll slider to the given slide
+		scrollToSlide: function( slideKey, animate ) {
+
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
+
+			component.scrollToSlide( sliderKey, slideKey, animate );
 		}
 	};
 

@@ -54,6 +54,13 @@
 			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.scrollToPosition( sliderKey, position, animate );
+		},
+		// Scroll slider to the given slide
+		scrollToSlide: function( slideKey, animate ) {
+
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
+
+			component.scrollToSlide( sliderKey, slideKey, animate );
 		}
 	};
 
