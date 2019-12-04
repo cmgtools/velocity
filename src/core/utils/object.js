@@ -36,6 +36,14 @@ cmt.utils.object = {
 		var prototype = object.__proto__ || object.constructor.prototype;
 
 		return ( property in object ) && ( !( property in prototype ) || prototype[ property ] !== object[ property ] );
+	},
+
+	/**
+	 * Check whether the given object exists and it's type is function
+	 */
+	isFunction: function( name ) {
+
+		return typeof window[ name ] === "function";
 	}
 
 };
