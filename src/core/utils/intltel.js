@@ -211,12 +211,11 @@ cmt.utils.intltel = {
 	populateIntlField: function( field ) {
 
 		var parent	= field.closest( '.form-group' );
-		var val		= parent.find( '.intl-tel-number' ).val();
+		var val		= parent.find( '.intl-tel-number' );
 
 		if( val.length > 0 ) {
 
-			field.intlTelInput( 'setNumber', val );
+			field.intlTelInput( 'setNumber', val.val() );
 		}
-
 	}
 };
