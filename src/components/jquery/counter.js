@@ -43,7 +43,7 @@
 
 			incBtn.click( function() {
 
-				cval = field.val( cval );
+				cval = field.val();
 
 				if( cval < max ) {
 
@@ -54,18 +54,21 @@
 					if( cval >= max ) {
 
 						incBtn.addClass( 'disabled' );
+						decBtn.removeClass( 'disabled' );
 
 					}
 					else {
 
 						incBtn.removeClass( 'disabled' );
+						decBtn.removeClass( 'disabled' );
+
 					}
 				}
 			});
 
 			decBtn.click( function() {
 
-				cval = field.val( cval );
+				cval = field.val();
 
 				if( cval > min ) {
 
@@ -76,11 +79,13 @@
 					if( cval <= min ) {
 
 						decBtn.addClass( 'disabled' );
+						incBtn.removeClass( 'disabled' );
 
 					}
 					else {
 
 						decBtn.removeClass( 'disabled' );
+						incBtn.removeClass( 'disabled' );
 					}
 				}
 			});
