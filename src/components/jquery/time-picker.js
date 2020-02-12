@@ -13,7 +13,7 @@
 		var pickers		= this;
 
 		// Append singleton element at the end of body
-		jQuery( 'body' ).append( '<div id="' + settings.id + '" class="cmt-timepicker ' + settings.classes + '" style="z-index: 100;"></div>' );
+		jQuery( 'body' ).append( '<div id="' + settings.id + '" class="cmt-timepicker ' + settings.classes + '" style="z-index: 100000;"></div>' );
 
 		// Iterate and initialise all the picker elements
 		pickers.each( function() {
