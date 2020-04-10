@@ -1,5 +1,6 @@
 cmt.api.controllers.BaseController = function( options ) {
 
+	this.caching = false; // Cache response
 };
 
 // Initialise --------------------

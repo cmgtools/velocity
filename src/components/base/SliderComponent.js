@@ -18,6 +18,7 @@ cmt.components.base.SliderComponent.inherits( cmt.components.base.BaseComponent 
 
 cmt.components.base.SliderComponent.prototype.defaults = {
 	// Controls
+	controls: true,
 	lControlContent: null,
 	rControlContent: null,
 	// Callback - Content is less than slider
@@ -72,7 +73,7 @@ cmt.components.base.SliderComponent.prototype.initSliders = function( elements )
 		slider.init();
 
 		element.attr( 'id', self.idKey + self.counter );
-		element.attr( 'ldata-id', self.counter );
+		element.attr( 'data-idx', self.counter );
 
 		self.sliders[ self.indexKey + self.counter ] = slider;
 
@@ -99,6 +100,16 @@ cmt.components.base.SliderComponent.prototype.addSlide = function( sliderKey, sl
 cmt.components.base.SliderComponent.prototype.removeSlide = function( sliderKey, slideKey ) {
 
 	this.sliders[ this.indexKey + sliderKey ].removeSlide( slideKey );
+};
+
+cmt.components.base.SliderComponent.prototype.scrollToPosition = function( sliderKey, position, animate ) {
+
+	this.sliders[ this.indexKey + sliderKey ].scrollToPosition( position, animate );
+};
+
+cmt.components.base.SliderComponent.prototype.scrollToSlide = function( sliderKey, slideKey, animate ) {
+
+	this.sliders[ this.indexKey + sliderKey ].scrollToSlide( slideKey, animate );
 };
 
 // == Slider ==============================
@@ -149,7 +160,7 @@ cmt.components.base.Slider.prototype.init = function() {
 
 // Update View
 cmt.components.base.Slider.prototype.initView = function() {
-	
+
 	var self = this;
 
 	var options = this.options;
@@ -178,7 +189,7 @@ cmt.components.base.Slider.prototype.initView = function() {
 
 			self.resetSlide( currentSlide );
 		});
-		
+
 		// Index
 		this.indexSlides();
 
@@ -199,7 +210,10 @@ cmt.components.base.Slider.prototype.initView = function() {
 	var view = '<div class="slider-slides-wrap"><div class="slider-slides"></div></div>';
 
 	// Controls
-	view += '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
+	if( options.controls ) {
+
+		view += '<div class="slider-control slider-control-left"></div><div class="slider-control slider-control-right"></div>';
+	}
 
 	this.element.html( view );
 
@@ -214,8 +228,11 @@ cmt.components.base.Slider.prototype.normalise = function() {
 	var element	= this.element;
 
 	// Controls
-	this.leftControl	= element.find( '.slider-control-left' );
-	this.rightControl	= element.find( '.slider-control-right' );
+	if( options.controls ) {
+
+		this.leftControl	= element.find( '.slider-control-left' );
+		this.rightControl	= element.find( '.slider-control-right' );
+	}
 
 	// Dimensions
 	this.width	= element.width();
@@ -255,9 +272,12 @@ cmt.components.base.Slider.prototype.normalise = function() {
 			options.smallerContent( element, this.filmstrip );
 		}
 	}
-	
+
 	// Initialise controls
-	this.initControls();
+	if( options.controls ) {
+
+		this.initControls();
+	}
 };
 
 // Index the slides
@@ -268,13 +288,13 @@ cmt.components.base.Slider.prototype.indexSlides = function() {
 
 		var currentSlide = jQuery( this );
 
-		currentSlide.attr( 'ldata-id', index );
+		currentSlide.attr( 'data-idx', index );
 	});
 }
 
 // Initialise the Slider controls
 cmt.components.base.Slider.prototype.initControls = function() {
-	
+
 	var self	= this;
 	var options = this.options;
 	var element	= this.element;
@@ -305,7 +325,7 @@ cmt.components.base.Slider.prototype.initControls = function() {
 		this.leftControl.hide();
 		this.rightControl.show();
 	}
-	
+
 	this.leftControl.unbind( 'click' );
 
 	this.leftControl.click( function() {
@@ -319,7 +339,7 @@ cmt.components.base.Slider.prototype.initControls = function() {
 			self.moveToRight();
 		}
 	});
-	
+
 	this.rightControl.unbind( 'click' );
 
 	this.rightControl.click( function() {
@@ -343,12 +363,12 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 
 		var currentSlide = jQuery( this );
 
-		var newIndex = parseInt( currentSlide.attr( 'ldata-id' ) ) + 1;
+		var newIndex = parseInt( currentSlide.attr( 'data-idx' ) ) + 1;
 
-		currentSlide.attr( 'ldata-id', newIndex );
+		currentSlide.attr( 'data-idx', newIndex );
 	});
 
-	var slide = this.filmstrip.find( '.slider-slide[ldata-id=1]' );
+	var slide = this.filmstrip.find( '.slider-slide[data-idx=1]' );
 
 	if( slide.length == 0 ) {
 
@@ -359,12 +379,12 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 	}
 	else {
 
-		this.filmstrip.find( '.slider-slide[ldata-id=1]' ).before( slideHtml );
+		this.filmstrip.find( '.slider-slide[data-idx=1]' ).before( slideHtml );
 
 		slide = slide.prev();
 	}
 
-	slide.attr( 'ldata-id', 0 );
+	slide.attr( 'data-idx', 0 );
 	slide.addClass( 'slider-slide' );
 
 	// Normalise slides
@@ -375,18 +395,18 @@ cmt.components.base.Slider.prototype.addSlide = function( slideHtml ) {
 cmt.components.base.Slider.prototype.removeSlide = function( slideKey ) {
 
 	// Remove
-	this.filmstrip.find( '.slider-slide[ldata-id=' + slideKey + ']' ).remove();
+	this.filmstrip.find( '.slider-slide[data-idx=' + slideKey + ']' ).remove();
 
 	// Set slides position on filmstrip
 	this.slides.each( function() {
 
 		var currentSlide = jQuery( this );
 
-		var index = parseInt( currentSlide.attr( 'ldata-id' ) );
+		var index = parseInt( currentSlide.attr( 'data-idx' ) );
 
 		if( index > slideKey ) {
 
-			currentSlide.attr( 'ldata-id', ( index - 1 ) );
+			currentSlide.attr( 'data-idx', ( index - 1 ) );
 		}
 	});
 
@@ -409,7 +429,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 		// reset click event
 		slide.click( function() {
 
-			options.onSlideClick( element, slide, slide.attr( 'ldata-id' ) );
+			options.onSlideClick( element, slide, slide.attr( 'data-idx' ) );
 		});
 	}
 
@@ -417,7 +437,7 @@ cmt.components.base.Slider.prototype.resetSlide = function( slide ) {
 
 		slide.click( function() {
 
-			self.showLightbox( slide, slide.attr( 'ldata-id' ) );
+			self.showLightbox( slide, slide.attr( 'data-idx' ) );
 		});
 	}
 };
@@ -456,7 +476,7 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	// do pre processing
 	if( null !== options.preSlideChange ) {
 
-		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 
 	// do animation - animate slider
@@ -482,7 +502,7 @@ cmt.components.base.Slider.prototype.showNextSlide = function() {
 	// do post processing
 	if( null !== options.postSlideChange ) {
 
-		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 }
 
@@ -498,7 +518,7 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	// do pre processing
 	if( null !== options.preSlideChange ) {
 
-		options.preSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.preSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 
 	// Remove last and append to first
@@ -526,13 +546,13 @@ cmt.components.base.Slider.prototype.showPrevSlide = function() {
 	// do post processing
 	if( null !== options.postSlideChange ) {
 
-		options.postSlideChange( element, firstSlide, firstSlide.attr( 'ldata-id' ) );
+		options.postSlideChange( element, firstSlide, firstSlide.attr( 'data-idx' ) );
 	}
 }
 
 // Slider Auto scroll
 cmt.components.base.Slider.prototype.startAutoScroll = function() {
-	
+
 	var self = this;
 
 	var slider		= this.element;
@@ -568,9 +588,10 @@ cmt.components.base.Slider.prototype.startAutoScroll = function() {
 
 // Move to left on clicking next button
 cmt.components.base.Slider.prototype.moveToLeft = function() {
-	
-	var self	= this;
-	var element = this.element;
+
+	var self		= this;
+	var settings	= this.options;
+	var element		= this.element;
 
 	var firstSlide		= this.slides.first();
 	var slideWidth		= firstSlide.outerWidth();
@@ -600,10 +621,13 @@ cmt.components.base.Slider.prototype.moveToLeft = function() {
 
 					if( remaining < ( sliderWidth - moveBy ) ) {
 
-						self.rightControl.hide();
+						if( settings.controls ) {
+
+							self.rightControl.hide();
+						}
 					}
 
-					if( self.leftControl.is( ':hidden' ) ) {
+					if( settings.controls && self.leftControl.is( ':hidden' ) ) {
 
 						self.leftControl.fadeIn( 'fast' );
 					}
@@ -615,8 +639,9 @@ cmt.components.base.Slider.prototype.moveToLeft = function() {
 
 // Move to right on clicking prev button
 cmt.components.base.Slider.prototype.moveToRight = function() {
-	
-	var self = this;
+
+	var self		= this;
+	var settings	= this.options;
 
 	var filmLeft = this.filmstrip.position().left;
 
@@ -638,11 +663,15 @@ cmt.components.base.Slider.prototype.moveToRight = function() {
 
 					if( filmLeft > -( self.slideWidth/2 ) ) {
 
-						self.leftControl.hide();
+						if( settings.controls ) {
+
+							self.leftControl.hide();
+						}
+
 						self.filmstrip.position( { at: "left top" } );
 					}
 
-					if( self.rightControl.is( ':hidden' ) ) {
+					if( settings.controls && self.rightControl.is( ':hidden' ) ) {
 
 						self.rightControl.fadeIn( 'fast' );
 					}
@@ -652,12 +681,83 @@ cmt.components.base.Slider.prototype.moveToRight = function() {
 	}
 	else {
 
-		this.leftControl.hide();
+		if( settings.controls ) {
+
+			this.leftControl.hide();
+		}
+
 		this.filmstrip.position( { at: "left top" } );
 	}
 };
 
-// Move to left on clicking next button
+// Scroll the filmstrip to given position
+// Works only if - controls - false, autoScroll - false, slides count is at least 3
+cmt.components.base.Slider.prototype.scrollToPosition = function( position, animate ) {
+
+	var self		= this;
+	var settings	= this.options;
+	var element		= this.element;
+
+	var sliderWidth	= element.outerWidth();
+
+	var filmWidth	= this.filmstrip.outerWidth();
+	var filmLeft	= this.filmstrip.position().left;
+
+	var scrollScope	= filmWidth - ( 2 * sliderWidth );
+
+	position = parseInt( position );
+
+	var scrollTo = parseInt( ( scrollScope * position ) / 100 );
+
+	if( !animate ) {
+
+		// Extreme Left
+		if( position == 0 ) {
+
+			this.filmstrip.position( { at: "left top" } );
+		}
+		// Extreme Right
+		else if( position == 100 ) {
+
+			this.filmstrip.css( 'left', -( filmWidth - sliderWidth ) );
+		}
+		// Move
+		else {
+
+			this.filmstrip.css( 'left', -( sliderWidth + scrollTo ) );
+		}
+	}
+};
+
+// Scroll the filmstrip to given slide
+// Works only if - controls - false, autoScroll - false, slides count is at least 3
+cmt.components.base.Slider.prototype.scrollToSlide = function( skideKey, animate ) {
+
+	var self		= this;
+	var settings	= this.options;
+	var element		= this.element;
+
+	var filmWidth	= this.filmstrip.outerWidth();
+	var filmLeft	= this.filmstrip.position().left;
+
+	var moveTo = this.slideWidth * skideKey;
+
+	if( !animate ) {
+
+		// Extreme Left
+		if( skideKey == 0 ) {
+
+			this.filmstrip.position( { at: "left top" } );
+		}
+		// Move
+		else {
+
+			this.filmstrip.css( 'left', -moveTo );
+		}
+	}
+};
+
+// Show the slider images in lightbox slider
 cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 
 	var self		= this;
@@ -677,7 +777,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 	lightboxData.css( { top: heightRatio/2, left: widthRatio/2, width: ( widthRatio * 11 ), height: ( heightRatio * 11 ) } );
 
 	if( self.options.lightboxBkg ) {
-		
+
 		lightbox.find( '.lightbox-data-bkg' ).addClass( 'lightbox-bkg-wrap' );
 	}
 
@@ -687,7 +787,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 	element.find( '.slider-slide, .slide, .cl-wrap, .cr-wrap' ).each( function() {
 
 		var slide	= jQuery( this );
-		var slId	= slide.attr( 'ldata-id' );
+		var slId	= slide.attr( 'data-idx' );
 
 		var thumbUrl = slide.attr( 'thumb-url' );
 		var imageUrl = slide.attr( 'image-url' );
@@ -701,7 +801,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 				lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
 			}
 			else {
-				
+
 				lightbox.find( '.lightbox-data-bkg' ).html( '<img src="' + imageUrl + '"/>' );
 			}
 		}
@@ -747,7 +847,7 @@ cmt.components.base.Slider.prototype.setLightboxBkg = function( slider, slide, s
 		bkg.css( 'background-image', 'url(' + imageUrl + ')');
 	}
 	else {
-		
+
 		bkg.html( '<img src="' + imageUrl + '"/>' );
 	}
 

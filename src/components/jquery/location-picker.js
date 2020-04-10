@@ -10,13 +10,13 @@
 		// == Init == //
 
 		// Configure Plugin
-		var settings 	= cmtjq.extend( {}, cmtjq.fn.latLongPicker.defaults, options );
+		var settings	= cmtjq.extend( {}, cmtjq.fn.latLongPicker.defaults, options );
 		var maps		= this;
 
 		// Iterate and initialise all the page blocks
 		maps.each( function() {
 
-			var mapPicker	= cmtjq( this );
+			var mapPicker = cmtjq( this );
 
 			init( mapPicker );
 		});
@@ -31,7 +31,7 @@
 			// Initialise Google Map
 			if( window.google ) {
 
-				var gMap	= initMapPicker( mapPicker );
+				var gMap = initMapPicker( mapPicker );
 			}
 		}
 
@@ -72,14 +72,15 @@
 				mapOptions.mapTypeId = google.maps.MapTypeId.ROADMAP;
 			}
 
-			mapOptions.center	= new google.maps.LatLng( latitude, longitude );
-			var gMap 			= new google.maps.Map( element, mapOptions );
-			var marker			= initMarker( mapPicker, gMap, mapOptions );
+			mapOptions.center = new google.maps.LatLng( latitude, longitude );
+
+			var gMap	= new google.maps.Map( element, mapOptions );
+			var marker	= initMarker( mapPicker, gMap, mapOptions );
 
 			// search locations using geocoder
 			if( settings.geocoder ) {
 
-				var geocoder 		= new google.maps.Geocoder();
+				var geocoder = new google.maps.Geocoder();
 
 				mapPicker.find( '.search-box' ).change( function() {
 
@@ -100,7 +101,7 @@
 			// search locations using places for text
 			if( settings.places ) {
 
-				var placeService	= new google.maps.places.PlacesService( gMap );
+				var placeService = new google.maps.places.PlacesService( gMap );
 
 				mapPicker.find( '.search-box' ).change( function() {
 
@@ -111,7 +112,7 @@
 
 						if( status == google.maps.places.PlacesServiceStatus.OK ) {
 
-							var location	= results[ 0 ].geometry.location;
+							var location = results[ 0 ].geometry.location;
 
 							updateCenter( mapPicker, gMap, location, marker );
 						}
@@ -136,11 +137,11 @@
 		function initMarker( mapPicker, gMap, mapOptions ) {
 
 			var marker = new google.maps.Marker({
-								position: mapOptions.center,
-								map: gMap,
-								title: settings.markerTitle,
-								draggable: true
-							});
+				position: mapOptions.center,
+				map: gMap,
+				title: settings.markerTitle,
+				draggable: true
+			});
 
 			google.maps.event.addListener( marker, 'dragend', function( evt ) {
 

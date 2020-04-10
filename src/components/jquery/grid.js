@@ -53,7 +53,7 @@
 
 				var pageUrl		= window.location.href;
 				var selected	= jQuery( this ).val();
-				
+
 				var option	= jQuery( this ).find( ':selected' );
 				var column	= option.attr( 'data-col' );
 				var cols	= jQuery( this ).closest( '.grid-filters' ).attr( 'data-cols' );
@@ -269,13 +269,13 @@
 				switch( layout ) {
 
 					case 'data': {
-						
+
 						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'data' );
 
 						break;
 					}
 					case 'table': {
-						
+
 						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, settings.layoutParam, 'table' );
 
 						break;
@@ -310,7 +310,7 @@
 					var gen		= jQuery( this ).is( '[generic]' );
 					var act		= jQuery( this ).attr( 'action' );
 					var req		= act.replace( /\s+/g, '-' ).toLowerCase();
-					var action 	= gen ? form.attr( 'action' ) + target : form.attr( 'action' ) + '/' + req + '?id=' + target;
+					var action 	= gen ? form.attr( 'data-action' ) + target : form.attr( 'data-action' ) + '/' + req + '?id=' + target;
 
 					form.attr( 'action', action );
 					form.find( '.action-generic' ).html( act );
@@ -342,7 +342,9 @@
 				if( target > 0 ) {
 
 					var pop		= jQuery( '#' + popup );
-					var action 	= pop.find( 'form' ).attr( 'action' ) + target;
+					var action 	= pop.find( 'form' ).attr( 'action' );
+
+					action = cmt.utils.data.updateUriParam( action, 'id', target );
 
 					pop.find( 'form' ).attr( 'action', action );
 

@@ -11,8 +11,8 @@
 		// == Init == //
 
 		// Configure Plugin
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtCheckbox.defaults, options );
-		var checkboxes		= this;
+		var settings 	= cmtjq.extend( {}, cmtjq.fn.cmtCheckbox.defaults, options );
+		var checkboxes	= this;
 
 		// Iterate and initialise all the fox sliders
 		checkboxes.each( function() {
@@ -49,11 +49,15 @@
 
  					input.val( 1 );
 					field.val( 1 );
+
+					input.trigger( 'change' );
  				}
  				else {
 
  					input.val( 0 );
 					field.val( 0 );
+
+					input.trigger( 'change' );
  				}
 			});
 		}

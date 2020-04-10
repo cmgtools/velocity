@@ -56,10 +56,37 @@
 					}
 				});
 			}
-			else if( radio.length > 0 ) {
+			else if( radio.length == 1 ) {
+
+				var status = fieldGroup.find( "input[type='radio']:checked" ).length;
+
+				if( status == 1 ) {
+
+					checkPositive( fieldGroup, reverse );
+				}
+				else if( status == 0 ) {
+
+					checkNegative( fieldGroup, reverse );
+				}
+
+				fieldGroup.find( "input[type='radio']" ).change( function() {
+
+					status = fieldGroup.find( "input[type='radio']:checked" ).length;
+
+					if( status == 1 ) {
+
+						checkPositive( fieldGroup, reverse );
+					}
+					else if( status == 0 ) {
+
+						checkNegative( fieldGroup, reverse );
+					}
+				});
+			}
+			else if( radio.length > 1 ) {
 
 				var status = parseInt( fieldGroup.find( "input[type='radio']:checked" ).val() );
-			
+
 				if( status == 1 ) {
 
 					checkPositive( fieldGroup, reverse );
@@ -84,7 +111,7 @@
 				});
 			}
 		}
-		
+
 		function checkPositive( fieldGroup, reverse ) {
 
 			var target	= fieldGroup.attr( 'group-target' );
@@ -101,7 +128,7 @@
 				jQuery( '.' + alt ).hide();
 			}
 		}
-		
+
 		function checkNegative( fieldGroup, reverse ) {
 
 			var target	= fieldGroup.attr( 'group-target' );

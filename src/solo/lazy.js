@@ -94,11 +94,22 @@ function processLazyImage( element ) {
 
 	if( element.classList.contains( 'cmt-lazy-img' ) ) {
 
-		element.src		= element.dataset.src;
-		element.srcset	= element.dataset.srcset;
-		element.sizes	= element.dataset.sizes;
+		if( typeof element.dataset.src !== 'undefined' ) {
 
-		element.classList.remove( '.cmt-lazy-img' );
+			element.src = element.dataset.src;
+		}
+
+		if( typeof element.dataset.srcset !== 'undefined' ) {
+
+			element.srcset = element.dataset.srcset;
+		}
+
+		if( typeof element.dataset.sizes !== 'undefined' ) {
+
+			element.sizes = element.dataset.sizes;
+		}
+
+		element.classList.remove( 'cmt-lazy-img' );
 	}
 	else if( element.classList.contains( 'cmt-lazy-bkg' ) ) {
 
@@ -106,19 +117,19 @@ function processLazyImage( element ) {
 		var srcset	= element.dataset.srcset.split( ',' );
 		var sizes	= element.dataset.sizes.split( ',' );
 
-		if( width > parseInt( sizes[ 0 ] ) ) {
+		if( typeof sizes[ 0 ] !== 'undefined' && width > parseInt( sizes[ 0 ] ) ) {
 
 			element.style.backgroundImage = "url('" + srcset[ 0 ] + "')"; 
 		}
-		else if( width > parseInt( sizes[ 1 ] ) ) {
+		else if( typeof sizes[ 1 ] !== 'undefined' && width > parseInt( sizes[ 1 ] ) ) {
 
 			element.style.backgroundImage = "url('" + srcset[ 1 ] + "')"; 
 		}
-		else {
+		else if( typeof sizes[ 2 ] !== 'undefined' ) {
 
 			element.style.backgroundImage = "url('" + srcset[ 2 ] + "')"; 
 		}
 
-		element.classList.remove( '.cmt-lazy-bkg' );
+		element.classList.remove( 'cmt-lazy-bkg' );
 	}
 }

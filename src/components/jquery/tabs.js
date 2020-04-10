@@ -9,8 +9,8 @@
 		// == Init == //
 
 		// Configure Plugin
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtTabs.defaults, options );
-		var tabPanels		= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtTabs.defaults, options );
+		var tabPanels	= this;
 
 		// Iterate and initialise all the tabs
 		tabPanels.each( function() {
@@ -29,7 +29,7 @@
 
 			var links	= tabPanel.find( '.tab-links-wrap' ).first().find( '.tab-link' );
 			var tabs	= tabPanel.find( '.tab-content-wrap' ).first();
-			var nested	= tabs.find('.tab-content-wrap .tab-content' );
+			var nested	= tabs.find( '.tab-content-wrap .tab-content' );
 
 			tabs = tabs.find( '.tab-content' ).not( nested );
 

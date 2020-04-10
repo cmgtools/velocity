@@ -35,13 +35,13 @@
 		},
 		addItem: function( itemHtml ) {
 
-			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.addItem( galleryKey, itemHtml );
 		},
 		removeItem: function( itemKey ) {
 			
-			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'ldata-id' ) );
+			var galleryKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.removeItem( galleryKey, itemKey );
 		}

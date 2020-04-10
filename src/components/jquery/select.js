@@ -218,7 +218,7 @@
 	// Utility method to reset the select after getting new values
 	cmtjq.fn.cmtSelect.resetSelect = function( selectWrap, optionsHtml ) {
 
-		var dropDown	= selectWrap.find( 'select' );
+		var dropDown = selectWrap.find( 'select' );
 
 		dropDown.html( optionsHtml );
 
@@ -251,7 +251,7 @@
 	// Utility method to set value
 	cmtjq.fn.cmtSelect.setValue = function( selectWrap, value ) {
 
-		var dropDown	= selectWrap.find( 'select' );
+		var dropDown = selectWrap.find( 'select' );
 
 		dropDown.val( value );
 
@@ -275,8 +275,8 @@
 		// == Init == //
 
 		// Configure Plugin
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtSelect.defaults, options );
-		var dropDowns		= this;
+		var settings 	= cmtjq.extend( {}, cmtjq.fn.cmtSelect.defaults, options );
+		var dropDowns	= this;
 
 		// Iterate and initialise all the fox sliders
 		dropDowns.each( function() {
@@ -292,29 +292,29 @@
 		function init( dropDown ) {
 
 			// Generate Icon Html
-			var iconHtml	= '<span class="s-icon">';
+			var iconHtml = '<span class="s-icon">';
 
 			if( null != settings.iconClass ) {
 
-				iconHtml	= '<span class="s-icon ' + settings.iconClass + '">';
+				iconHtml = '<span class="s-icon ' + settings.iconClass + '">';
 			}
 
 			if( null != settings.iconHtml ) {
 
-				iconHtml	+= settings.iconHtml + "</span>";
+				iconHtml += settings.iconHtml + "</span>";
 			}
 			else {
 
-				iconHtml	+= "</span>";
+				iconHtml += "</span>";
 			}
 
 			// Generate Select Html
-			var customHtml	= '<div class="cmt-selected"><span class="s-text">' + dropDown.attr( 'title' ) + '</span>' + iconHtml + '</div>';
+			var customHtml = '<div class="cmt-selected"><span class="s-text">' + dropDown.attr( 'title' ) + '</span>' + iconHtml + '</div>';
 
 			// Prepend
 			dropDown.prepend( customHtml );
 
-			var selectList	= dropDown.find( '.cmt-select-list' );
+			var selectList = dropDown.find( '.cmt-select-list' );
 
 			// Hide List by default
 			selectList.hide();

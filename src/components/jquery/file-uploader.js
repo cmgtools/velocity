@@ -1,11 +1,11 @@
 /**
  * File Uploader plugin can be used to upload files. The appropriate backend code should be able to handle the file sent by this plugin.
  * It works fine for CMSGears using it's File Uploader and Avatar Uploader widgets.
- * 
+ *
  * It also support two special cases using special classes as listed below:
- * 
+ *
  * file-uploader-direct - To upload several files in a row.
- * 
+ *
  * file-uploader-chooser - Always Show File Wrap and Chooser and keep Dragger hidden.
  */
 
@@ -21,13 +21,15 @@
 		// Configure Modules
 		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtFileUploader.defaults, options );
 		var fileUploaders	= this;
+		var cameraStream	= null;
+		var videoPlayer		= null;
 
 		// Iterate and initialise all the uploaders
 		fileUploaders.each( function() {
 
 			var fileUploader = cmtjq( this );
 
-			init( fileUploader );
+			init( fileUploader, cameraStream, videoPlayer );
 		});
 
 		// return control
@@ -36,7 +38,24 @@
 		// == Private Functions == //
 
 		// Initialise Uploader
-		function init( fileUploader ) {
+		function init( fileUploader, cameraStream, videoPlayer ) {
+
+			initBtnChooser( fileUploader );
+
+			initBtnCapture( fileUploader, cameraStream, videoPlayer );
+
+			// Always Show File Wrap and Chooser and keep Dragger hidden
+			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
+
+				fileUploader.find( '.chooser-wrap' ).show();
+				fileUploader.find( '.file-wrap' ).show();
+				fileUploader.find( '.file-dragger' ).hide();
+			}
+
+			initUploader( fileUploader );
+		}
+
+		function initBtnChooser( fileUploader ) {
 
 			// Show/Hide file chooser - either of the option must exist to choose file
 			var btnChooser	= fileUploader.find( '.btn-chooser' );
@@ -64,7 +83,7 @@
 						fileUploader.find( '.chooser-wrap' ).fadeToggle( 'slow' );
 						fileUploader.find( '.file-wrap' ).fadeToggle( 'fast' );
 					}
-					
+
 					// Hide Postaction
 					fileUploader.find( '.post-action' ).hide();
 
@@ -75,14 +94,99 @@
 					resetUploader( fileUploader );
 				});
 			}
+		}
 
-			// Always Show File Wrap and Chooser and keep Dragger hidden
-			if( fileUploader.hasClass( 'file-uploader-chooser' ) ) {
+		function initBtnCapture( fileUploader, cameraStream, videoPlayer ) {
 
-				fileUploader.find( '.chooser-wrap' ).show();
-				fileUploader.find( '.file-wrap' ).show();
-				fileUploader.find( '.file-dragger' ).hide();
+			// Capture Button
+			var btnCapture = fileUploader.find( '.btn-capture' );
+
+			if( btnCapture.length > 0 ) {
+
+				btnCapture.click( function() {
+
+					var camera = parseInt( btnCapture.attr( 'data-camera' ) );
+
+					// Enable Camera
+					if( camera == 0 ) {
+
+						var stream = 'mediaDevices' in navigator;
+
+						// Start Camera
+						if( stream ) {
+
+							navigator.mediaDevices.getUserMedia( { video: true } )
+							.then( function( mediaStream ) {
+
+								videoPlayer = fileUploader.find( '.file-camera .video' )[ 0 ];
+
+								videoPlayer.srcObject = mediaStream;
+
+								cameraStream = mediaStream;
+
+								videoPlayer.play();
+							})
+							.catch( function( err ) {
+
+								console.log( "Unable to access camera: " + err );
+							});
+						}
+						else {
+
+							alert( 'Your browser does not support media devices.' );
+
+							return;
+						}
+
+						btnCapture.attr( 'data-camera', 1 );
+
+						fileUploader.find( '.file-preloader .file-preloader-bar' ).html( '' );
+					}
+					// Disable Camera
+					else {
+
+						if( null != cameraStream ) {
+
+							var track = cameraStream.getTracks()[0];
+
+							track.stop();
+
+							cameraStream = null;
+
+							if( null != videoPlayer ) {
+
+								videoPlayer.load();
+							}
+						}
+
+						btnCapture.attr( 'data-camera', 0 );
+					}
+
+					if( settings.toggle ) {
+
+						// Swap Chooser and Dragger
+						fileUploader.find( '.chooser-wrap' ).fadeToggle( 'slow' );
+						fileUploader.find( '.file-wrap' ).fadeToggle( 'fast' );
+					}
+
+					// Hide Postaction
+					fileUploader.find( '.post-action' ).hide();
+
+					// Reset Canvas and Progress
+					resetUploader( fileUploader );
+				});
+
+				jQuery( '.file-capture' ).click( function() {
+
+					if( null != cameraStream ) {
+
+						uploadCapture( fileUploader, cameraStream, videoPlayer );
+					}
+				});
 			}
+		}
+
+		function initUploader( fileUploader ) {
 
 			// Modern Uploader
 			if ( cmt.utils.browser.isFileApi() ) {
@@ -133,7 +237,7 @@
 			// Clear Old Values
 			if( cmt.utils.browser.isCanvas() && fileUploader.attr( 'type' ) == 'image' ) {
 
-				var canvasArr = fileUploader.find( '.file-dragger canvas' );
+				var canvasArr = fileUploader.find( '.file-dragger canvas, .file-camera .canvas' );
 
 				if( canvasArr.length > 0 ) {
 
@@ -296,7 +400,7 @@
 			  dataType:		'json',
 			}).done( function( response ) {
 
-				progress.html( 'File uploaded' );
+				progressContainer.html( 'File uploaded' );
 
 				if( response['result'] == 1 ) {
 
@@ -321,13 +425,90 @@
 			});
 		}
 
+		function uploadCapture( fileUploader, cameraStream, videoPlayer ) {
+
+			var directory	= fileUploader.attr( 'directory' );
+			var type		= fileUploader.attr( 'type' );
+			var gen			= fileUploader.attr( 'gen' );
+			var canvas		= fileUploader.find( '.file-camera .canvas' );
+			var fileName	= canvas.attr( 'data-name' );
+			canvas			= canvas[ 0 ];
+			var context		= canvas.getContext( '2d' );
+
+			context.drawImage( videoPlayer, 0, 0, canvas.width, canvas.height );
+
+			var dataURI		= canvas.toDataURL( "image/png" );
+			var imageData	= cmt.utils.data.dataURItoBlob( dataURI );
+
+			var progressContainer = fileUploader.find( '.file-preloader .file-preloader-bar' );
+
+			var formData = new FormData();
+
+			// Show progress
+			progressContainer.html( 'Uploading file' );
+
+			formData.append( 'file', imageData, fileName );
+
+			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+
+			jQuery.ajax({
+			  type:			"POST",
+			  url: 			urlParams,
+			  data: 		formData,
+		      cache: 		false,
+		      contentType: 	false,
+		      processData: 	false,
+			  dataType:		'json',
+			}).done( function( response ) {
+
+				progressContainer.html( 'File uploaded' );
+
+				if( response['result'] == 1 ) {
+
+					if( settings.uploadListener ) {
+
+						settings.uploadListener( fileUploader, directory, type, gen, response[ 'data' ] );
+					}
+					else {
+
+						fileUploaded( fileUploader, directory, type, gen, response[ 'data' ] );
+
+						if( null != cameraStream ) {
+
+							var track = cameraStream.getTracks()[ 0 ];
+
+							track.stop();
+
+							cameraStream = null;
+
+							if( null != videoPlayer ) {
+
+								videoPlayer.load();
+							}
+						}
+
+						fileUploader.find( '.btn-capture' ).attr( 'data-camera', 0 );
+					}
+				}
+				else {
+
+					var errors = response[ 'errors' ];
+
+					alert( errors.error );
+				}
+
+				// Reset Canvas and Progress
+				resetUploader( fileUploader );
+			});
+		}
+
 		// default post processor for uploaded files.
 		function fileUploaded( fileUploader, directory, type, gen, result ) {
 
 			var fileName = result[ 'name' ] + "." + result[ 'extension' ];
 
 			if( null == type || typeof type == 'undefined' ) {
-				
+
 				type = result[ 'type' ];
 			}
 
@@ -389,9 +570,9 @@
 			fileInfo.find( '.change' ).val( 1 );
 
 			var title = fileFields.find( '.title' ).val();
-			
+
 			if( null == title || title.length == 0 ) {
-				
+
 				fileFields.find( '.title' ).val( result[ 'title' ] );
 			}
 		}

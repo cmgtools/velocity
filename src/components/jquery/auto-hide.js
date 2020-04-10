@@ -27,13 +27,13 @@
 
 		function init( trigger ) {
 
-			var hide = jQuery( trigger.attr( 'ldata-target' ) );
+			var target = jQuery( trigger.attr( 'data-target' ) );
 
 			jQuery( window ).click( function( e ) {
 
-				if ( !trigger.is( e.target ) && trigger.has( e.target ).length === 0 ) {
+				if ( !trigger.is( e.target ) && trigger.has( e.target ).length === 0 && !target.is( e.target ) && target.has( e.target ).length === 0 ) {
 
-					jQuery( hide ).slideUp();
+					jQuery( target ).slideUp();
 
 					trigger.removeClass( 'active' );
 				}
