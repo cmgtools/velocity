@@ -1,0 +1,16 @@
+{
+	"name": "cmgtools/velocity",
+	"description": "Velocity is a JavaScript library which provide utilties, UI components and MVC framework implementation.",
+	"homepage": "https://www.cmgtools.org",
+	"type": "project",
+	"keywords": [
+		"js", "web", "front-end", "framework", "velocity"
+	],
+	"support": {
+		"resources": "https://www.cmgtools.org"
+	},
+	"license": "GPL-3.0-or-later",
+	"authors": [
+		{ "name": "Bhagwat Singh Chouhan", "email": "bhagwat.chouhan@gmail.com" }
+	]
+}
