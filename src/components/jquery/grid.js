@@ -82,6 +82,22 @@
 				jQuery( this ).toggleClass( 'active' );
 			});
 
+			// Import
+			grid.find( '.trigger-import-toggle' ).click( function() {
+
+				grid.find( '.grid-import-wrap' ).fadeToggle( 'slow' );
+
+				jQuery( this ).toggleClass( 'active' );
+			});
+
+			// Export
+			grid.find( '.trigger-export-toggle' ).click( function() {
+
+				grid.find( '.grid-export-wrap' ).fadeToggle( 'slow' );
+
+				jQuery( this ).toggleClass( 'active' );
+			});
+
 			grid.find( '.trigger-report-generate' ).click( function() {
 
 				var pageUrl	= window.location.href;

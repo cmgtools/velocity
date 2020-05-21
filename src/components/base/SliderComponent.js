@@ -17,6 +17,8 @@ cmt.components.base.SliderComponent = function() {
 cmt.components.base.SliderComponent.inherits( cmt.components.base.BaseComponent );
 
 cmt.components.base.SliderComponent.prototype.defaults = {
+	// Normaliser
+	normalise: true,
 	// Controls
 	controls: true,
 	lControlContent: null,
@@ -141,13 +143,16 @@ cmt.components.base.Slider = function( component, element ) {
 
 cmt.components.base.Slider.prototype.init = function() {
 
-	var settings	= this.options;
+	var settings = this.options;
 
 	// Slider View
 	this.initView();
 
 	// Init Slides based on configuration params
-	this.normalise();
+	if( settings.normalise ) {
+
+		this.normalise();
+	}
 
 	// Indexify the Slides
 	this.indexSlides();
@@ -218,6 +223,8 @@ cmt.components.base.Slider.prototype.initView = function() {
 	this.element.html( view );
 
 	this.element.find( '.slider-slides' ).append( slides );
+
+	this.slides = this.element.find( '.slider-slide' );
 };
 
 // Make filmstrip of all slides
