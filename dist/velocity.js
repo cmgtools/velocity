@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2020-05-21
+ * Velocity - v1.0.0-alpha1 - 2020-07-14
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -2845,8 +2845,8 @@ cmt.components.jquery = cmt.components.jquery || {};
 		// == Init == //
 
 		// Configure Plugin
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtAutoFill.defaults, options );
-		var fillers			= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtAutoFill.defaults, options );
+		var fillers		= this;
 
 		// Iterate and initialise all the fillers
 		fillers.each( function() {
@@ -2868,12 +2868,14 @@ cmt.components.jquery = cmt.components.jquery || {};
 			// Auto Fill
 			filler.find( '.auto-fill-text' ).blur( function() {
 
-				var wrapFill	= jQuery( this ).closest( '.wrap-fill' );
+				//var wrapFill = jQuery( this ).closest( '.wrap-fill' );
 
-				wrapFill.find( '.wrap-auto-list' ).slideUp();
+				//wrapFill.find( '.wrap-auto-list' ).slideUp();
 
 				// Clear fields
-				wrapFill.find( '.fill-clear' ).val( '' );
+				//wrapFill.find( '.fill-clear' ).val( '' );
+
+				filler.find( '.auto-fill-items' ).slideUp();
 			});
 		}
 	};

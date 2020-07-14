@@ -10,8 +10,8 @@
 		// == Init == //
 
 		// Configure Plugin
-		var settings 		= cmtjq.extend( {}, cmtjq.fn.cmtAutoFill.defaults, options );
-		var fillers			= this;
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtAutoFill.defaults, options );
+		var fillers		= this;
 
 		// Iterate and initialise all the fillers
 		fillers.each( function() {
@@ -33,12 +33,14 @@
 			// Auto Fill
 			filler.find( '.auto-fill-text' ).blur( function() {
 
-				var wrapFill	= jQuery( this ).closest( '.wrap-fill' );
+				//var wrapFill = jQuery( this ).closest( '.wrap-fill' );
 
-				wrapFill.find( '.wrap-auto-list' ).slideUp();
+				//wrapFill.find( '.wrap-auto-list' ).slideUp();
 
 				// Clear fields
-				wrapFill.find( '.fill-clear' ).val( '' );
+				//wrapFill.find( '.fill-clear' ).val( '' );
+
+				filler.find( '.auto-fill-items' ).slideUp();
 			});
 		}
 	};
