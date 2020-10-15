@@ -4,12 +4,12 @@
 
 ( function( cmtjq ) {
 
-	cmtjq.fn.cmtCircledp = function( options ) {
+	cmtjq.fn.cmtCircled = function( options ) {
 
 		// == Init == //
 
 		// Configure Modules
-		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtCircledp.defaults, options );
+		var settings	= cmtjq.extend( {}, cmtjq.fn.cmtCircled.defaults, options );
 		var circles		= this;
 
 		// Iterate and initialise all the circles
@@ -51,7 +51,7 @@
 	};
 
 	// Default Settings
-	cmtjq.fn.cmtCircledp.defaults = {
+	cmtjq.fn.cmtCircled.defaults = {
 
 	};
 
