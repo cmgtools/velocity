@@ -116,7 +116,7 @@
 
 							block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
 
-							var contentWrap = block.children( '& > .block-content-wrap' );
+							var contentWrap = block.children( '> .block-content-wrap' );
 
 							if( contentWrap.length > 0 && contentWrap.hasClass( 'valign-center' ) ) {
 
@@ -131,8 +131,8 @@
 				}
 
 				// adjust content wrap and block height in case content height exceeds
-				var contentWrap	= block.find( '& > .block-content-wrap' );
-				var content		= block.find( '& > .block-content' );
+				var contentWrap	= block.find( '> .block-content-wrap' );
+				var content		= block.find( '> .block-content' );
 
 				if( contentWrap.length > 0 && content.length > 0 && ( content.height() > contentWrap.height() ) ) {
 
