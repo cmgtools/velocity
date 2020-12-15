@@ -34,6 +34,13 @@
 				});
 			}
 		},
+		// Returns the active slider
+		getSlider: function() {
+
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
+
+			return component.getSlider( sliderKey );
+		},
 		// Adds a new slide using the given HTML and re-arrange the slides
 		addSlide: function( slideHtml ) {
 
@@ -61,6 +68,20 @@
 			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
 
 			component.scrollToSlide( sliderKey, slideKey, animate );
+		},
+		// Scroll slider to the given position in %
+		showPrevSlide: function() {
+
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
+
+			component.showPrevSlide( sliderKey );
+		},
+		// Scroll slider to the given slide
+		showNextSlide: function() {
+
+			var sliderKey = parseInt( jQuery( this[ 0 ] ).attr( 'data-idx' ) );
+
+			component.showNextSlide( sliderKey );
 		}
 	};
 

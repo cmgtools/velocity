@@ -94,6 +94,11 @@ cmt.components.base.SliderComponent.prototype.normaliseSliders = function() {
     }
 };
 
+cmt.components.base.SliderComponent.prototype.getSlider = function( sliderKey ) {
+
+	return this.sliders[ this.indexKey + sliderKey ];
+};
+
 cmt.components.base.SliderComponent.prototype.addSlide = function( sliderKey, slideHtml ) {
 
 	this.sliders[ this.indexKey + sliderKey ].addSlide( slideHtml );
@@ -112,6 +117,16 @@ cmt.components.base.SliderComponent.prototype.scrollToPosition = function( slide
 cmt.components.base.SliderComponent.prototype.scrollToSlide = function( sliderKey, slideKey, animate ) {
 
 	this.sliders[ this.indexKey + sliderKey ].scrollToSlide( slideKey, animate );
+};
+
+cmt.components.base.SliderComponent.prototype.showPrevSlide = function( sliderKey ) {
+
+	this.sliders[ this.indexKey + sliderKey ].showPrevSlide();
+};
+
+cmt.components.base.SliderComponent.prototype.showNextSlide = function( sliderKey ) {
+
+	this.sliders[ this.indexKey + sliderKey ].showNextSlide();
 };
 
 // == Slider ==============================
@@ -771,6 +786,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 	var element		= this.element;
 	var lightboxId	= this.options.lightboxId;
 	var lightbox	= jQuery( '#' + lightboxId );
+	var bkg			= lightbox.find( '.lightbox-data-bkg' );
 
 	// Configure
 	var screenWidth		= jQuery( window ).width();
@@ -785,7 +801,7 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 
 	if( self.options.lightboxBkg ) {
 
-		lightbox.find( '.lightbox-data-bkg' ).addClass( 'lightbox-bkg-wrap' );
+		bkg.addClass( 'lightbox-bkg-wrap' );
 	}
 
 	var sliderHtml = '<div class="slider slider-basic slider-lightbox">';
@@ -805,11 +821,11 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 
 			if( self.options.lightboxBkg ) {
 
-				lightbox.find( '.lightbox-data-bkg' ).css( 'background-image', 'url(' + imageUrl + ')' );
+				bkg.css( 'background-image', 'url(' + imageUrl + ')' );
 			}
 			else {
 
-				lightbox.find( '.lightbox-data-bkg' ).html( '<img src="' + imageUrl + '"/>' );
+				bkg.html( '<img src="' + imageUrl + '"/>' );
 			}
 		}
 		else {
@@ -827,14 +843,63 @@ cmt.components.base.Slider.prototype.showLightbox = function( slide, slideId ) {
 		jQuery( 'body' ).css( { 'overflow': 'hidden', 'height': jQuery( window ).height() } );
 	}
 
+	bkg.attr( 'data-idx', slideId );
+	bkg.attr( 'data-max', element.find( '.slider-slide' ).length );
+
 	lightbox.fadeIn( 'slow' );
 
 	// Sliders
 	lightboxData.find( '.slider-lightbox' ).cmtSlider({
 		lControlContent: '<i class="fa fa-2x fa-angle-left valign-center"></i>',
 		rControlContent: '<i class="fa fa-2x fa-angle-right valign-center"></i>',
-		circular: false,
+		circular: true,
 		onSlideClick: self.setLightboxBkg
+	});
+
+	lightboxData.find( '.lightbox-control' ).unbind( 'click' );
+
+	lightboxData.find( '.lightbox-control-left' ).click( function() {
+
+		var slider	= lightboxData.find( '.slider-lightbox' ).cmtSlider( 'getSlider' );
+		var element	= slider.element;
+
+		slider.showPrevSlide();
+
+		var slideId = parseInt( bkg.attr( 'data-idx' ) );
+		var total	= parseInt( bkg.attr( 'data-max' ) );
+
+		if( ( slideId == 0 ) ) {
+
+			self.setLightboxBkg( element, element.find( '[data-idx=' + ( total - 1 ) + ']'), ( total - 1 ) );
+		}
+		else {
+
+			self.setLightboxBkg( element, element.find( '[data-idx=' + ( slideId - 1 ) + ']'), ( slideId - 1 ) );
+		}
+	});
+
+	lightboxData.find( '.lightbox-control-right' ).click( function() {
+
+		var slider	= lightboxData.find( '.slider-lightbox' ).cmtSlider( 'getSlider' );
+		var element	= slider.element;
+
+		slider.showNextSlide();
+
+		var slideId = parseInt( bkg.attr( 'data-idx' ) );
+		var total	= parseInt( bkg.attr( 'data-max' ) );
+
+		if( ( slideId == 0 && total == 1 ) || ( slideId == ( total - 1 ) ) ) {
+
+			self.setLightboxBkg( element, element.find( '[data-idx=0]'), 0 );
+		}
+		else if( slideId == 0 && total > 1 ) {
+
+			self.setLightboxBkg( element, element.find( '[data-idx=1]'), 1 );
+		}
+		else {
+
+			self.setLightboxBkg( element, element.find( '[data-idx=' + ( slideId + 1 ) + ']'), ( slideId + 1 ) );
+		}
 	});
 }
 
@@ -844,7 +909,7 @@ cmt.components.base.Slider.prototype.setLightboxBkg = function( slider, slide, s
 
 	var bkg = slider.closest( '.lightbox-slider-wrap' ).find( '.lightbox-data-bkg' );
 
-	slider.find( '.slide' ).removeClass( 'active' );
+	slider.find( '.slider-slide' ).removeClass( 'active' );
 	slide.addClass( 'active' );
 
 	bkg.hide();
@@ -857,6 +922,9 @@ cmt.components.base.Slider.prototype.setLightboxBkg = function( slider, slide, s
 
 		bkg.html( '<img src="' + imageUrl + '"/>' );
 	}
+
+	bkg.attr( 'data-idx', slideId );
+	bkg.attr( 'data-max', slider.find( '.slider-slide' ).length );
 
 	bkg.fadeIn( 'slow' );
 }
