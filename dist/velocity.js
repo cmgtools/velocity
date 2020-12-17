@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2020-12-15
+ * Velocity - v1.0.0-alpha1 - 2020-12-17
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -4040,7 +4040,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 					}
 				};
 
-				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+				var urlParams = siteUrl + fileUploader.attr( 'uploader' ) + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 				// start upload
 				xhr.open("POST", urlParams, true );
@@ -4066,7 +4066,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 			formData.append( 'file', file );
 
-			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+			var urlParams = siteUrl + fileUploader.attr( 'uploader' ) + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 			jQuery.ajax({
 			  type:			"POST",
@@ -4127,7 +4127,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 
 			formData.append( 'file', imageData, fileName );
 
-			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+			var urlParams = siteUrl + fileUploader.attr( 'uploader' ) + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 			jQuery.ajax({
 			  type:			"POST",
