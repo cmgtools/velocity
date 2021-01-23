@@ -41,7 +41,7 @@ cmt.utils.intltel = {
 			cmt.utils.intltel.validateIntlField( jQuery( this ) );
 		});
 
-		jQuery( '.intl-tel-input' ).closest( '.form' ).on( 'submit', function() {
+		jQuery( '.intl-tel-number' ).closest( '.form' ).on( 'submit', function() {
 
 			var result = true;
 
