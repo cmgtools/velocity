@@ -158,7 +158,11 @@
 				}
 				else {
 
-					pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, 'search', column );
+					if( null != column ) {
+
+						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, 'search', column );
+					}
+
 					pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, 'keywords', keywords );
 				}
 
@@ -180,7 +184,11 @@
 					}
 					else {
 
-						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, 'search', column );
+						if( null != column ) {
+
+							pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, 'search', column );
+						}
+
 						pageUrl	= cmt.utils.data.updateUrlParam( pageUrl, 'keywords', keywords );
 					}
 
