@@ -31,8 +31,11 @@
 
 			var min		= cmt.utils.data.hasAttribute( counter, 'data-min' ) ? counter.attr( 'data-min' ) : settings.min;
 			var max		= cmt.utils.data.hasAttribute( counter, 'data-max' ) ? counter.attr( 'data-max' ) : settings.max;
-			var val		= cmt.utils.data.hasAttribute( counter, 'data-val' ) ? counter.attr( 'data-val' ) : settings.val;
-			var cval	= val;
+			var cval	= cmt.utils.data.hasAttribute( counter, 'data-val' ) ? counter.attr( 'data-val' ) : settings.val;
+
+			min		= parseInt( min );
+			max		= parseInt( max );
+			cval	= parseInt( cval );
 
 			var incBtn	= counter.find( '.counter-inc' );
 			var decBtn	= counter.find( '.counter-dec' );
@@ -43,13 +46,14 @@
 
 			incBtn.click( function() {
 
-				cval = field.val();
+				cval = parseInt( field.val() );
 
 				if( cval < max ) {
 
 					cval++;
 
 					field.val( cval );
+					field.change();
 
 					if( cval >= max ) {
 
@@ -68,13 +72,14 @@
 
 			decBtn.click( function() {
 
-				cval = field.val();
+				cval = parseInt( field.val() );
 
 				if( cval > min ) {
 
 					cval--;
 
 					field.val( cval );
+					field.change();
 
 					if( cval <= min ) {
 
