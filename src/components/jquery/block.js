@@ -111,30 +111,30 @@
 				if( null != heightAutoMobile && heightAutoMobile ) {
 
 					if( window.innerWidth <= heightAutoMobileWidth ) {
-						
+
 						if( fullHeight ) {
 
 							block.css( { 'height': 'auto', 'min-height': screenHeight + 'px' } );
 
-							var contentWrap = block.children( '.block-content-wrap' );
+							var contentWrap = block.children( '> .block-content-wrap' );
 
-							if( contentWrap.hasClass( 'valign-center' ) ) {
+							if( contentWrap.length > 0 && contentWrap.hasClass( 'valign-center' ) ) {
 
 								contentWrap.removeClass( 'valign-center' );
 							}
 						}
 						else {
-							
+
 							block.css( { 'height': 'auto' } );
 						}
 					}
 				}
 
 				// adjust content wrap and block height in case content height exceeds
-				var contentWrap	= block.find( '.block-content-wrap' );
-				var content		= block.find( '.block-content' );
+				var contentWrap	= block.find( '> .block-content-wrap' );
+				var content		= block.find( '> .block-content' );
 
-				if( content !== undefined && ( content.height() > contentWrap.height() ) ) {
+				if( contentWrap.length > 0 && content.length > 0 && ( content.height() > contentWrap.height() ) ) {
 
 					var newHeight 	= ( content.height() + 100 ) + 'px';
 					var diff		= content.height() - contentWrap.height();
@@ -189,7 +189,7 @@
 						block.css( { 'height': ( screenHeight / 2 ) + 'px' } );
 					}
 				}
-				
+
 				// Apply Quarter to Full Height
 				if( settings.qtfHeight ) {
 

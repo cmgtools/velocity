@@ -362,7 +362,7 @@
 					}
 				};
 
-				var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+				var urlParams = siteUrl + fileUploader.attr( 'uploader' ) + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 				// start upload
 				xhr.open("POST", urlParams, true );
@@ -388,7 +388,7 @@
 
 			formData.append( 'file', file );
 
-			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+			var urlParams = siteUrl + fileUploader.attr( 'uploader' ) + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 			jQuery.ajax({
 			  type:			"POST",
@@ -449,7 +449,7 @@
 
 			formData.append( 'file', imageData, fileName );
 
-			var urlParams = fileUploadUrl + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
+			var urlParams = siteUrl + fileUploader.attr( 'uploader' ) + "?directory=" + encodeURIComponent( directory ) + "&type=" + encodeURIComponent( type ) + "&gen=" + encodeURIComponent( gen );
 
 			jQuery.ajax({
 			  type:			"POST",

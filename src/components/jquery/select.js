@@ -31,34 +31,34 @@
 		 * 1. Find the selected option if there is any.
 		 * 2. Wrap the select in a div and access the wrapper div.
 		 * 3. If copyId config is set, the select id attribute will be moved to wrapper div.
-		 * 4. The class cmt-select-wrap will be assigned to wrapper div.
+		 * 4. The class .select-wrap will be assigned to wrapper div.
 		 * 5. If wrapperClass config is set, these additional classes will be assigned to wrapper div.
 		 * 6. The icon span having class s-icon will be created. If iconClass and iconHtml are set, the icon span will be assigned these classes and html.
-		 * 7. The custom select div will be created having class cmt-select and child div element having class cmt-selected.
-		 * 8. The span having class s-text will be appended to cmt-selected div. The span s-icon will follow s-text.
-		 * 9. A ul having class cmt-select-list will be appended to cmt-select.
-		 * 10. The select options will be iterated and li elements will be formed and appended to cmt-select-list.
-		 * 11. The custom select i.e. cmt-select will be appended to wrapper div i.e. cmt-select-wrap.
-		 * 12. The cmt-select-list will be hidden by default.
+		 * 7. The custom select div will be created having class .select and child div element having class .selected.
+		 * 8. The span having class s-text will be appended to .selected div. The span s-icon will follow s-text.
+		 * 9. A ul having class .select-list will be appended to .select.
+		 * 10. The select options will be iterated and li elements will be formed and appended to select-list.
+		 * 11. The custom select i.e. select will be appended to wrapper div i.e. select-wrap.
+		 * 12. The select-list will be hidden by default.
 		 * 13. If select is disabled, disabled class will be assigned to custom select.
-		 * 14. Toggle behaviour added to cmt-selected for cmt-select-list.
-		 * 15. Click listener added to all the list elements to change select value and update s-text of cmt-selected.
+		 * 14. Toggle behaviour added to selected for select-list.
+		 * 15. Click listener added to all the list elements to change select value and update s-text of selected.
 		 * 16. Global listener added to hide select list if user click on other area.
 		 */
 		function init( dropDown ) {
 
 			// Find Selected Option
-			var selected	= dropDown.children( 'option:selected' );
+			var selected = dropDown.children( 'option:selected' );
 
 			// Wrap Select
 			dropDown.wrap( '<div></div>' );
 
-			var wrapper		= dropDown.parent();
+			var wrapper = dropDown.parent();
 
 			if( settings.copyId ) {
 
 				// Find select Id
-				var selectId	= dropDown.attr( 'id' );
+				var selectId = dropDown.attr( 'id' );
 
 				// Transfer Id to wrapper
 				if( null != selectId && selectId.length > 0 ) {
@@ -72,7 +72,7 @@
 			}
 
 			// Assign class to wrapper
-			wrapper.addClass( 'cmt-select-wrap' );
+			wrapper.addClass( 'select-wrap' );
 
 			if( null != settings.wrapperClass ) {
 
@@ -80,34 +80,34 @@
 			}
 
 			// Generate Icon Html
-			var iconHtml	= '<span class="s-icon">';
+			var iconHtml = '<span class="s-icon">';
 
 			if( null != settings.iconClass ) {
 
-				iconHtml	= '<span class="s-icon ' + settings.iconClass + '">';
+				iconHtml = '<span class="s-icon ' + settings.iconClass + '">';
 			}
 
 			if( null != settings.iconHtml ) {
 
-				iconHtml	+= settings.iconHtml + "</span>";
+				iconHtml += settings.iconHtml + "</span>";
 			}
 			else {
 
-				iconHtml	+= "</span>";
+				iconHtml += "</span>";
 			}
 
 			// Generate Custom Select Html
-			var customHtml	= "<div class='cmt-select'><div class='cmt-selected'><span class='s-text'>" + selected.html() + "</span>" + iconHtml + "</div><ul class='cmt-select-list'>";
+			var customHtml	= "<div class='select'><div class='selected'><span class='s-text'>" + selected.html() + "</span>" + iconHtml + "</div><ul class='select-list'>";
 
 			if( settings.copyOptionClass ) {
 
-				var selected	= dropDown.find( ':selected' );
+				var selected = dropDown.find( ':selected' );
 
 				if( selected.length == 1 ) {
 
 					var classes = selected.attr( 'class' );
 
-					customHtml	= "<div class='cmt-select'><div class='cmt-selected'><span class='s-text " + classes + "'>" + selected.html() + "</span>" + iconHtml + "</div><ul class='cmt-select-list'>";
+					customHtml	= "<div class='select'><div class='selected'><span class='s-text " + classes + "'>" + selected.html() + "</span>" + iconHtml + "</div><ul class='select-list'>";
 				}
 			}
 
@@ -131,9 +131,9 @@
 			// Append Custom Select to wrapper
 			wrapper.append( customHtml );
 
-			var customSelect	= wrapper.children( '.cmt-select' );
-			var customSelected	= wrapper.children( '.cmt-select' ).children( '.cmt-selected' );
-			var customList		= wrapper.children( '.cmt-select' ).children( '.cmt-select-list' );
+			var customSelect	= wrapper.children( '.select' );
+			var customSelected	= wrapper.children( '.select' ).children( '.selected' );
+			var customList		= wrapper.children( '.select' ).children( '.select-list' );
 
 			// Hide List by default
 			customList.hide();
@@ -186,7 +186,7 @@
 					var selected	= jQuery( this );
 					var parent		= selected.parents().eq( 1 );
 
-					parent.children( '.cmt-selected' ).children( '.s-text' ).html( selected.html() );
+					parent.children( '.selected' ).children( '.s-text' ).html( selected.html() );
 					parent.parent().children( 'select' ).val( selected.attr( 'data-value' ) ).change();
 
 					customList.hide();
@@ -223,8 +223,8 @@
 		dropDown.html( optionsHtml );
 
 		var selected	= dropDown.children( 'option:selected' );
-	 	var list		= selectWrap.find( '.cmt-select-list' );
-	 	var sText		= selectWrap.find( '.cmt-selected' ).children( '.s-text' );
+	 	var list		= selectWrap.find( '.select-list' );
+	 	var sText		= selectWrap.find( '.selected' ).children( '.s-text' );
 		var listHtml	= '';
 
 		dropDown.children( 'option' ).each( function( index ) {
@@ -256,7 +256,7 @@
 		dropDown.val( value );
 
 		var selected	= dropDown.children( 'option:selected' );
-	 	var sText		= selectWrap.find( '.cmt-selected' ).children( '.s-text' );
+	 	var sText		= selectWrap.find( '.selected' ).children( '.s-text' );
 
 		sText.html( selected.html() );
 	};
@@ -309,12 +309,12 @@
 			}
 
 			// Generate Select Html
-			var customHtml = '<div class="cmt-selected"><span class="s-text">' + dropDown.attr( 'title' ) + '</span>' + iconHtml + '</div>';
+			var customHtml = '<div class="selected"><span class="s-text">' + dropDown.attr( 'title' ) + '</span>' + iconHtml + '</div>';
 
 			// Prepend
 			dropDown.prepend( customHtml );
 
-			var selectList = dropDown.find( '.cmt-select-list' );
+			var selectList = dropDown.find( '.select-list' );
 
 			// Hide List by default
 			selectList.hide();
@@ -329,7 +329,7 @@
 			else {
 
 				// Add listener to selected val
-				dropDown.find( '.cmt-selected' ).click( function( e ) {
+				dropDown.find( '.selected' ).click( function( e ) {
 
 					if( !selectList.is( ':visible' ) ) {
 
