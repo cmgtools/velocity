@@ -150,6 +150,13 @@
 				// Add listener to selected val
 				customSelected.click( function( e ) {
 
+					disabled = customSelected.hasClass( 'disabled' );
+
+					if( disabled ) {
+
+						return;
+					}
+
 					var visible = customList.is( ':visible' );
 
 					customList.hide();
