@@ -88,7 +88,7 @@
 					fileUploader.find( '.post-action' ).hide();
 
 					// Reset Chooser
-					fileUploader.find( '.file-chooser .input' ).val( "" );
+					fileUploader.find( '.file-chooser input[type=file]' ).val( "" );
 
 					// Reset Canvas and Progress
 					resetUploader( fileUploader );
@@ -192,7 +192,7 @@
 			if ( cmt.utils.browser.isFileApi() ) {
 
 				// Traditional way using input
-				var inputField = fileUploader.find( '.file-chooser .input' );
+				var inputField = fileUploader.find( '.file-chooser input[type=file]' );
 
 				inputField.change( function( event ) {
 
@@ -223,7 +223,7 @@
 				var directory	= fileUploader.attr( 'directory' );
 				var type		= fileUploader.attr( 'type' );
 				var gen			= fileUploader.attr( 'gen' );
-				var inputField 	= fileUploader.find( '.file-chooser .input' );
+				var inputField 	= fileUploader.find( '.file-chooser input[type=file]' );
 
 				inputField.change( function( event ) {
 
@@ -378,7 +378,7 @@
 		function uploadTraditionalFile( fileUploader, directory, type, gen ) {
 
 			var progressContainer	= fileUploader.find( '.file-preloader .file-preloader-bar' );
-			var fileList			= fileUploader.find( '.file-chooser .input' );
+			var fileList			= fileUploader.find( '.file-chooser input[type=file]' );
 			var file 				= fileList.files[ 0 ];
 			var formData 			= new FormData();
 			fileName 				= file.name;

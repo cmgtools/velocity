@@ -44,6 +44,24 @@
 			// Set value
 			field.val( cval );
 
+			if( min == cval ) {
+
+				decBtn.addClass( 'disabled' );
+			}
+			else {
+
+				decBtn.removeClass( 'disabled' );
+			}
+
+			if( max == cval ) {
+
+				incBtn.addClass( 'disabled' );
+			}
+			else {
+
+				incBtn.removeClass( 'disabled' );
+			}
+
 			incBtn.click( function() {
 
 				cval = parseInt( field.val() );

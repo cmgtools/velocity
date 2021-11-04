@@ -1,5 +1,5 @@
 /**
- * Velocity - v1.0.0-alpha1 - 2021-03-19
+ * Velocity - v1.0.0-alpha1 - 2021-07-12
  * Description: Velocity is a JavaScript library which provide utilities, ui components and MVC framework implementation.
  * License: GPL-3.0-or-later
  * Author: Bhagwat Singh Chouhan
@@ -3461,6 +3461,24 @@ cmt.components.jquery = cmt.components.jquery || {};
 			// Set value
 			field.val( cval );
 
+			if( min == cval ) {
+
+				decBtn.addClass( 'disabled' );
+			}
+			else {
+
+				decBtn.removeClass( 'disabled' );
+			}
+
+			if( max == cval ) {
+
+				incBtn.addClass( 'disabled' );
+			}
+			else {
+
+				incBtn.removeClass( 'disabled' );
+			}
+
 			incBtn.click( function() {
 
 				cval = parseInt( field.val() );
@@ -3771,7 +3789,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 					fileUploader.find( '.post-action' ).hide();
 
 					// Reset Chooser
-					fileUploader.find( '.file-chooser .input' ).val( "" );
+					fileUploader.find( '.file-chooser input[type=file]' ).val( "" );
 
 					// Reset Canvas and Progress
 					resetUploader( fileUploader );
@@ -3875,7 +3893,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 			if ( cmt.utils.browser.isFileApi() ) {
 
 				// Traditional way using input
-				var inputField = fileUploader.find( '.file-chooser .input' );
+				var inputField = fileUploader.find( '.file-chooser input[type=file]' );
 
 				inputField.change( function( event ) {
 
@@ -3906,7 +3924,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 				var directory	= fileUploader.attr( 'directory' );
 				var type		= fileUploader.attr( 'type' );
 				var gen			= fileUploader.attr( 'gen' );
-				var inputField 	= fileUploader.find( '.file-chooser .input' );
+				var inputField 	= fileUploader.find( '.file-chooser input[type=file]' );
 
 				inputField.change( function( event ) {
 
@@ -4061,7 +4079,7 @@ cmt.components.jquery = cmt.components.jquery || {};
 		function uploadTraditionalFile( fileUploader, directory, type, gen ) {
 
 			var progressContainer	= fileUploader.find( '.file-preloader .file-preloader-bar' );
-			var fileList			= fileUploader.find( '.file-chooser .input' );
+			var fileList			= fileUploader.find( '.file-chooser input[type=file]' );
 			var file 				= fileList.files[ 0 ];
 			var formData 			= new FormData();
 			fileName 				= file.name;
@@ -6214,6 +6232,13 @@ function hideMessagePopup() {
 
 				// Add listener to selected val
 				customSelected.click( function( e ) {
+
+					disabled = customSelected.hasClass( 'disabled' );
+
+					if( disabled ) {
+
+						return;
+					}
 
 					var visible = customList.is( ':visible' );
 
